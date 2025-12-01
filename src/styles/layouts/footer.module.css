@@ -1,0 +1,16 @@
+@reference '../global.css';
+
+.footer {
+	@apply w-full mt-14 md:mt-20;
+	@apply border-t border-gray-300 md:border-t-0;
+}
+
+.colophon {
+	@apply py-4;
+	@apply md:border-t border-gray-300;
+	@apply flex items-center justify-between;
+}
+
+.copyright {
+	@apply text-sm;
+}

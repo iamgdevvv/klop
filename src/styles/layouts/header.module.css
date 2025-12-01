@@ -1,0 +1,20 @@
+@reference '../global.css';
+
+.inner {
+	@apply py-4;
+	@apply flex items-center flex-wrap;
+}
+
+.branding {
+	@apply w-auto mr-auto;
+}
+
+.logo {
+	@apply size-[34px] md:size-[48px];
+	@apply flex items-start;
+
+	img {
+		@apply size-full;
+		@apply object-contain;
+	}
+}
