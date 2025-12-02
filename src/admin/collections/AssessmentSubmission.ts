@@ -37,12 +37,18 @@ export const AssessmentSubmissions: CollectionConfig = {
 		// hideAPIURL: true,
 		baseFilter({ req }) {
 			if (req?.user) {
-				if (req.user.role === 'candidate' || req.user.role === 'company') {
+				if (req.user.role === 'admin') {
 					return {
 						userCandidateCompany: {
-							in: [req.user.id],
+							exists: true,
 						},
 					}
+				}
+
+				return {
+					userCandidateCompany: {
+						in: [req.user.id],
+					},
 				}
 			}
 
@@ -277,13 +283,6 @@ export const AssessmentSubmissions: CollectionConfig = {
 										condition: (data, _, { user }) => {
 											return user?.role === 'company'
 										},
-									},
-									filterOptions: ({ user }) => {
-										return {
-											author: {
-												equals: user?.id,
-											},
-										}
 									},
 								},
 							],

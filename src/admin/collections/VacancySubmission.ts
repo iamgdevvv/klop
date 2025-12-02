@@ -37,12 +37,18 @@ export const VacancySubmissions: CollectionConfig = {
 		// hideAPIURL: true,
 		baseFilter({ req }) {
 			if (req?.user) {
-				if (req.user.role === 'candidate' || req.user.role === 'company') {
+				if (req.user.role === 'admin') {
 					return {
 						userCandidateCompany: {
-							in: [req.user.id],
+							exists: true,
 						},
 					}
+				}
+
+				return {
+					userCandidateCompany: {
+						in: [req.user.id],
+					},
 				}
 			}
 
@@ -223,6 +229,37 @@ export const VacancySubmissions: CollectionConfig = {
 					label: 'Vacancy',
 					fields: [
 						{
+							type: 'relationship',
+							name: 'userCandidateCompany',
+							relationTo: 'users',
+							label: 'Relation',
+							required: true,
+							hasMany: true,
+							maxRows: 2,
+							admin: {
+								readOnly: true,
+							},
+							filterOptions: ({ user }) => {
+								if (user?.role === 'candidate') {
+									return {
+										role: {
+											equals: 'company',
+										},
+									}
+								}
+
+								if (user?.role === 'company') {
+									return {
+										role: {
+											equals: 'candidate',
+										},
+									}
+								}
+
+								return false
+							},
+						},
+						{
 							type: 'group',
 							name: 'vacancy',
 							label: false,
@@ -231,45 +268,13 @@ export const VacancySubmissions: CollectionConfig = {
 									type: 'row',
 									fields: [
 										{
-											type: 'relationship',
-											name: 'userCandidateCompany',
-											relationTo: 'users',
-											label: 'Relation',
-											required: true,
-											hasMany: true,
-											maxRows: 2,
-											admin: {
-												readOnly: true,
-												width: '25%',
-											},
-											filterOptions: ({ user }) => {
-												if (user?.role === 'candidate') {
-													return {
-														role: {
-															equals: 'company',
-														},
-													}
-												}
-
-												if (user?.role === 'company') {
-													return {
-														role: {
-															equals: 'candidate',
-														},
-													}
-												}
-
-												return false
-											},
-										},
-										{
 											type: 'select',
 											name: 'type',
 											enumName: 'vcltyp',
 											options: vacancyType,
 											admin: {
 												readOnly: true,
-												width: '25%',
+												width: '33.3333%',
 											},
 										},
 										{
@@ -279,7 +284,7 @@ export const VacancySubmissions: CollectionConfig = {
 											options: vacancyLevel,
 											admin: {
 												readOnly: true,
-												width: '25%',
+												width: '33.3333%',
 											},
 										},
 										{
@@ -289,7 +294,7 @@ export const VacancySubmissions: CollectionConfig = {
 											options: vacancyEducation,
 											admin: {
 												readOnly: true,
-												width: '25%',
+												width: '33.3333%',
 											},
 										},
 									],
@@ -337,6 +342,10 @@ export const VacancySubmissions: CollectionConfig = {
 								},
 							},
 							filterOptions: ({ user }) => {
+								if (user?.role === 'admin') {
+									return true
+								}
+
 								return {
 									author: {
 										equals: user?.id,

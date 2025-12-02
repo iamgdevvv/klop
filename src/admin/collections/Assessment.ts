@@ -26,6 +26,14 @@ export const Assessments: CollectionConfig = {
 		group: 'Company',
 		baseFilter({ req }) {
 			if (req?.user) {
+				if (req.user.role === 'admin') {
+					return {
+						author: {
+							exists: true,
+						},
+					}
+				}
+
 				if (req.user.role === 'company') {
 					return {
 						author: {
@@ -184,6 +192,10 @@ export const Assessments: CollectionConfig = {
 					name: 'vacancy',
 					relationTo: 'vacancies',
 					filterOptions: ({ user }) => {
+						if (user?.role === 'admin') {
+							return true
+						}
+
 						return {
 							author: {
 								equals: user?.id,

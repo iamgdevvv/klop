@@ -413,8 +413,8 @@ export interface VacancySubmission {
       tiktok?: string | null;
     };
   };
-  vacancy: {
-    userCandidateCompany: (number | User)[];
+  userCandidateCompany: (number | User)[];
+  vacancy?: {
     type?: ('fullTime' | 'partTime' | 'contract' | 'internship') | null;
     level?: ('senior' | 'medior' | 'junior') | null;
     education?: ('bachelor' | 'master' | 'diploma' | 'highSchool' | 'middleSchool' | 'elementarySchool') | null;
@@ -754,10 +754,10 @@ export interface VacancySubmissionsSelect<T extends boolean = true> {
               tiktok?: T;
             };
       };
+  userCandidateCompany?: T;
   vacancy?:
     | T
     | {
-        userCandidateCompany?: T;
         type?: T;
         level?: T;
         education?: T;

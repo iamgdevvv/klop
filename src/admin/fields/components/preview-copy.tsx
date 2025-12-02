@@ -125,14 +125,14 @@ export function useCopy(options: UseCopyOptions = {}) {
 		}
 	}, [])
 
-	const clearResetTimer = () => {
+	const clearResetTimer = useCallback(() => {
 		if (resetTimer.current) {
 			window.clearTimeout(resetTimer.current)
 			resetTimer.current = null
 		}
-	}
+	}, [])
 
-	const scheduleReset = () => {
+	const scheduleReset = useCallback(() => {
 		clearResetTimer()
 		if (resetAfterMs > 0) {
 			// window.setTimeout returns number in browser
@@ -143,7 +143,7 @@ export function useCopy(options: UseCopyOptions = {}) {
 				resetTimer.current = null
 			}, resetAfterMs)
 		}
-	}
+	}, [clearResetTimer, resetAfterMs])
 
 	const copy = useCallback(
 		async (text: string) => {
@@ -204,7 +204,7 @@ export function useCopy(options: UseCopyOptions = {}) {
 		setIsCopying(false)
 		setIsCopied(false)
 		setError(null)
-	}, [])
+	}, [clearResetTimer])
 
 	return {
 		copy,

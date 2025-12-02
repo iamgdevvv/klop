@@ -10,6 +10,7 @@ export const Asset: CollectionConfig = {
 			if (!req?.user) {
 				return null
 			}
+
 			return {
 				author: {
 					equals: req?.user?.id,
