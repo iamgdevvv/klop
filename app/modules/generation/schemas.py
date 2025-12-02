@@ -20,7 +20,7 @@ class GenerateRequest(BaseModel):
 # --- Output Response Components ---
 
 
-# 1. Model Baru untuk Opsi Pilihan Ganda (Frontend Friendly)
+# 1. Model Baru untuk Opsi Pilihan Ganda
 class OptionItem(BaseModel):
     key: str = Field(..., description="Label pilihan (A, B, C, D)", example="A")
     text: str = Field(
