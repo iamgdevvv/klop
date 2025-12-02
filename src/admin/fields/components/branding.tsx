@@ -14,7 +14,7 @@ export const Icon = () => {
 export const Logo = () => {
 	return (
 		<Image
-			src="/favicon.jpg"
+			src="/logo.svg"
 			alt="Klop! Logo"
 			width={220}
 			height={40}

@@ -73,6 +73,7 @@ export interface Config {
     vacancies: Vacancy;
     assessments: Assessment;
     assessmentSubmissions: AssessmentSubmission;
+    vacancySubmissions: VacancySubmission;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -86,6 +87,7 @@ export interface Config {
     vacancies: VacanciesSelect<false> | VacanciesSelect<true>;
     assessments: AssessmentsSelect<false> | AssessmentsSelect<true>;
     assessmentSubmissions: AssessmentSubmissionsSelect<false> | AssessmentSubmissionsSelect<true>;
+    vacancySubmissions: VacancySubmissionsSelect<false> | VacancySubmissionsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -131,6 +133,7 @@ export interface UserAuthOperations {
 export interface Asset {
   id: number;
   alt?: string | null;
+  author?: (number | null) | User;
   prefix?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -151,7 +154,23 @@ export interface Asset {
 export interface User {
   id: number;
   name?: string | null;
-  role?: ('admin' | 'company') | null;
+  role?: ('admin' | 'company' | 'candidate') | null;
+  avatar?: (number | null) | Asset;
+  phone?: string | null;
+  gender?: ('male' | 'female') | null;
+  education?: ('bachelor' | 'master' | 'diploma' | 'highSchool' | 'middleSchool' | 'elementarySchool') | null;
+  biography?: string | null;
+  resume?: (number | null) | Asset;
+  documents?: (number | Asset)[] | null;
+  socials?: {
+    website?: string | null;
+    facebook?: string | null;
+    instagram?: string | null;
+    linkedin?: string | null;
+    twitter?: string | null;
+    youtube?: string | null;
+    tiktok?: string | null;
+  };
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -229,8 +248,11 @@ export interface Company {
  */
 export interface Vacancy {
   id: number;
-  level?: ('senior' | 'junior') | null;
-  expectedSalary?: number | null;
+  type?: ('fullTime' | 'partTime' | 'contract' | 'internship') | null;
+  level?: ('senior' | 'medior' | 'junior') | null;
+  education?: ('bachelor' | 'master' | 'diploma' | 'highSchool' | 'middleSchool' | 'elementarySchool') | null;
+  fromExpectedSalary?: number | null;
+  toExpectedSalary?: number | null;
   description?: {
     root: {
       type: string;
@@ -259,6 +281,8 @@ export interface Vacancy {
   excerpt?: string | null;
   featuredImage?: (number | null) | Asset;
   company: number | Company;
+  expiresAt?: string | null;
+  closeVacancy?: boolean | null;
   publishedAt?: string | null;
   author?: (number | null) | User;
   updatedAt: string;
@@ -270,6 +294,14 @@ export interface Vacancy {
  */
 export interface Assessment {
   id: number;
+  /**
+   * In minutes
+   */
+  duration?: number | null;
+  /**
+   * In percentage
+   */
+  passingGrade?: number | null;
   description?: {
     root: {
       type: string;
@@ -285,11 +317,32 @@ export interface Assessment {
     };
     [k: string]: unknown;
   } | null;
+  questions?:
+    | {
+        question?: string | null;
+        /**
+         * Please use this only as a helper for the question, not as the main question, because this feature is not supported yet if you treat as main question.
+         */
+        questionMedia?: (number | null) | Asset;
+        /**
+         * Please make sure to include answer options, and fill the "expected answer" field with the correct answer selected from those options.
+         */
+        isAnswerOptions?: boolean | null;
+        answerOptions?:
+          | {
+              answerOption?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        expectedAnswer?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   title: string;
   slug: string;
   excerpt?: string | null;
   featuredImage?: (number | null) | Asset;
-  vacancy: number | Vacancy;
+  vacancy?: (number | null) | Vacancy;
   publishedAt?: string | null;
   author?: (number | null) | User;
   updatedAt: string;
@@ -301,8 +354,74 @@ export interface Assessment {
  */
 export interface AssessmentSubmission {
   id: number;
-  name: string;
-  assessment: number | Assessment;
+  candidateName: string;
+  candidate?: {
+    avatar?: (number | null) | Asset;
+    phone?: string | null;
+    gender?: ('male' | 'female') | null;
+    education?: ('bachelor' | 'master' | 'diploma' | 'highSchool' | 'middleSchool' | 'elementarySchool') | null;
+    biography?: string | null;
+    resume?: (number | null) | Asset;
+    documents?: (number | Asset)[] | null;
+    socials?: {
+      website?: string | null;
+      facebook?: string | null;
+      instagram?: string | null;
+      linkedin?: string | null;
+      twitter?: string | null;
+      youtube?: string | null;
+      tiktok?: string | null;
+    };
+  };
+  userCandidateCompany: (number | User)[];
+  score: number;
+  assessment?: (number | null) | Assessment;
+  summary?: string | null;
+  assessmentResults?:
+    | {
+        isAnswerCorrect?: boolean | null;
+        question?: string | null;
+        answer?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vacancySubmissions".
+ */
+export interface VacancySubmission {
+  id: number;
+  candidateName: string;
+  candidate?: {
+    avatar?: (number | null) | Asset;
+    phone?: string | null;
+    gender?: ('male' | 'female') | null;
+    education?: ('bachelor' | 'master' | 'diploma' | 'highSchool' | 'middleSchool' | 'elementarySchool') | null;
+    biography?: string | null;
+    resume?: (number | null) | Asset;
+    documents?: (number | Asset)[] | null;
+    socials?: {
+      website?: string | null;
+      facebook?: string | null;
+      instagram?: string | null;
+      linkedin?: string | null;
+      twitter?: string | null;
+      youtube?: string | null;
+      tiktok?: string | null;
+    };
+  };
+  vacancy: {
+    userCandidateCompany: (number | User)[];
+    type?: ('fullTime' | 'partTime' | 'contract' | 'internship') | null;
+    level?: ('senior' | 'medior' | 'junior') | null;
+    education?: ('bachelor' | 'master' | 'diploma' | 'highSchool' | 'middleSchool' | 'elementarySchool') | null;
+    fromExpectedSalary?: number | null;
+    toExpectedSalary?: number | null;
+  };
+  vacancyReference?: (number | null) | Vacancy;
   updatedAt: string;
   createdAt: string;
 }
@@ -353,6 +472,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'assessmentSubmissions';
         value: number | AssessmentSubmission;
+      } | null)
+    | ({
+        relationTo: 'vacancySubmissions';
+        value: number | VacancySubmission;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -402,6 +525,7 @@ export interface PayloadMigration {
  */
 export interface AssetSelect<T extends boolean = true> {
   alt?: T;
+  author?: T;
   prefix?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -422,6 +546,24 @@ export interface AssetSelect<T extends boolean = true> {
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
   role?: T;
+  avatar?: T;
+  phone?: T;
+  gender?: T;
+  education?: T;
+  biography?: T;
+  resume?: T;
+  documents?: T;
+  socials?:
+    | T
+    | {
+        website?: T;
+        facebook?: T;
+        instagram?: T;
+        linkedin?: T;
+        twitter?: T;
+        youtube?: T;
+        tiktok?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -483,8 +625,11 @@ export interface CompaniesSelect<T extends boolean = true> {
  * via the `definition` "vacancies_select".
  */
 export interface VacanciesSelect<T extends boolean = true> {
+  type?: T;
   level?: T;
-  expectedSalary?: T;
+  education?: T;
+  fromExpectedSalary?: T;
+  toExpectedSalary?: T;
   description?: T;
   meta?:
     | T
@@ -498,6 +643,8 @@ export interface VacanciesSelect<T extends boolean = true> {
   excerpt?: T;
   featuredImage?: T;
   company?: T;
+  expiresAt?: T;
+  closeVacancy?: T;
   publishedAt?: T;
   author?: T;
   updatedAt?: T;
@@ -508,7 +655,24 @@ export interface VacanciesSelect<T extends boolean = true> {
  * via the `definition` "assessments_select".
  */
 export interface AssessmentsSelect<T extends boolean = true> {
+  duration?: T;
+  passingGrade?: T;
   description?: T;
+  questions?:
+    | T
+    | {
+        question?: T;
+        questionMedia?: T;
+        isAnswerOptions?: T;
+        answerOptions?:
+          | T
+          | {
+              answerOption?: T;
+              id?: T;
+            };
+        expectedAnswer?: T;
+        id?: T;
+      };
   title?: T;
   slug?: T;
   excerpt?: T;
@@ -524,8 +688,83 @@ export interface AssessmentsSelect<T extends boolean = true> {
  * via the `definition` "assessmentSubmissions_select".
  */
 export interface AssessmentSubmissionsSelect<T extends boolean = true> {
-  name?: T;
+  candidateName?: T;
+  candidate?:
+    | T
+    | {
+        avatar?: T;
+        phone?: T;
+        gender?: T;
+        education?: T;
+        biography?: T;
+        resume?: T;
+        documents?: T;
+        socials?:
+          | T
+          | {
+              website?: T;
+              facebook?: T;
+              instagram?: T;
+              linkedin?: T;
+              twitter?: T;
+              youtube?: T;
+              tiktok?: T;
+            };
+      };
+  userCandidateCompany?: T;
+  score?: T;
   assessment?: T;
+  summary?: T;
+  assessmentResults?:
+    | T
+    | {
+        isAnswerCorrect?: T;
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "vacancySubmissions_select".
+ */
+export interface VacancySubmissionsSelect<T extends boolean = true> {
+  candidateName?: T;
+  candidate?:
+    | T
+    | {
+        avatar?: T;
+        phone?: T;
+        gender?: T;
+        education?: T;
+        biography?: T;
+        resume?: T;
+        documents?: T;
+        socials?:
+          | T
+          | {
+              website?: T;
+              facebook?: T;
+              instagram?: T;
+              linkedin?: T;
+              twitter?: T;
+              youtube?: T;
+              tiktok?: T;
+            };
+      };
+  vacancy?:
+    | T
+    | {
+        userCandidateCompany?: T;
+        type?: T;
+        level?: T;
+        education?: T;
+        fromExpectedSalary?: T;
+        toExpectedSalary?: T;
+      };
+  vacancyReference?: T;
   updatedAt?: T;
   createdAt?: T;
 }

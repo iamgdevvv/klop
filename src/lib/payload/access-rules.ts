@@ -8,7 +8,11 @@ export const authenticated: isAuthenticated = ({ req: { user } }) => {
 	return Boolean(user)
 }
 
-export const authenticatedActionRole: Access = ({ data, req: { user } }) => {
+export const authenticatedAdmin: isAuthenticated = ({ req: { user } }) => {
+	return user?.collection === 'users' && user.role === 'admin'
+}
+
+export const authenticatedAdminOrAuthor: Access = ({ data, req: { user } }) => {
 	if (data?.author && user?.collection === 'users') {
 		if (user.role === 'admin') {
 			return true

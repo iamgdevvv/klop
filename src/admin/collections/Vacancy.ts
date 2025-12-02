@@ -2,8 +2,8 @@ import type { CollectionConfig } from 'payload'
 
 import { metafield } from '$payload-fields/metadata'
 import { slugField } from '$payload-fields/slug'
-import { authenticated, authenticatedActionRole } from '$payload-libs/access-rules'
-import { vacancyLevel } from '$payload-libs/enum'
+import { authenticated, authenticatedAdminOrAuthor } from '$payload-libs/access-rules'
+import { vacancyEducation, vacancyLevel, vacancyType } from '$payload-libs/enum'
 import { revalidateChange, revalidateDelete } from '$payload-libs/hooks/revalidate'
 import { generatePreviewPath } from '$payload-libs/preview-path'
 
@@ -11,9 +11,32 @@ export const Vacancies: CollectionConfig = {
 	slug: 'vacancies',
 	dbName: 'vcn',
 	admin: {
+		hidden({ user }) {
+			return user?.role === 'candidate'
+		},
+		components: {
+			edit: {
+				beforeDocumentControls: [
+					'$payload-fields/components/preview-copy#PreviewVacancyCopy',
+				],
+			},
+		},
 		useAsTitle: 'title',
-		defaultColumns: ['title', 'slug', 'updatedAt'],
-		group: 'General',
+		defaultColumns: ['title', 'slug', 'level', 'company', 'closeVacancy', 'expiresAt'],
+		group: 'Company',
+		baseFilter({ req }) {
+			if (req?.user) {
+				if (req.user.role === 'company') {
+					return {
+						author: {
+							equals: req.user.id,
+						},
+					}
+				}
+			}
+
+			return null
+		},
 		livePreview: {
 			url: ({ data, req }) => {
 				let companySlug = 'unknown'
@@ -53,9 +76,9 @@ export const Vacancies: CollectionConfig = {
 	},
 	access: {
 		create: authenticated,
-		read: authenticatedActionRole,
-		update: authenticatedActionRole,
-		delete: authenticatedActionRole,
+		read: authenticatedAdminOrAuthor,
+		update: authenticatedAdminOrAuthor,
+		delete: authenticatedAdminOrAuthor,
 	},
 	hooks: {
 		afterChange: [revalidateChange],
@@ -73,18 +96,57 @@ export const Vacancies: CollectionConfig = {
 							fields: [
 								{
 									type: 'select',
-									name: 'level',
-									options: vacancyLevel,
+									name: 'type',
+									enumName: 'vcltyp',
+									options: vacancyType,
 									admin: {
-										width: '50%',
+										width: '33.333%',
 									},
 								},
 								{
-									type: 'number',
-									name: 'expectedSalary',
+									type: 'select',
+									name: 'level',
+									enumName: 'vclvl',
+									options: vacancyLevel,
 									admin: {
-										width: '50%',
+										width: '33.333%',
 									},
+								},
+								{
+									type: 'select',
+									name: 'education',
+									enumName: 'vcedu',
+									options: vacancyEducation,
+									admin: {
+										width: '33.333%',
+									},
+								},
+							],
+						},
+						{
+							type: 'collapsible',
+							label: 'Salary',
+							fields: [
+								{
+									type: 'row',
+									fields: [
+										{
+											type: 'number',
+											label: 'Minimum',
+											name: 'fromExpectedSalary',
+											admin: {
+												width: '50%',
+											},
+										},
+										{
+											type: 'number',
+											label: 'Maximum',
+											name: 'toExpectedSalary',
+											admin: {
+												width: '50%',
+											},
+										},
+									],
 								},
 							],
 						},
@@ -107,6 +169,22 @@ export const Vacancies: CollectionConfig = {
 					name: 'company',
 					required: true,
 					relationTo: 'companies',
+					filterOptions: ({ user }) => {
+						return {
+							author: {
+								equals: user?.id,
+							},
+						}
+					},
+				},
+				{
+					type: 'date',
+					name: 'expiresAt',
+				},
+				{
+					type: 'checkbox',
+					name: 'closeVacancy',
+					defaultValue: false,
 				},
 			],
 		}),

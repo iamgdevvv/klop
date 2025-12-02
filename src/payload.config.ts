@@ -18,6 +18,7 @@ import { Users } from '$payload-collections/Users'
 import { Vacancies } from '$payload-collections/Vacancy'
 
 import { slugDashboard } from '$modules/vars'
+import { VacancySubmissions } from '$payload-collections/VacancySubmission'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -69,7 +70,15 @@ export default buildConfig({
 	},
 	debug: process.env.NODE_ENV === 'development',
 	defaultDepth: 5,
-	collections: [Asset, Users, Companies, Vacancies, Assessments, AssessmentSubmissions],
+	collections: [
+		Asset,
+		Users,
+		Companies,
+		Vacancies,
+		Assessments,
+		AssessmentSubmissions,
+		VacancySubmissions,
+	],
 	cors: [process.env.NEXT_PUBLIC_SITE_URL],
 	editor: richTextEditor(),
 	secret: process.env.PAYLOAD_SECRET,

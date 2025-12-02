@@ -1,9 +1,9 @@
 import type { Access, CollectionConfig } from 'payload'
 
-import { candidateGender, vacancyEducation } from '$payload-libs/enum'
+import { candidateGender, vacancyEducation, vacancyLevel, vacancyType } from '$payload-libs/enum'
 import { revalidateChange, revalidateDelete } from '$payload-libs/hooks/revalidate'
 
-const authenticatedActionByAssessmentAuthor: Access = ({ data, req: { user } }) => {
+const authenticatedActionByVacancyAuthor: Access = ({ data, req: { user } }) => {
 	if (data?.assessment && user?.collection === 'users') {
 		if (user.role === 'admin') {
 			return true
@@ -27,12 +27,12 @@ const authenticatedActionByAssessmentAuthor: Access = ({ data, req: { user } }) 
 	return !!user
 }
 
-export const AssessmentSubmissions: CollectionConfig = {
-	slug: 'assessmentSubmissions',
-	dbName: 'assbs',
+export const VacancySubmissions: CollectionConfig = {
+	slug: 'vacancySubmissions',
+	dbName: 'vcnsbs',
 	admin: {
 		useAsTitle: 'candidateName',
-		defaultColumns: ['candidateName', 'assessment', 'score', 'createdAt'],
+		defaultColumns: ['candidateName', 'vacancy', 'createdAt'],
 		group: 'Submissions',
 		// hideAPIURL: true,
 		baseFilter({ req }) {
@@ -51,7 +51,7 @@ export const AssessmentSubmissions: CollectionConfig = {
 	},
 	access: {
 		create: () => false,
-		read: authenticatedActionByAssessmentAuthor,
+		read: authenticatedActionByVacancyAuthor,
 		update: () => false,
 		delete: () => false,
 	},
@@ -220,117 +220,135 @@ export const AssessmentSubmissions: CollectionConfig = {
 					],
 				},
 				{
-					label: 'Assessment',
+					label: 'Vacancy',
 					fields: [
 						{
-							type: 'row',
+							type: 'group',
+							name: 'vacancy',
+							label: false,
 							fields: [
 								{
-									type: 'relationship',
-									name: 'userCandidateCompany',
-									relationTo: 'users',
-									label: 'Relation',
-									required: true,
-									hasMany: true,
-									maxRows: 2,
-									admin: {
-										readOnly: true,
-										width: '33.3333%',
-									},
-									filterOptions: ({ user }) => {
-										if (user?.role === 'candidate') {
-											return {
-												role: {
-													equals: 'company',
-												},
-											}
-										}
-
-										if (user?.role === 'company') {
-											return {
-												role: {
-													equals: 'candidate',
-												},
-											}
-										}
-
-										return false
-									},
-								},
-								{
-									type: 'number',
-									name: 'score',
-									required: true,
-									admin: {
-										readOnly: true,
-										width: '33.3333%',
-									},
-								},
-								{
-									type: 'relationship',
-									name: 'assessment',
-									relationTo: 'assessments',
-									required: true,
-									admin: {
-										readOnly: true,
-										width: '33.3333%',
-										condition: (data, _, { user }) => {
-											return user?.role === 'company'
-										},
-									},
-									filterOptions: ({ user }) => {
-										return {
-											author: {
-												equals: user?.id,
+									type: 'row',
+									fields: [
+										{
+											type: 'relationship',
+											name: 'userCandidateCompany',
+											relationTo: 'users',
+											label: 'Relation',
+											required: true,
+											hasMany: true,
+											maxRows: 2,
+											admin: {
+												readOnly: true,
+												width: '25%',
 											},
-										}
-									},
-								},
-							],
-						},
-						{
-							type: 'textarea',
-							name: 'summary',
-							admin: {
-								readOnly: true,
-							},
-						},
-						{
-							type: 'array',
-							name: 'assessmentResults',
-							dbName: (args) => {
-								if (args.tableName) {
-									return args.tableName + '_assrslt'
-								}
+											filterOptions: ({ user }) => {
+												if (user?.role === 'candidate') {
+													return {
+														role: {
+															equals: 'company',
+														},
+													}
+												}
 
-								return 'assrslt'
-							},
-							admin: {
-								readOnly: true,
-							},
-							fields: [
-								{
-									type: 'checkbox',
-									name: 'isAnswerCorrect',
-									admin: {
-										readOnly: true,
-									},
+												if (user?.role === 'company') {
+													return {
+														role: {
+															equals: 'candidate',
+														},
+													}
+												}
+
+												return false
+											},
+										},
+										{
+											type: 'select',
+											name: 'type',
+											enumName: 'vcltyp',
+											options: vacancyType,
+											admin: {
+												readOnly: true,
+												width: '25%',
+											},
+										},
+										{
+											type: 'select',
+											name: 'level',
+											enumName: 'vclvl',
+											options: vacancyLevel,
+											admin: {
+												readOnly: true,
+												width: '25%',
+											},
+										},
+										{
+											type: 'select',
+											name: 'education',
+											enumName: 'vcedu',
+											options: vacancyEducation,
+											admin: {
+												readOnly: true,
+												width: '25%',
+											},
+										},
+									],
 								},
 								{
-									type: 'text',
-									name: 'question',
-									admin: {
-										readOnly: true,
-									},
-								},
-								{
-									type: 'textarea',
-									name: 'answer',
-									admin: {
-										readOnly: true,
-									},
+									type: 'collapsible',
+									label: 'Salary',
+									fields: [
+										{
+											type: 'row',
+											fields: [
+												{
+													type: 'number',
+													label: 'Minimum',
+													name: 'fromExpectedSalary',
+													admin: {
+														readOnly: true,
+														width: '50%',
+													},
+												},
+												{
+													type: 'number',
+													label: 'Maximum',
+													name: 'toExpectedSalary',
+													admin: {
+														readOnly: true,
+														width: '50%',
+													},
+												},
+											],
+										},
+									],
 								},
 							],
+						},
+						{
+							type: 'relationship',
+							name: 'vacancyReference',
+							relationTo: 'vacancies',
+							required: true,
+							admin: {
+								readOnly: true,
+								condition: (_, __, { user }) => {
+									return user?.role === 'company'
+								},
+							},
+							filterOptions: ({ user }) => {
+								return {
+									author: {
+										equals: user?.id,
+									},
+									expiresAt: {
+										greater_than_equal: new Date().toISOString(),
+									},
+									closeVacancy: {
+										not_equals: true,
+									},
+								}
+							},
 						},
 					],
 				},
