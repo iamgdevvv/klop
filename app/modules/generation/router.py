@@ -13,7 +13,7 @@ service = GenerationService()
     "/",
     response_model=BaseResponse[GenerateData],
     status_code=status.HTTP_201_CREATED,
-    summary="Generate Essay Questions",
+    summary="Generate Questions",
 )
 async def generate_assessment(payload: GenerateRequest):
     try:
