@@ -20,7 +20,7 @@ Description: {description}
 
 ### OUTPUT FORMAT (JSON ONLY)
 {
-  "question": "Sistem X mengalami load tinggi saat flash sale (Situasi). Apa strategi caching yang paling tepat untuk mengurangi beban database tanpa mengorbankan konsistensi data stok? (Pertanyaan)"
+  "question": "Sistem X mengalami load tinggi saat flash sale (Situasi). Apa strategi caching yang paling tepat untuk mengurangi beban database tanpa mengorbankan konsistensi data stok?"
 }
 """
 
