@@ -23,7 +23,6 @@ class AnswerService:
         self.llm = BaseLLMClient()
 
     async def _call_llm(self, prompt, content):
-        # json_mode=True (Wajib untuk Kolosal/OpenAI Client)
         raw = await self.llm.call_llm(prompt, content, json_mode=True, temperature=0.3)
         return parse_toon_string(raw)
 

@@ -1,10 +1,11 @@
 import logging
 
-from fastapi import FastAPI, Request, status
+from fastapi import Depends, FastAPI, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+from app.core.security import verify_api_token
 from app.modules.answers.router import router as answers_router
 from app.modules.assessments.router import router as assessments_router
 from app.modules.questions.router import router as questions_router
@@ -19,6 +20,7 @@ app = FastAPI(
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
+    dependencies=[Depends(verify_api_token)],
 )
 
 # --- CONFIGURATION: CORS ---
@@ -53,7 +55,7 @@ async def global_exception_handler(request: Request, exc: Exception):
     )
 
 
-# Menangani HTTP Exception (misal: 404 Not Found, 400 Bad Request)
+# Menangani HTTP Exception (misal: 401 Unauthorized, 404 Not Found)
 @app.exception_handler(StarletteHTTPException)
 async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     return JSONResponse(

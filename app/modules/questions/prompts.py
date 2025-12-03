@@ -1,65 +1,81 @@
-#  CREATE
 GENERATE_QUESTION_PROMPT = """
 ### PERAN
-Arsitek Asesmen Senior.
+Expert Assessment Architect.
+
 ### TUGAS
-Buat 1 (satu) paragraf Studi Kasus (4-6 kalimat) yang tajam berdasarkan Title dan Description.
-### ATURAN FORMAT (STRICT PLAIN TEXT)
-1. DILARANG menggunakan simbol Markdown (*, #, -).
-2. DILARANG menggunakan list/bullet points.
-3. Gunakan kalimat pendek dan efektif.
-4. Struktur: Situasi -> Masalah -> Kendala -> Pertanyaan Keputusan.
-### OUTPUT JSON
-{ "question": "..." }
+Ubah data 'Title' dan 'Description' menjadi Studi Kasus super ringkas.
+
+### ATURAN PANJANG (STRICT)
+Output MUTLAK maksimal 2 kalimat:
+- Kalimat 1: Deskripsi Situasi/Masalah.
+- Kalimat 2: Pertanyaan Keputusan/Tindakan.
+
+### ATURAN FORMAT
+1. Plain Text murni.
+2. DILARANG: Markdown, Bullet points, Numbering.
+
+### INPUT DATA
+Title: {title}
+Description: {description}
+
+### OUTPUT FORMAT (JSON ONLY)
+{
+  "question": "Sistem X mengalami load tinggi saat flash sale (Situasi). Apa strategi caching yang paling tepat untuk mengurangi beban database tanpa mengorbankan konsistensi data stok? (Pertanyaan)"
+}
 """
 
-# ENHANCE
 ENHANCE_QUESTION_PROMPT = """
 ### PERAN
-Editor Bahasa Profesional.
+Senior Editor.
+
 ### TUGAS
-Rewrite draft pertanyaan menjadi Studi Kasus Naratif yang bersih.
-### ATURAN
-1. HAPUS semua simbol markdown (*, _).
-2. Ubah instruksi "Sebutkan langkah" menjadi pertanyaan keputusan "Apa strategi Anda?".
-3. Jadikan satu paragraf utuh yang mengalir.
-### OUTPUT JSON
-{ "question": "..." }
+Rewrite draft pertanyaan menjadi level HOTS (Analisis/Evaluasi) tanpa menambah panjang teks.
+
+### ATURAN REWRITE
+1. **Limitasi:** Hasil rewrite WAJIB tetap maksimal 2 kalimat. Padatkan diksi yang bertele-tele.
+2. **Logic Upgrade:** Ubah pertanyaan hafalan menjadi pertanyaan analisis keputusan.
+3. **Clean Up:** Hapus semua simbol markdown (*, #, -).
+
+### INPUT DRAFT
+{draft_question}
+
+### OUTPUT FORMAT (JSON ONLY)
+{
+  "question": "Teks hasil rewrite yang tajam dan padat (Max 2 kalimat)..."
+}
 """
 
-
-# COMPREHENSIVE (FULL PACKAGE) ---
 COMPREHENSIVE_PROMPT = """
-### PERAN SISTEM
-Lead Assessor & Technical Grader.
+### PERAN
+Lead Technical Assessor.
 
 ### TUGAS
-Buat paket soal lengkap.
-1. **Question:** Studi kasus naratif (plain text).
-2. **Expected Answer:** Kunci penilaian ringkas.
+Buat paket soal lengkap (Soal + Opsi + Kunci) berdasarkan parameter input.
 
-### PARAMETER INPUT
-- Title, Description, REQUESTED TYPE.
+### PARAMETER
+- Topik: {title}
+- Konteks: {description}
+- Tipe: {requested_type} ("ESSAY" / "MULTIPLE_CHOICE")
 
-### ATURAN 'EXPECTED ANSWER' (PENTING UNTUK SCORING)
-1. **JIKA ESSAY:**
-   - **JANGAN** memberikan tutorial, kode program lengkap, atau penjelasan panjang lebar.
-   - **BERIKAN** daftar konsep kunci, istilah teknis, atau langkah logis yang **WAJIB** ada dalam jawaban kandidat agar dianggap benar.
-   - Tulis dalam bentuk kalimat deklaratif pendek atau frasa kunci yang dipisahkan koma/titik.
-   - **Contoh Salah:** "Pertama-tama kita harus melakukan validasi karena itu penting untuk keamanan..." (Terlalu naratif).
-   - **Contoh Benar:** "Implementasi validasi input ($request->validate), penggunaan Eloquent Mass Assignment, pencegahan CSRF, dan return redirect dengan flash message."
-2. **JIKA MULTIPLE CHOICE:**
-   - Salin teks opsi yang benar.
+### ATURAN KONTEN
+1. **Panjang Pertanyaan:** STRICT Maksimal 2 kalimat (Situasi + Pertanyaan).
+2. **Format Teks:** Plain text murni, DILARANG Markdown.
+3. **Logika Pengecoh:** Opsi salah harus logis/plausible.
 
-### ATURAN FORMAT (STRICT PLAIN TEXT)
-1. DILARANG menggunakan Markdown (*, #, -).
-2. DILARANG menggunakan Bullet Points.
+### LOGIKA OUTPUT (JSON)
+A. TIPE "ESSAY":
+   - `answerOptions`: [] (Array kosong).
+   - `expectedAnswer`: Tuliskan HANYA kata kunci/konsep teknis wajib (rubrik penilaian), dipisahkan koma. JANGAN berupa kalimat narasi panjang.
 
-### SKEMA OUTPUT JSON
+B. TIPE "MULTIPLE_CHOICE":
+   - `answerOptions`: Array 4 teks [Opsi A, B, C, D].
+   - `expectedAnswer`: Copy-paste teks opsi yang benar.
+
+### OUTPUT SCHEMA (JSON ONLY)
 {
-  "question": "...",
+  "question": "String (Max 2 kalimat)",
   "isAnswerOptions": true/false,
-  "answerOptions": [ "[Opsi A]", "[Opsi B]", "[Opsi C]", "[Opsi D]" ] (atau null),
-  "expectedAnswer": "[Opsi A]"
+  "answerOptions": ["String", "String", "String", "String"],
+  "expectedAnswer": "String"
 }
 """
