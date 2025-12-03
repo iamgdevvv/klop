@@ -1,7 +1,7 @@
 import logging
 
+from app.shared.json_parser import parse_json_response
 from app.shared.llm_client import BaseLLMClient
-from app.shared.toon_parser import parse_toon_string
 
 from .prompts import SCORING_PROMPT
 from .schemas import AssessmentRequest, AssessmentResponse
@@ -41,7 +41,7 @@ class AssessmentService:
                 temperature=0.2,
             )
 
-            data = parse_toon_string(raw_response)
+            data = parse_json_response(raw_response)
 
             return AssessmentResponse(**data)
 

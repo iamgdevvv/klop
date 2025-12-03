@@ -1,12 +1,12 @@
 import logging
 
+from app.shared.json_parser import parse_json_response
 from app.shared.llm_client import BaseLLMClient
-from app.shared.toon_parser import parse_toon_string
 
 from .prompts import (
+    ANSWER_OPTIONS_PROMPT,
     EXPECTED_CHOICE_PROMPT,
     EXPECTED_ESSAY_PROMPT,
-    OPTIONS_GENERATOR_PROMPT,
 )
 from .schemas import (
     AnswerOptionsResponse,
@@ -24,7 +24,7 @@ class AnswerService:
 
     async def _call_llm(self, prompt, content):
         raw = await self.llm.call_llm(prompt, content, json_mode=True, temperature=0.3)
-        return parse_toon_string(raw)
+        return parse_json_response(raw)
 
     # --- ENDPOINT /expected/essay ---
     async def generate_essay_key(
@@ -65,5 +65,5 @@ class AnswerService:
             f"Description: {payload.description}\n"
             f"Question: {payload.question}"
         )
-        data = await self._call_llm(OPTIONS_GENERATOR_PROMPT, user_content)
+        data = await self._call_llm(ANSWER_OPTIONS_PROMPT, user_content)
         return AnswerOptionsResponse(**data)

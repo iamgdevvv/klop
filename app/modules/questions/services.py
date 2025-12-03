@@ -1,7 +1,9 @@
 import logging
 
+# PERBAIKAN 1: Import dari json_parser (bukan toon_parser lagi)
+# dan gunakan nama fungsi yang baru: parse_json_response
+from app.shared.json_parser import parse_json_response
 from app.shared.llm_client import BaseLLMClient
-from app.shared.toon_parser import parse_toon_string
 
 from .prompts import (
     COMPREHENSIVE_PROMPT,
@@ -9,7 +11,7 @@ from .prompts import (
     GENERATE_QUESTION_PROMPT,
 )
 
-# Import Schema & Prompts
+# Import Schema
 from .schemas import (
     ComprehensiveRequest,
     ComprehensiveResponse,
@@ -31,10 +33,11 @@ class QuestionService:
             raw_response = await self.llm.call_llm(
                 system_prompt=system_prompt,
                 user_prompt=user_content,
-                json_mode=False,
+                json_mode=True,  # Pastikan ini True agar output JSON valid
                 temperature=0.4,
             )
-            return parse_toon_string(raw_response)
+            # PERBAIKAN 2: Panggil fungsi parser yang baru
+            return parse_json_response(raw_response)
         except Exception as e:
             logger.error(f"LLM Call Error: {str(e)}")
             raise e
@@ -73,8 +76,11 @@ class QuestionService:
 
         data = await self._call_llm(COMPREHENSIVE_PROMPT, user_content)
 
+        # Logic: Hapus field Pilihan Ganda jika user minta Essay
         if not payload.isAnswerOptions:
             data["answerOptions"] = None
-            data["isAnswerOptions"] = None
+            data["isAnswerOptions"] = (
+                None  # Di-set None agar dibuang Router (exclude_none)
+            )
 
         return ComprehensiveResponse(**data)
