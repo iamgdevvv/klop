@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { metafield } from '$payload-fields/metadata'
-import { authenticated, authenticatedActionRole } from '$payload-libs/access-rules'
+import { authenticated, authenticatedAdminOrAuthor } from '$payload-libs/access-rules'
 import { revalidateChange, revalidateDelete } from '$payload-libs/hooks/revalidate'
 import { generatePreviewPath } from '$payload-libs/preview-path'
 
@@ -9,6 +9,16 @@ export const Companies: CollectionConfig = {
 	slug: 'companies',
 	dbName: 'cmps',
 	admin: {
+		hidden({ user }) {
+			return user?.role === 'candidate'
+		},
+		components: {
+			edit: {
+				beforeDocumentControls: [
+					'$payload-fields/components/preview-copy#PreviewCompanyCopy',
+				],
+			},
+		},
 		useAsTitle: 'title',
 		defaultColumns: [
 			'title',
@@ -18,7 +28,28 @@ export const Companies: CollectionConfig = {
 			'totalEmployees',
 			'updatedAt',
 		],
-		group: 'General',
+		group: 'Company',
+		baseFilter({ req }) {
+			if (req?.user) {
+				if (req.user.role === 'admin') {
+					return {
+						author: {
+							exists: true,
+						},
+					}
+				}
+
+				if (req.user.role === 'company') {
+					return {
+						author: {
+							equals: req.user.id,
+						},
+					}
+				}
+			}
+
+			return null
+		},
 		livePreview: {
 			url: ({ data, req }) => {
 				return generatePreviewPath({
@@ -35,9 +66,9 @@ export const Companies: CollectionConfig = {
 	},
 	access: {
 		create: authenticated,
-		read: authenticatedActionRole,
-		update: authenticatedActionRole,
-		delete: authenticatedActionRole,
+		read: authenticatedAdminOrAuthor,
+		update: authenticatedAdminOrAuthor,
+		delete: authenticatedAdminOrAuthor,
 	},
 	hooks: {
 		afterChange: [revalidateChange],

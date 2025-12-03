@@ -1,3 +1,11 @@
+html:root {
+	font-size: 16px;
+}
+
+.field-label {
+	font-size: inherit;
+}
+
 .array-field__title {
 	font-size: inherit;
 }
@@ -8,4 +16,8 @@
 
 .progress-bar {
 	height: 4px;
+}
+
+.payload-settings {
+	display: none;
 }

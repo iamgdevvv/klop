@@ -33,8 +33,11 @@ export const queryVacancies = async <T extends Partial<Record<keyof Vacancy, tru
 		const limit = options?.limit || 6
 		const page = options?.page || 1
 		const sort = options?.sort || '-startDate'
-		const whereAnd: Where['and'] = options?.whereAnd || []
-		const whereOr: Where['and'] = options?.whereOr || []
+		const whereAnd: Where['and'] = [
+			...(options?.where?.and || []),
+			...(options?.whereAnd || []),
+		]
+		const whereOr: Where['or'] = [...(options?.where?.or || []), ...(options?.whereOr || [])]
 
 		if (options?.filter) {
 			if (options.filter.ids?.length) {
@@ -85,6 +88,7 @@ export const queryVacancies = async <T extends Partial<Record<keyof Vacancy, tru
 			sort,
 			select,
 			where: {
+				...options?.where,
 				and: whereAnd,
 				or: whereOr,
 			},

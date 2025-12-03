@@ -11,3 +11,5 @@ export const slugDashboard = 'dashboard'
 export const slugPrivacyPolicy = 'privacy-policy'
 
 export const slugTermCondition = 'term-condition'
+
+export const slugShortVacancy = 'scv'

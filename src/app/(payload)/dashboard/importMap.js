@@ -29,6 +29,11 @@ import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea
 import { MetaImageComponent as MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { SlugField as SlugField_13d1e14c82544ba0d525cc0797299598 } from '$payload-fields/components/slug'
+import { PreviewCompanyCopy as PreviewCompanyCopy_fe11963e77c8c87512e322b88798c037 } from '$payload-fields/components/preview-copy'
+import { PreviewVacancyCopy as PreviewVacancyCopy_fe11963e77c8c87512e322b88798c037 } from '$payload-fields/components/preview-copy'
+import { QuestionField as QuestionField_791ccfd5fd5b5c62548ab48a892ddc50 } from '$payload-fields/components/assessment'
+import { ExpectedAnswerField as ExpectedAnswerField_791ccfd5fd5b5c62548ab48a892ddc50 } from '$payload-fields/components/assessment'
+import { PreviewAssessmentCopy as PreviewAssessmentCopy_fe11963e77c8c87512e322b88798c037 } from '$payload-fields/components/preview-copy'
 import { Icon as Icon_510920d9a71a2d311746029178f575c3 } from '$payload-fields/components/branding'
 import { Logo as Logo_510920d9a71a2d311746029178f575c3 } from '$payload-fields/components/branding'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
@@ -65,6 +70,11 @@ export const importMap = {
   "@payloadcms/plugin-seo/client#MetaImageComponent": MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#PreviewComponent": PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "$payload-fields/components/slug#SlugField": SlugField_13d1e14c82544ba0d525cc0797299598,
+  "$payload-fields/components/preview-copy#PreviewCompanyCopy": PreviewCompanyCopy_fe11963e77c8c87512e322b88798c037,
+  "$payload-fields/components/preview-copy#PreviewVacancyCopy": PreviewVacancyCopy_fe11963e77c8c87512e322b88798c037,
+  "$payload-fields/components/assessment#QuestionField": QuestionField_791ccfd5fd5b5c62548ab48a892ddc50,
+  "$payload-fields/components/assessment#ExpectedAnswerField": ExpectedAnswerField_791ccfd5fd5b5c62548ab48a892ddc50,
+  "$payload-fields/components/preview-copy#PreviewAssessmentCopy": PreviewAssessmentCopy_fe11963e77c8c87512e322b88798c037,
   "$payload-fields/components/branding#Icon": Icon_510920d9a71a2d311746029178f575c3,
   "$payload-fields/components/branding#Logo": Logo_510920d9a71a2d311746029178f575c3,
   "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24
