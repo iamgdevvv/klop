@@ -28,5 +28,5 @@ class ExpectedAnswerResponse(BaseModel):
 
 
 class AnswerOptionsResponse(BaseModel):
-    answerOption: List[str]
+    answerOptions: List[str]
     expectedAnswer: str
