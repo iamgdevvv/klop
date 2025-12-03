@@ -1,6 +1,6 @@
 # Klop! AI Assessment API
 
-Platform backend untuk membuat soal asesmen esai berbasis skenario (Situational / Scenario-Based Essay) dengan dukungan LLM (Google Gemini) dan rubric penilaian positif/negatif secara terstruktur. Dibangun menggunakan FastAPI, menerapkan pola *Envelope Response*, parsing format custom berbasis YAML (TOON), serta extensible modular architecture.
+Backend platform untuk menghasilkan soal asesmen esai berbasis skenario (Scenario-Based Essay) dengan dukungan LLM (Google Gemini) dan rubric penilaian positif/negatif yang terstruktur. Dibangun dengan FastAPI, menerapkan pola Envelope Response, parser YAML (TOON), serta arsitektur modular yang mudah diperluas.
 
 ---
 
@@ -9,378 +9,312 @@ Platform backend untuk membuat soal asesmen esai berbasis skenario (Situational 
 2. Fitur Utama
 3. Arsitektur & Struktur Folder
 4. Teknologi & Dependensi
-5. Setup Lingkungan & Instalasi
-6. Konfigurasi Environment Variables
-7. Menjalankan Aplikasi (Local & Docker)
-8. Endpoint API
-9. Format TOON / YAML
-10. Alur Generate Assessment
-11. Error Handling & Logging
-12. Testing
-13. Deployment Notes
-14. Roadmap
-15. Kontribusi
-16. Lisensi
+5. Persiapan Lingkungan
+6. Instalasi
+7. Konfigurasi Environment Variables
+8. Menjalankan Aplikasi (Local & Docker)
+9. Endpoint API
+10. Format TOON (YAML)
+11. Alur Generate Assessment
+12. Error Handling & Logging
+13. Testing
+14. Deployment Notes
+15. Roadmap
+16. Kontribusi
+17. Lisensi
+18. FAQ
+19. Kontak
 
 ---
 
-## 1. Ringkasan
+## 1) Ringkasan
 
-Klop! AI Assessment API menyediakan endpoint untuk menghasilkan soal berbentuk esai yang terstruktur (scenario + task) dan rubric penilaian (indikator positif & red flag negatif). Output dari LLM dipaksa dalam bentuk YAML valid agar dapat diparse menjadi objek Python dan divalidasi oleh Pydantic.
+Klop! AI Assessment API menyediakan endpoint untuk:
+- Menghasilkan soal esai situasional (scenario + task).
+- Menghasilkan rubric penilaian terstruktur (indikator positif dan red flag negatif).
+- Memaksa output LLM dalam format YAML valid untuk diparse dan divalidasi dengan Pydantic.
 
 ---
 
-## 2. Fitur Utama
+## 2) Fitur Utama
 
 - Generate soal esai situasional menggunakan LLM (Google Gemini).
-- Prompt engineering dengan aturan format ketat (valid YAML tanpa code fences).
-- Parsing format TOON/YAML menjadi schema Pydantic.
-- Response Envelope Standar (code, success, message, data).
-- CORS configurable untuk akses frontend.
-- Retry otomatis terhadap kegagalan pemanggilan LLM (tenacity).
-- Modular service layer (generation / scoring / insight / analytics bisa dikembangkan).
+- Prompt engineering dengan aturan format ketat (YAML murni tanpa code fences).
+- Parsing YAML (TOON) menjadi schema Pydantic.
+- Envelope response konsisten: `code`, `success`, `message`, `data`.
+- CORS bisa dikonfigurasi untuk akses frontend.
+- Retry otomatis pemanggilan LLM (exponential backoff).
+- Modular service layer: generation / scoring / insight / analytics.
 - Dukungan Docker untuk kemudahan deployment.
-- Struktur siap untuk penambahan unit & integration tests.
+- Siap untuk pengujian unit dan integrasi.
 
 ---
 
-## 3. Arsitektur & Struktur Folder
+## 3) Arsitektur & Struktur Folder
 
-```
-app/
-  __init__.py
-  main.py                  # Entry point FastAPI
-  core/
-    config.py              # Settings & environment
-  shared/
-    llm_client.py          # Wrapper Gemini API
-    schemas.py             # BaseResponse (Envelope)
-    toon_parser.py         # Parser & normalizer TOON/YAML
-  modules/
-    generation/
-      prompts.py           # Sistem prompt YAML rules
-      router.py            # Endpoint /api/v1/generate
-      schemas.py           # Pydantic model GenerateRequest/GenerateData
-      service.py           # Logika panggil LLM & parsing
-    scoring/               # (placeholder future)
-    insight/               # (placeholder future)
-    analytics/             # (placeholder future)
-tests/
-  unit/                    # Unit tests
-  integration/             # Integration tests
-Dockerfile
-requirements.txt
-README.md
-```
+Struktur direktori inti:
+- `app/main.py`: Entry point FastAPI.
+- `app/core/config.py`: Konfigurasi environment & settings.
+- `app/shared/llm_client.py`: Wrapper Gemini API.
+- `app/shared/schemas.py`: Envelope response (`BaseResponse`).
+- `app/shared/toon_parser.py`: Parser & normalizer TOON/YAML.
+- `app/modules/generation/`: Modul generate assessment (prompts, router, schemas, service).
+- `tests/`: Unit dan integration tests.
+- `Dockerfile`, `requirements.txt`, `README.md`.
 
-Desain mengikuti pola:
-- `router` menangani HTTP layer.
-- `service` fokus pada business logic (memanggil LLM + validasi).
-- `shared` untuk reusable util (schema umum, parser, client LLM).
-- `core` untuk konfigurasi sistem.
+Desain:
+- `router`: HTTP layer (request/response).
+- `service`: Business logic (memanggil LLM + validasi).
+- `shared`: Reusable util (schema umum, parser, client LLM).
+- `core`: Konfigurasi sistem dan environment.
 
 ---
 
-## 4. Teknologi & Dependensi
+## 4) Teknologi & Dependensi
 
-| Komponen | Deskripsi |
-|----------|-----------|
-| FastAPI | Framework web async |
-| Uvicorn | ASGI server |
-| google-genai | Client Google Gemini |
-| tenacity | Retry logic (exponential backoff) |
-| pydantic v2 & pydantic-settings | Validasi schema & environment |
-| PyYAML | Parsing YAML (TOON format) |
-| pytest / pytest-asyncio | Testing |
-| httpx | Client HTTP async untuk test / future integrasi |
+Komponen utama:
+- FastAPI (web framework async)
+- Uvicorn (ASGI server)
+- google-genai (client Google Gemini)
+- tenacity (retry logic)
+- pydantic v2 & pydantic-settings (validasi schema & environment)
+- PyYAML (parsing YAML)
+- pytest / pytest-asyncio (testing)
+- httpx (HTTP client async)
 
-Lihat `requirements.txt` untuk versi lengkap.
+Lihat file `requirements.txt` untuk versi lengkap paket.
 
 ---
 
-## 5. Setup Lingkungan & Instalasi
+## 5) Persiapan Lingkungan
 
 Prasyarat:
-- Python 3.11+
-- Memiliki API Key Google Gemini
-- Git & (opsional) Docker
+- Python 3.11 atau lebih baru
+- API Key Google Gemini (aktif)
+- Git
+- Docker (opsional, untuk menjalankan dalam container)
+
+---
+
+## 6) Instalasi
 
 Langkah:
-```
-git clone <repo_url>
-cd klop-ai-be
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
+- Clone repository: gunakan perintah `git clone` dengan URL repo Anda.
+- Masuk ke folder proyek: `cd klop-ai-be`.
+- Buat virtual environment: `python -m venv .venv`.
+- Aktifkan virtual environment: `source .venv/bin/activate` (Linux/Mac) atau `.venv\Scripts\activate` (Windows).
+- Install dependencies: `pip install -r requirements.txt`.
 
 ---
 
-## 6. Konfigurasi Environment Variables
+## 7) Konfigurasi Environment Variables
 
-Buat file `.env` di root project:
+Buat file `.env` di root project dengan isi:
+- `GEMINI_API_KEY=YOUR_GEMINI_KEY`
+- `GEMINI_MODEL=gemini-1.5-flash` (atau `gemini-1.5-pro` sesuai kebutuhan)
 
-```
-GEMINI_API_KEY=YOUR_GEMINI_KEY
-GEMINI_MODEL=gemini-1.5-flash
-```
-
-Penyesuaian:
-- Model bisa diganti sesuai ketersediaan (`gemini-1.5-pro`, dsb).
-- Jangan commit `.env` ke repo publik.
-
-`Settings` dibaca di `app/core/config.py` menggunakan `pydantic-settings`.
+Catatan:
+- Jangan commit `.env` ke repository publik.
+- `Settings` dibaca di `app/core/config.py` menggunakan `pydantic-settings`.
 
 ---
 
-## 7. Menjalankan Aplikasi
+## 8) Menjalankan Aplikasi
 
-Metode standar (direkomendasikan):
-```
-uvicorn app.main:app --reload
-```
-Akses:
-- Swagger: http://localhost:8000/docs
-- Redoc: http://localhost:8000/redoc
-- Health: http://localhost:8000/health
+A. Mode lokal (direkomendasikan):
+- Jalankan: `uvicorn app.main:app --reload`
+- Akses:
+  - Swagger: http://localhost:8000/docs
+  - Redoc: http://localhost:8000/redoc
+  - Health: http://localhost:8000/health
+- Jika modul `app` tidak ditemukan, jalankan dengan `PYTHONPATH=.` sebelum perintah uvicorn.
 
-Jika terjadi masalah modul `app` tidak ditemukan:
-```
-PYTHONPATH=. uvicorn app.main:app --reload
-```
+B. Mode Docker:
+- Build image: `docker build -t klop-ai .`
+- Jalankan container:
+  - `docker run -p 8000:8000 --env GEMINI_API_KEY=YOUR_KEY --env GEMINI_MODEL=gemini-1.5-flash klop-ai`
 
-Jangan gunakan `python app/main.py` untuk produksi; itu hanya fallback.
-
-### Menjalankan dengan Docker
-
-Build:
-```
-docker build -t klop-ai .
-```
-
-Run:
-```
-docker run -p 8000:8000 --env GEMINI_API_KEY=... --env GEMINI_MODEL=gemini-1.5-flash klop-ai
-```
+Catatan:
+- Hindari menjalankan `python app/main.py` untuk produksi; gunakan Uvicorn/ASGI server.
 
 ---
 
-## 8. Endpoint API
+## 9) Endpoint API
 
-### 8.1 Health Check
-```
-GET /health
-Response:
-{
-  "status": "ok",
-  "service": "Klop! AI",
-  "version": "1.0.0"
-}
-```
+A. Health Check
+- Method: GET
+- Path: `/health`
+- Response contoh:
+  - `{"status":"ok","service":"Klop! AI","version":"1.0.0"}`
 
-### 8.2 Generate Assessment
-```
-POST /api/v1/generate
-Content-Type: application/json
-Body:
-{
-  "role": "Senior Backend Engineer",
-  "location": "Jakarta, Indonesia",
-  "level": "Senior",
-  "criteria": "System Design & Scalability"
-}
-```
-
-Response (Envelope):
-```
-{
-  "code": 201,
-  "success": true,
-  "message": "Assessment generated successfully",
-  "data": {
-    "meta": { ... },
-    "questions": [
-      {
-        "id": 1,
-        "text": "…",
-        "rubric": {
-          "positive": [...],
-          "negative": [...]
-        }
-      }
-    ]
-  }
-}
-```
-
-Error format contoh:
-```
-{
-  "code": 500,
-  "success": false,
-  "message": "Failed to generate assessment: AI Output is not in valid TOON/YAML format",
-  "data": null
-}
-```
+B. Generate Assessment
+- Method: POST
+- Path: `/api/v1/generate`
+- Header: `Content-Type: application/json`
+- Body contoh:
+  - `{"role":"Senior Backend Engineer","location":"Jakarta, Indonesia","level":"Senior","criteria":"System Design & Scalability"}`
+- Response (Envelope) contoh:
+  - `{"code":201,"success":true,"message":"Assessment generated successfully","data":{"meta":{},"questions":[{"id":1,"text":"...","rubric":{"positive":["..."],"negative":["..."]}}]}}`
+- Error format contoh:
+  - `{"code":500,"success":false,"message":"Failed to generate assessment: AI Output is not in valid TOON/YAML format","data":null}`
 
 ---
 
-## 9. Format TOON / YAML
+## 10) Format TOON (YAML)
 
-Untuk efisiensi token & kompatibilitas parser, LLM dipaksa output YAML murni tanpa code fences/backticks. Struktur minimal:
+Output LLM dipaksa menjadi YAML murni (tanpa code fences/backticks) untuk efisiensi token dan kompatibilitas parser.
 
-```yaml
-meta:
-  generated_at: 2024-01-01
-  difficulty: Senior
+Struktur minimal:
+- `meta`: informasi meta (tanggal, tingkat kesulitan, dll).
+- `questions`: daftar pertanyaan; setiap item memiliki:
+  - `id`: nomor urut
+  - `text`: narasi skenario dan task (menggunakan block scalar agar rapi)
+  - `rubric.positive`: daftar indikator penilaian positif
+  - `rubric.negative`: daftar red flag (indikator negatif)
 
-questions:
-  - id: 1
-    text: |
-      [Scenario paragraph 1]
-
-      [Scenario paragraph 2]
-
-      [Task / Question paragraph]
-    rubric:
-      positive:
-        - Indicator 1
-        - Indicator 2
-      negative:
-        - Red flag 1
-        - Red flag 2
-```
-
-Parser:
-- Menghapus code fences jika LLM masih membandel.
-- Menormalkan kunci yang memiliki pola `[n]` (legacy prompt) menjadi kunci standar (contoh: `questions[1]` -> `questions`).
+Perilaku parser:
+- Menghapus code fences/backticks bila masih muncul pada output LLM.
+- Menormalkan kunci legacy yang memiliki pola `[n]` (mis. `questions[1]`) menjadi kunci standar (`questions`).
 - Menggunakan `yaml.safe_load` untuk keamanan.
 
+Best practices untuk prompt:
+- Gunakan instruksi eksplisit: “Output harus YAML murni, tanpa penjelasan, tanpa code fences”.
+- Gunakan contoh YAML sebagai template dengan variabel kosong untuk dipopulasi.
+- Hindari karakter khusus yang dapat mengacaukan indentasi.
+
 ---
 
-## 10. Alur Generate Assessment
+## 11) Alur Generate Assessment
 
-1. Request masuk ke `router.py`.
+1. Request masuk ke `modules/generation/router.py`.
 2. Service `GenerationService.generate_quiz`:
-   - Bangun `user_content` (menggabungkan role, location, level, criteria).
-   - Panggil LLM via `BaseLLMClient.call_llm`.
-3. LLM mengembalikan teks YAML (TOON).
+   - Membangun `user_content` dari `role`, `location`, `level`, dan `criteria`.
+   - Memanggil LLM via `BaseLLMClient.call_llm`.
+3. LLM mengembalikan YAML (TOON).
 4. `parse_toon_string`:
-   - Bersihkan raw text.
-   - Parse YAML → dict.
-   - Normalisasi kunci.
-5. Pydantic memvalidasi ke `GenerateData`.
-6. Response dibungkus `BaseResponse[GenerateData]`.
+   - Membersihkan raw text (hilangkan fences).
+   - Parse YAML menjadi `dict`.
+   - Normalisasi kunci dan struktur.
+5. Validasi Pydantic ke model `GenerateData`.
+6. Response dibungkus dalam `BaseResponse[GenerateData]`.
 
-Retry logic untuk LLM memakai `tenacity`:
-- Maks 3 percobaan.
+Retry logic:
+- Maksimal 3 percobaan.
 - Exponential backoff (2s → 4s → 8s).
 
 ---
 
-## 11. Error Handling & Logging
+## 12) Error Handling & Logging
 
-Global exception handler (`main.py`):
-- HTTPException → status sesuai.
-- Exception umum → 500 dengan envelope standar.
+Global exception handler (di `main.py`):
+- `HTTPException`: status sesuai.
+- Exception umum: `500` dengan envelope standar.
 
 Logging:
-- Informasi generate (`logger.info`).
-- Error parsing YAML atau kosong dari LLM → dicatat (`logger.error`).
+- `info`: peristiwa generate, metadata, dan flow.
+- `error`: parsing YAML gagal, output LLM kosong, kegagalan panggilan LLM, dll.
 
-Best Practice:
-- Tambah log raw output potongan awal LLM saat debugging (jangan commit raw sensitif ke log produksi).
+Tips:
+- Saat debugging, log potongan awal raw output LLM (hindari menyimpan data sensitif di produksi).
+- Tambahkan correlation/request ID untuk pelacakan.
 
 ---
 
-## 12. Testing
+## 13) Testing
 
-Struktur test:
-- `tests/unit`: Menguji fungsi atomik (parser, client stub).
-- `tests/integration`: Menguji endpoint end-to-end (mock LLM).
+Struktur:
+- `tests/unit`: parser, client stub, helpers.
+- `tests/integration`: endpoint end-to-end (mock LLM).
 
 Menjalankan:
-```
-pytest
-```
+- `pytest`
 
-Contoh fokus test awal yang direkomendasikan:
-- Parser: input YAML valid → dict.
-- Parser: input dengan code fence → tetap lolos.
-- Parser: kunci dengan `[count]` → dinormalisasi.
+Rekomendasi cakupan awal:
+- Parser: YAML valid → dict.
+- Parser: output dengan code fence → tetap lolos.
+- Parser: kunci `[count]` → dinormalisasi.
 - Endpoint: `POST /api/v1/generate` dengan mock LLM menghasilkan schema valid.
+- Service: retry pada kegagalan LLM dengan tenacity.
 
 ---
 
-## 13. Deployment Notes
+## 14) Deployment Notes
 
-- Pastikan variabel environment (API key) dikelola di secret manager (Vault / AWS Secrets / GCP Secret Manager).
-- Gunakan image lean (`python:3.11-slim` sudah dipakai).
-- Tambahkan mekanisme timeout & circuit breaker di masa depan untuk LLM.
-- Observabilitas:
-  - Tambah middleware metrics (Prometheus) jika diperlukan.
-  - APM (OpenTelemetry) dapat ditambahkan mudah karena FastAPI mendukung instrumentation.
+Keamanan & konfigurasi:
+- Letakkan secrets (API key) di secret manager (Vault/AWS Secrets/GCP Secret Manager).
+- Gunakan image lean (contoh: `python:3.11-slim`).
 
----
+Reliability:
+- Tambahkan timeout & circuit breaker untuk pemanggilan LLM.
+- Siapkan strategi fallback (cache output terakhir atau default template).
 
-## 14. Roadmap
-
-| Fase | Item |
-|------|------|
-| 1 | Penambahan modul scoring (otomatis evaluasi jawaban user) |
-| 2 | Insight generation (analisis kekuatan / kelemahan berdasarkan jawaban) |
-| 3 | Analytics dashboard (agg metrics) |
-| 4 | Caching prompt + output untuk efisiensi biaya |
-| 5 | Rate limiting & auth (JWT / API Key) |
-| 6 | Multi-model fallback (Gemini → OpenAI / lokal) |
-| 7 | Internationalization (EN/ID switching) |
+Observabilitas:
+- Middleware metrics (Prometheus) bila diperlukan.
+- APM/Tracing (OpenTelemetry) mudah diintegrasikan karena FastAPI mendukung instrumentation.
 
 ---
 
-## 15. Kontribusi
+## 15) Roadmap
 
-Langkah kontribusi:
-1. Fork & clone.
-2. Buat branch fitur (`feat/generation-enhancement`).
-3. Tambah / update test.
-4. Pastikan lint & test lulus.
-5. Pull request dengan deskripsi jelas.
+Fase pengembangan:
+1. Modul scoring: evaluasi jawaban otomatis (rubric-based).
+2. Insight generation: analisis kekuatan/kelemahan berdasarkan jawaban.
+3. Analytics dashboard: agregasi metrik dan tren.
+4. Caching prompt+output: efisiensi biaya & latency.
+5. Rate limiting & auth: JWT/API Key.
+6. Multi-model fallback: Gemini → OpenAI → model lokal.
+7. Internationalization: dukungan EN/ID switching.
+
+---
+
+## 16) Kontribusi
+
+Langkah:
+1. Fork & clone repository.
+2. Buat branch fitur: gunakan konvensi `feat/...`, `fix/...`, `docs/...`.
+3. Tambahkan/ubah tests sesuai perubahan.
+4. Pastikan lint & tests lulus.
+5. Buat Pull Request dengan deskripsi jelas, lampirkan contoh payload dan hasil.
 
 Format commit disarankan:
-```
-feat(generation): improve rubric richness
-fix(parser): handle stray BOM char
-docs(readme): add TOON explanation
-```
+- `feat(generation): improve rubric richness`
+- `fix(parser): handle stray BOM char`
+- `docs(readme): add TOON explanation`
+
+Kode etik:
+- Ikuti style Python (PEP 8) dan tipe anotasi bila memungkinkan.
+- Hindari hardcode secret dan konfigurasi environment.
 
 ---
 
-## 16. Lisensi
+## 17) Lisensi
 
-(Tentukan lisensi: MIT / Apache-2.0 / Proprietary. Tambahkan file LICENSE terpisah.)
+Pilih lisensi (MIT/Apache-2.0/Proprietary) dan tambahkan file `LICENSE`.
 
 Contoh placeholder:
-```
-Hak cipta (c) 2024 Klop! AI. Seluruh hak cipta dilindungi.
-```
+- Hak cipta (c) 2024 Klop! AI. Seluruh hak cipta dilindungi.
 
 ---
 
-## FAQ Singkat
+## 18) FAQ
 
-| Pertanyaan | Jawaban |
-|------------|---------|
-| Mengapa YAML bukan JSON? | Block scalar (`|`) mudah untuk teks panjang & lebih ringkas tanpa escape newline. |
-| Bagaimana jika LLM tetap output JSON? | Parser masih bisa memproses selama struktur cocok; namun prompt memaksa YAML. |
-| Format `[key[count]]` hilang? | Dinormalisasi agar kompatibel dengan Pydantic schema standar. |
-| Bisa tambah autentikasi? | Ya, tambahkan dependency `fastapi-users` atau middleware custom di future phase. |
+Tanya: Mengapa YAML bukan JSON?
+- Jawab: Block scalar (`|`) memudahkan teks panjang dan lebih ringkas tanpa escape newline.
+
+Tanya: Bagaimana jika LLM tetap output JSON?
+- Jawab: Parser berusaha memproses selama struktur cocok; namun prompt memaksa YAML untuk konsistensi.
+
+Tanya: Format `[key[count]]` hilang?
+- Jawab: Dinormalisasi agar kompatibel dengan schema Pydantic standar.
+
+Tanya: Bisakah ditambah autentikasi?
+- Jawab: Ya, tambahkan middleware atau integrasi `fastapi-users` pada fase berikutnya.
 
 ---
 
-## Kontak / Bantuan
+## 19) Kontak
 
-Jika Anda membutuhkan bantuan integrasi atau menambah modul baru:
-- Buat issue di repository.
-- Sertakan payload request & potongan log relevan.
+Membutuhkan bantuan integrasi atau ingin menambah modul baru?
+- Buat issue di repository dan sertakan payload request serta potongan log relevan.
 
 Selamat membangun dan mengembangkan Klop! AI Assessment! 🚀

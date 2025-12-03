@@ -6,17 +6,7 @@ from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 # --- IMPORT ROUTERS ---
-# Menggunakan try-except agar aman dijalankan dari root folder maupun folder app
-try:
-    from app.modules.enhance.router import (
-        router as enhance_router,
-    )
-    from app.modules.generation.router import router as gen_router
-except ModuleNotFoundError:
-    from .modules.enhance.router import (
-        router as enhance_router,
-    )
-    from .modules.generation.router import router as gen_router
+from app.modules.questions.router import router as questions_router
 
 # Setup Logger
 logging.basicConfig(level=logging.INFO)
@@ -24,17 +14,17 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="Klop! AI Assessment API",
-    description="AI untuk generate soal, scoring, dan insight.",
+    description="AI untuk generate soal, enhance, scoring, dan insight.",
     version="1.0.0",
     docs_url="/docs",
     redoc_url="/redoc",
 )
 
-# --- 1. CONFIGURATION: CORS (Wajib untuk Frontend) ---
+# --- CONFIGURATION: CORS ---
 origins = [
     "http://localhost:3000",  # React default port
     "http://localhost:8000",  # Local API
-    "*",  # Allow All (Gunakan spesifik domain saat production!)
+    "*",
 ]
 
 app.add_middleware(
@@ -46,7 +36,7 @@ app.add_middleware(
 )
 
 
-# --- 2. GLOBAL EXCEPTION HANDLER (Envelope Pattern) ---
+# --- GLOBAL EXCEPTION HANDLER ---
 # Menangani Error tak terduga (500 Internal Server Error)
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
@@ -76,15 +66,11 @@ async def http_exception_handler(request: Request, exc: StarletteHTTPException):
     )
 
 
-# --- 3. REGISTER ROUTERS ---
-# Router Generate (POST /api/v1/generate)
-app.include_router(gen_router, prefix="/api/v1/generate", tags=["Generation"])
-
-# Router Enhance (POST /api/v1/enhance)
-app.include_router(enhance_router, prefix="/api/v1/enhance", tags=["Enhancement"])
+# --- REGISTER ROUTERS ---
+app.include_router(questions_router, prefix="/api/v1/question", tags=["Generation"])
 
 
-# --- 4. HEALTH CHECK ---
+# --- HEALTH CHECK ---
 @app.get("/health", tags=["System"])
 def health_check():
     return {"status": "ok", "service": "Klop! AI", "version": "1.0.0"}
