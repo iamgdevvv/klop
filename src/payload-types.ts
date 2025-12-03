@@ -153,7 +153,7 @@ export interface Asset {
  */
 export interface User {
   id: number;
-  name?: string | null;
+  name: string;
   role?: ('admin' | 'company' | 'candidate') | null;
   avatar?: (number | null) | Asset;
   phone?: string | null;

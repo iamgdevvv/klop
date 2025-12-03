@@ -26,6 +26,7 @@ export const Users: CollectionConfig = {
 				{
 					name: 'name',
 					type: 'text',
+					required: true,
 					admin: {
 						width: '50%',
 					},
@@ -34,6 +35,7 @@ export const Users: CollectionConfig = {
 					name: 'role',
 					type: 'select',
 					defaultValue: 'candidate',
+					required: true,
 					options: [
 						{
 							label: 'Admin',
@@ -73,6 +75,21 @@ export const Users: CollectionConfig = {
 					relationTo: 'asset',
 					admin: {
 						width: '100%',
+					},
+					filterOptions({ user }) {
+						if (user) {
+							if (user.role === 'admin') {
+								return true
+							}
+
+							return {
+								author: {
+									equals: user.id,
+								},
+							}
+						}
+
+						return false
 					},
 				},
 				{
@@ -114,6 +131,21 @@ export const Users: CollectionConfig = {
 					admin: {
 						width: '100%',
 					},
+					filterOptions({ user }) {
+						if (user) {
+							if (user.role === 'admin') {
+								return true
+							}
+
+							return {
+								author: {
+									equals: user.id,
+								},
+							}
+						}
+
+						return false
+					},
 				},
 				{
 					type: 'upload',
@@ -122,6 +154,21 @@ export const Users: CollectionConfig = {
 					hasMany: true,
 					admin: {
 						width: '100%',
+					},
+					filterOptions({ user }) {
+						if (user) {
+							if (user.role === 'admin') {
+								return true
+							}
+
+							return {
+								author: {
+									equals: user.id,
+								},
+							}
+						}
+
+						return false
 					},
 				},
 			],

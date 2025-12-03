@@ -138,6 +138,21 @@ export const Assessments: CollectionConfig = {
 										description:
 											'Please use this only as a helper for the question, not as the main question, because this feature is not supported yet if you treat as main question.',
 									},
+									filterOptions({ user }) {
+										if (user) {
+											if (user.role === 'admin') {
+												return true
+											}
+
+											return {
+												author: {
+													equals: user.id,
+												},
+											}
+										}
+
+										return false
+									},
 								},
 								{
 									type: 'checkbox',

@@ -178,15 +178,19 @@ export const Vacancies: CollectionConfig = {
 					required: true,
 					relationTo: 'companies',
 					filterOptions: ({ user }) => {
-						if (user?.role === 'admin') {
-							return true
+						if (user) {
+							if (user.role === 'admin') {
+								return true
+							}
+
+							return {
+								author: {
+									equals: user.id,
+								},
+							}
 						}
 
-						return {
-							author: {
-								equals: user?.id,
-							},
-						}
+						return false
 					},
 				},
 				{

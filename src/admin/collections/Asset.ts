@@ -5,7 +5,7 @@ import { authenticatedAdminOrAuthor } from '$payload-libs/access-rules'
 export const Asset: CollectionConfig = {
 	slug: 'asset',
 	admin: {
-		// hideAPIURL: true,
+		hideAPIURL: true,
 		baseFilter({ req }) {
 			if (!req?.user) {
 				return null
@@ -21,18 +21,6 @@ export const Asset: CollectionConfig = {
 	access: {
 		read: authenticatedAdminOrAuthor,
 	},
-	hooks: {
-		beforeChange: [
-			({ data, req }) => {
-				const user = req?.user
-
-				return {
-					...data,
-					author: data?.author || (user ? user.id : 1),
-				}
-			},
-		],
-	},
 	fields: [
 		{
 			name: 'alt',
@@ -42,6 +30,7 @@ export const Asset: CollectionConfig = {
 			name: 'author',
 			type: 'relationship',
 			relationTo: 'users',
+			required: true,
 			admin: {
 				condition: () => false,
 			},
@@ -53,15 +42,19 @@ export const Asset: CollectionConfig = {
 				return undefined
 			},
 			filterOptions({ user }) {
-				if (!user) {
-					return false
+				if (user) {
+					if (user.role === 'admin') {
+						return true
+					}
+
+					return {
+						author: {
+							equals: user.id,
+						},
+					}
 				}
 
-				return {
-					id: {
-						equals: user.id,
-					},
-				}
+				return false
 			},
 		},
 	],

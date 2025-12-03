@@ -13,7 +13,6 @@ export default function Footer(props: FooterProps) {
 			{...props}
 			component="footer"
 			data-slot="footer"
-			mt={props.mt || 'xl'}
 			pb={props.pb || 'lg'}
 		>
 			<Divider mb="lg" />

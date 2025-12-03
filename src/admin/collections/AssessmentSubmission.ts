@@ -96,6 +96,21 @@ export const AssessmentSubmissions: CollectionConfig = {
 												width: '100%',
 												readOnly: true,
 											},
+											filterOptions({ user }) {
+												if (user) {
+													if (user.role === 'admin') {
+														return true
+													}
+
+													return {
+														author: {
+															equals: user.id,
+														},
+													}
+												}
+
+												return false
+											},
 										},
 										{
 											name: 'phone',
@@ -141,6 +156,21 @@ export const AssessmentSubmissions: CollectionConfig = {
 												width: '100%',
 												readOnly: true,
 											},
+											filterOptions({ user }) {
+												if (user) {
+													if (user.role === 'admin') {
+														return true
+													}
+
+													return {
+														author: {
+															equals: user.id,
+														},
+													}
+												}
+
+												return false
+											},
 										},
 										{
 											type: 'upload',
@@ -150,6 +180,21 @@ export const AssessmentSubmissions: CollectionConfig = {
 											admin: {
 												width: '100%',
 												readOnly: true,
+											},
+											filterOptions({ user }) {
+												if (user) {
+													if (user.role === 'admin') {
+														return true
+													}
+
+													return {
+														author: {
+															equals: user.id,
+														},
+													}
+												}
+
+												return false
 											},
 										},
 									],

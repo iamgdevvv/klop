@@ -1,0 +1,33 @@
+@reference '../global.css';
+
+.inner {
+	@apply flex flex-col-reverse md:flex-row justify-between items-center;
+	@apply text-center md:text-left;
+	@apply gap-8 md:gap-12;
+}
+
+.content {
+	@apply flex-1 w-full md:max-w-[650px];
+}
+
+.image {
+	@apply flex-[0_0_auto];
+	@apply w-full max-w-[300px] md:max-w-[400px] h-auto mx-auto md:mx-0;
+	@apply object-contain;
+}
+
+@media (max-width: 48em) {
+	.title {
+		@apply text-[32px];
+	}
+}
+.control {
+}
+@media (max-width: 48em) {
+	.control {
+		@apply w-full;
+	}
+}
+.highlight {
+	@apply relative bg-[color:var(--mantine-color-blue-1)] text-[color:var(--mantine-color-blue-7)] rounded-[var(--mantine-radius-sm)] inline-block px-3 py-0.5;
+}

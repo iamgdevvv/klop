@@ -96,6 +96,21 @@ export const VacancySubmissions: CollectionConfig = {
 												width: '100%',
 												readOnly: true,
 											},
+											filterOptions({ user }) {
+												if (user) {
+													if (user.role === 'admin') {
+														return true
+													}
+
+													return {
+														author: {
+															equals: user.id,
+														},
+													}
+												}
+
+												return false
+											},
 										},
 										{
 											name: 'phone',
@@ -141,6 +156,21 @@ export const VacancySubmissions: CollectionConfig = {
 												width: '100%',
 												readOnly: true,
 											},
+											filterOptions({ user }) {
+												if (user) {
+													if (user.role === 'admin') {
+														return true
+													}
+
+													return {
+														author: {
+															equals: user.id,
+														},
+													}
+												}
+
+												return false
+											},
 										},
 										{
 											type: 'upload',
@@ -150,6 +180,21 @@ export const VacancySubmissions: CollectionConfig = {
 											admin: {
 												width: '100%',
 												readOnly: true,
+											},
+											filterOptions({ user }) {
+												if (user) {
+													if (user.role === 'admin') {
+														return true
+													}
+
+													return {
+														author: {
+															equals: user.id,
+														},
+													}
+												}
+
+												return false
 											},
 										},
 									],
@@ -342,21 +387,25 @@ export const VacancySubmissions: CollectionConfig = {
 								},
 							},
 							filterOptions: ({ user }) => {
-								if (user?.role === 'admin') {
-									return true
+								if (user) {
+									if (user.role === 'admin') {
+										return true
+									}
+
+									return {
+										author: {
+											equals: user.id,
+										},
+										expiresAt: {
+											greater_than_equal: new Date().toISOString(),
+										},
+										closeVacancy: {
+											not_equals: true,
+										},
+									}
 								}
 
-								return {
-									author: {
-										equals: user?.id,
-									},
-									expiresAt: {
-										greater_than_equal: new Date().toISOString(),
-									},
-									closeVacancy: {
-										not_equals: true,
-									},
-								}
+								return false
 							},
 						},
 					],

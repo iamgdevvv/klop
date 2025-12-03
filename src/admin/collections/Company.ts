@@ -85,6 +85,21 @@ export const Companies: CollectionConfig = {
 							type: 'upload',
 							name: 'logo',
 							relationTo: 'asset',
+							filterOptions({ user }) {
+								if (user) {
+									if (user.role === 'admin') {
+										return true
+									}
+
+									return {
+										author: {
+											equals: user.id,
+										},
+									}
+								}
+
+								return false
+							},
 						},
 						{
 							type: 'richText',
@@ -181,6 +196,21 @@ export const Companies: CollectionConfig = {
 							name: 'gallery',
 							relationTo: 'asset',
 							hasMany: true,
+							filterOptions({ user }) {
+								if (user) {
+									if (user.role === 'admin') {
+										return true
+									}
+
+									return {
+										author: {
+											equals: user.id,
+										},
+									}
+								}
+
+								return false
+							},
 						},
 					],
 				},
@@ -192,6 +222,21 @@ export const Companies: CollectionConfig = {
 					type: 'upload',
 					name: 'favicon',
 					relationTo: 'asset',
+					filterOptions({ user }) {
+						if (user) {
+							if (user.role === 'admin') {
+								return true
+							}
+
+							return {
+								author: {
+									equals: user.id,
+								},
+							}
+						}
+
+						return false
+					},
 				},
 			],
 		}),

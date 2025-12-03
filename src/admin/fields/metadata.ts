@@ -30,6 +30,21 @@ export const metafield = (fields?: {
 						name: 'featuredImage',
 						type: 'upload',
 						relationTo: 'asset',
+						filterOptions({ user }) {
+							if (user) {
+								if (user.role === 'admin') {
+									return true
+								}
+
+								return {
+									author: {
+										equals: user.id,
+									},
+								}
+							}
+
+							return false
+						},
 					},
 					...(fields?.general ?? []),
 				],

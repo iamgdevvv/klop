@@ -1,5 +1,5 @@
 'use client'
-import { createTheme, Text } from '@mantine/core'
+import { createTheme, List, Text } from '@mantine/core'
 
 const theme = createTheme({
 	breakpoints: {
@@ -84,6 +84,11 @@ const theme = createTheme({
 		Text: Text.extend({
 			defaultProps: {
 				lh: 'xl',
+			},
+		}),
+		List: List.extend({
+			defaultProps: {
+				fz: 'md',
 			},
 		}),
 	},
