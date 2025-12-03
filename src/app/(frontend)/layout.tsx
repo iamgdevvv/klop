@@ -33,6 +33,8 @@ const fontBody = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
 	icons: '/favicon.jpg',
+	title: 'Klop!',
+	robots: 'noindex, nofollow',
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {

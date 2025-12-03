@@ -49,6 +49,17 @@ html {
 	}
 }
 
+@media all and (max-width: theme(--breakpoint-md)) {
+	html:root {
+		--title-h1: 2rem;
+		--title-h2: 1.8rem;
+		--title-h3: 1.6rem;
+		--title-h4: 1.4rem;
+		--title-h5: 1.2rem;
+		--title-h6: 1.125rem;
+	}
+}
+
 body[data-scroll-locked][data-scroll-locked] {
 	@apply !mr-0;
 }

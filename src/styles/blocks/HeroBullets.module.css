@@ -16,18 +16,6 @@
 	@apply object-contain;
 }
 
-@media (max-width: 48em) {
-	.title {
-		@apply text-[32px];
-	}
-}
-.control {
-}
-@media (max-width: 48em) {
-	.control {
-		@apply w-full;
-	}
-}
 .highlight {
-	@apply relative bg-[color:var(--mantine-color-blue-1)] text-[color:var(--mantine-color-blue-7)] rounded-[var(--mantine-radius-sm)] inline-block px-3 py-0.5;
+	@apply relative bg-blue-100 text-blue-700 rounded-sm inline-block px-3 py-0.5;
 }

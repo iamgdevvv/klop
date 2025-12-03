@@ -1,8 +1,15 @@
+import { Stack } from '@mantine/core'
+import type { Metadata } from 'next'
+
 import Footer from '$layouts/Footer'
 import Header from '$layouts/Header'
 import { HeroBullets } from '$root/ui/blocks/HeroBullets'
 import { getAuthUser } from '$server-functions/auth'
-import { Stack } from '@mantine/core'
+
+export const metadata: Metadata = {
+	title: 'Temukan Kandidat yang Klop!',
+	robots: 'index, follow',
+}
 
 export default async function HomePage() {
 	const authUser = await getAuthUser()

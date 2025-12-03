@@ -32,10 +32,12 @@ import { SlugField as SlugField_13d1e14c82544ba0d525cc0797299598 } from '$payloa
 import { PreviewCompanyCopy as PreviewCompanyCopy_fe11963e77c8c87512e322b88798c037 } from '$payload-fields/components/preview-copy'
 import { PreviewVacancyCopy as PreviewVacancyCopy_fe11963e77c8c87512e322b88798c037 } from '$payload-fields/components/preview-copy'
 import { QuestionField as QuestionField_791ccfd5fd5b5c62548ab48a892ddc50 } from '$payload-fields/components/assessment'
+import { AnswerOptionsCTA as AnswerOptionsCTA_791ccfd5fd5b5c62548ab48a892ddc50 } from '$payload-fields/components/assessment'
 import { ExpectedAnswerField as ExpectedAnswerField_791ccfd5fd5b5c62548ab48a892ddc50 } from '$payload-fields/components/assessment'
 import { PreviewAssessmentCopy as PreviewAssessmentCopy_fe11963e77c8c87512e322b88798c037 } from '$payload-fields/components/preview-copy'
 import { Icon as Icon_510920d9a71a2d311746029178f575c3 } from '$payload-fields/components/branding'
 import { Logo as Logo_510920d9a71a2d311746029178f575c3 } from '$payload-fields/components/branding'
+import { BeforeNavLinks as BeforeNavLinks_3390833afe93c88c78da0d4234579a4b } from '$payload-fields/components/navlinks'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
 
 export const importMap = {
@@ -73,9 +75,11 @@ export const importMap = {
   "$payload-fields/components/preview-copy#PreviewCompanyCopy": PreviewCompanyCopy_fe11963e77c8c87512e322b88798c037,
   "$payload-fields/components/preview-copy#PreviewVacancyCopy": PreviewVacancyCopy_fe11963e77c8c87512e322b88798c037,
   "$payload-fields/components/assessment#QuestionField": QuestionField_791ccfd5fd5b5c62548ab48a892ddc50,
+  "$payload-fields/components/assessment#AnswerOptionsCTA": AnswerOptionsCTA_791ccfd5fd5b5c62548ab48a892ddc50,
   "$payload-fields/components/assessment#ExpectedAnswerField": ExpectedAnswerField_791ccfd5fd5b5c62548ab48a892ddc50,
   "$payload-fields/components/preview-copy#PreviewAssessmentCopy": PreviewAssessmentCopy_fe11963e77c8c87512e322b88798c037,
   "$payload-fields/components/branding#Icon": Icon_510920d9a71a2d311746029178f575c3,
   "$payload-fields/components/branding#Logo": Logo_510920d9a71a2d311746029178f575c3,
+  "$payload-fields/components/navlinks#BeforeNavLinks": BeforeNavLinks_3390833afe93c88c78da0d4234579a4b,
   "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24
 }

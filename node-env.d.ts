@@ -8,6 +8,8 @@ namespace NodeJS {
 		NODE_ENV: string
 		NEXT_PUBLIC_SITE_URL: string
 		NEXT_PUBLIC_SITE_INDEX: 'true' | 'false'
+		KLOP_AI_API: string
+		KLOP_AI_TOKEN: string
 		SUPABASE_S3_BUCKET: string
 		SUPABASE_S3_ACCESS_KEY_ID: string
 		SUPABASE_S3_SECRET_ACCESS_KEY: string

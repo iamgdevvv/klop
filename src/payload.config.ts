@@ -32,6 +32,7 @@ export default buildConfig({
 	admin: {
 		theme: 'light',
 		user: Users.slug,
+		autoRefresh: true,
 		importMap: {
 			baseDir: '@',
 		},
@@ -62,6 +63,7 @@ export default buildConfig({
 			icons: '/favicon.jpg',
 		},
 		components: {
+			beforeNavLinks: ['$payload-fields/components/navlinks#BeforeNavLinks'],
 			graphics: {
 				Icon: '$payload-fields/components/branding#Icon',
 				Logo: '$payload-fields/components/branding#Logo',

@@ -174,6 +174,11 @@ export const Assessments: CollectionConfig = {
 									},
 									admin: {
 										condition: (_, siblingData) => siblingData.isAnswerOptions,
+										components: {
+											Description: {
+												path: '$payload-fields/components/assessment#AnswerOptionsCTA',
+											},
+										},
 									},
 									fields: [
 										{

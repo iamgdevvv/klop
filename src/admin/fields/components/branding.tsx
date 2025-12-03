@@ -1,23 +1,29 @@
+import { Link } from '@payloadcms/ui'
+
 import Image from '$components/Image'
 
 export const Icon = () => {
 	return (
-		<Image
-			src="/favicon.jpg"
-			alt="Klop! Logo"
-			width={512}
-			height={512}
-		/>
+		<Link href="/">
+			<Image
+				src="/favicon.jpg"
+				alt="Klop! Logo"
+				width={20}
+				height={20}
+			/>
+		</Link>
 	)
 }
 
 export const Logo = () => {
 	return (
-		<Image
-			src="/logo.svg"
-			alt="Klop! Logo"
-			width={220}
-			height={40}
-		/>
+		<Link href="/">
+			<Image
+				src="/logo.svg"
+				alt="Klop! Logo"
+				width={178}
+				height={80}
+			/>
+		</Link>
 	)
 }

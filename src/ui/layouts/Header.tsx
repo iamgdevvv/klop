@@ -34,9 +34,9 @@ export default function Header({ user, showActions, ...props }: HeaderProps) {
 				>
 					<span className="sr-only">Logo</span>
 					<Image
-						src="/images/placeholder.jpg"
-						width={48}
-						height={48}
+						src="/logo.svg"
+						width={80}
+						height={36}
 					/>
 				</Link>
 				{showActions ? (

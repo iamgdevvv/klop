@@ -10,7 +10,7 @@
 }
 
 .logo {
-	@apply size-[34px] md:size-[48px];
+	@apply w-[62px] h-[28px] sm:w-[80px] sm:h-[36px];
 	@apply flex items-start;
 
 	img {

@@ -22,16 +22,7 @@ export const PreviewAssessmentCopy = () => {
 				copy(`${process.env.NEXT_PUBLIC_SITE_URL}/${slugAssessment}/${slugValue}`)
 			}
 		>
-			{isCopying ? (
-				<Loader
-					size={18}
-					className="animate-spin"
-				/>
-			) : isCopied ? (
-				<CopyCheck size={18} />
-			) : (
-				<Copy size={18} />
-			)}
+			{isCopying ? <Loader /> : isCopied ? <CopyCheck size={18} /> : <Copy size={18} />}
 		</Button>
 	)
 }
@@ -60,16 +51,7 @@ export const PreviewVacancyCopy = () => {
 				)
 			}
 		>
-			{isCopying ? (
-				<Loader
-					size={18}
-					className="animate-spin"
-				/>
-			) : isCopied ? (
-				<CopyCheck size={18} />
-			) : (
-				<Copy size={18} />
-			)}
+			{isCopying ? <Loader /> : isCopied ? <CopyCheck size={18} /> : <Copy size={18} />}
 		</Button>
 	)
 }
@@ -90,16 +72,7 @@ export const PreviewCompanyCopy = () => {
 			buttonStyle="subtle"
 			onClick={() => copy(`${process.env.NEXT_PUBLIC_SITE_URL}/${slugValue}`)}
 		>
-			{isCopying ? (
-				<Loader
-					size={18}
-					className="animate-spin"
-				/>
-			) : isCopied ? (
-				<CopyCheck size={18} />
-			) : (
-				<Copy size={18} />
-			)}
+			{isCopying ? <Loader /> : isCopied ? <CopyCheck size={18} /> : <Copy size={18} />}
 		</Button>
 	)
 }
