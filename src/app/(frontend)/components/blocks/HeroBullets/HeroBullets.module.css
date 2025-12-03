@@ -1,0 +1,90 @@
+/* src/app/(frontend)/components/blocks/HeroBullets/HeroBullets.module.css */
+
+.inner {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	/* Gunakan unit rem agar konsisten jika var gagal */
+	gap: 3rem;
+	padding-top: 4rem;
+	padding-bottom: 4rem;
+}
+
+/* --- BAGIAN TEKS (KIRI) --- */
+.content {
+	/* Flex 1: Ambil SEMUA ruang sisa yang tersedia */
+	flex: 1;
+	/* Opsional: Batas maksimal agar baris tidak terlalu panjang */
+	max-width: 650px;
+}
+
+/* --- BAGIAN GAMBAR (KANAN) --- */
+.image {
+	/* PENTING: Matikan flex-grow. Jangan biarkan dia membesar otomatis! */
+	flex: 0 0 auto;
+
+	/* KUNCI UKURAN DI SINI: */
+	width: 100%; /* Default isi container */
+	max-width: 400px; /* BATAS MATI: Jangan pernah lebih lebar dari 400px di Desktop */
+
+	height: auto;
+	object-fit: contain;
+}
+
+/* --- RESPONSIF (TABLET & MOBILE) --- */
+@media (max-width: 62em) {
+	.inner {
+		flex-direction: column-reverse; /* Gambar di atas/bawah */
+		text-align: center;
+		gap: 2rem;
+		padding-top: 2rem;
+		padding-bottom: 2rem;
+	}
+
+	.content {
+		/* Di HP, teks boleh lebar penuh */
+		max-width: 100%;
+	}
+
+	.image {
+		/* Di HP, kita reset batasnya agar pas dengan layar kecil */
+		max-width: 300px; /* Lebih kecil lagi di HP biar manis */
+		margin-left: auto;
+		margin-right: auto;
+	}
+}
+
+/* --- TYPOGRAPHY --- */
+.title {
+	color: var(--mantine-color-text);
+	font-family: 'Outfit', var(--mantine-font-family);
+	font-size: 44px;
+	line-height: 1.2;
+	font-weight: 700;
+	margin-bottom: 1.5rem;
+}
+
+@media (max-width: 48em) {
+	.title {
+		font-size: 32px;
+	}
+}
+
+.control {
+	/* Default */
+}
+
+@media (max-width: 48em) {
+	.control {
+		width: 100%;
+	}
+}
+
+.highlight {
+	position: relative;
+	background-color: var(--mantine-color-blue-1);
+	color: var(--mantine-color-blue-7);
+	border-radius: var(--mantine-radius-sm);
+	padding: 2px 12px;
+	display: inline-block;
+}

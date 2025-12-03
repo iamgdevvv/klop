@@ -1,18 +1,32 @@
 import Footer from '$layouts/Footer'
 import Header from '$layouts/Header'
 import { getAuthUser } from '$server-functions/auth'
+import { Box } from '@mantine/core'
+import { HeroBullets } from './components/blocks/HeroBullets'
 
-export default async function homePage() {
-	const authUser = await getAuthUser()
+export default async function HomePage() {
+    const authUser = await getAuthUser();
 
-	return (
-		<>
-			<Header
-				showActions={true}
-				user={authUser}
-			/>
-			<h1>Home Page</h1>
-			<Footer />
-		</>
-	)
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+            <Header showActions={true} user={authUser} />
+            <Box
+                component="main"
+                style={{
+                    flex: 1,
+                    backgroundColor: 'var(--mantine-color-gray-0)',
+                    backgroundImage: 'radial-gradient(var(--mantine-color-gray-3) 1.5px, transparent 1.5px)',
+                    backgroundSize: '24px 24px',
+                    display: 'flex',
+                    alignItems: 'center',
+                }}
+            >
+                <HeroBullets
+                    imageSrc="/images/hero-banner.png"
+                />
+            </Box>
+
+            <Footer />
+        </div>
+    );
 }
