@@ -4,28 +4,32 @@ import type { Options } from 'node_modules/payload/dist/collections/operations/l
 import { getPayload, type PaginatedDocs, type Where } from 'payload'
 
 import configPromise from '$payload-config'
-import type { Vacancy } from '$payload-types'
+import type { Assessment } from '$payload-types'
 
-export type OptionsQueryVacancies = Omit<
-	Options<'vacancies', Record<keyof Vacancy, true>>,
+export type OptionsQueryAssessments = Omit<
+	Options<'assessments', Record<keyof Assessment, true>>,
 	'collection'
 > & {
 	whereAnd?: Where['and']
 	whereOr?: Where['or']
 	search?: string
-	queried?: Vacancy
+	queried?: Assessment
 	filter?: {
 		ids?: number[]
 		toolIds?: number[]
 	}
 }
 
-const fieldSearch = ['type', 'level', 'education', 'education', 'title', 'excerpt']
+const fieldSearch = ['title', 'excerpt']
 
-export const queryVacancies = async <T extends Partial<Record<keyof Vacancy, true>> | undefined>(
-	options?: OptionsQueryVacancies,
+export const queryAssessments = async <
+	T extends Partial<Record<keyof Assessment, true>> | undefined,
+>(
+	options?: OptionsQueryAssessments,
 	select?: T,
-): Promise<PaginatedDocs<Pick<Vacancy, T extends undefined ? keyof Vacancy : keyof T>> | null> => {
+): Promise<PaginatedDocs<
+	Pick<Assessment, T extends undefined ? keyof Assessment : keyof T>
+> | null> => {
 	'use cache'
 	try {
 		const payload = await getPayload({ config: configPromise })
@@ -82,7 +86,7 @@ export const queryVacancies = async <T extends Partial<Record<keyof Vacancy, tru
 		}
 
 		const result = await payload.find({
-			collection: 'vacancies',
+			collection: 'assessments',
 			limit,
 			page,
 			sort,
@@ -95,11 +99,11 @@ export const queryVacancies = async <T extends Partial<Record<keyof Vacancy, tru
 			},
 		})
 
-		cacheTag('collection', 'collection:vacancies')
+		cacheTag('collection', 'collection:assessments')
 
 		return result
 	} catch (error) {
-		console.log('Error fetching vacancies', { error })
+		console.log('Error fetching assessments', { error })
 		return null
 	}
 }

@@ -1,17 +1,16 @@
 import { Stack } from '@mantine/core'
 import type { Metadata } from 'next'
 
-import { PrivacyPolicy } from '$blocks/PrivacyPolicy'
 import Footer from '$layouts/Footer'
 import Header from '$layouts/Header'
 import { getAuthUser } from '$server-functions/auth'
 
 export const metadata: Metadata = {
-	title: 'Kebijakan Privasi ⎯ Klop!',
+	title: 'Temukan Perusahaan ⎯ Klop!',
 	robots: 'index, follow',
 }
 
-export default async function privacyPolicyPage() {
+export default async function browseCompaniesPage() {
 	const authUser = await getAuthUser()
 
 	return (
@@ -24,9 +23,7 @@ export default async function privacyPolicyPage() {
 				user={authUser}
 			/>
 
-			<main className="main">
-				<PrivacyPolicy />
-			</main>
+			<main className="main">Browse Companies</main>
 
 			<Footer />
 		</Stack>

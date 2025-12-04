@@ -31,7 +31,7 @@ export async function generateMeta(
 	}
 
 	if (doc?.title) {
-		title = `${doc.title} | ${siteTitle}`
+		title = `${doc.title} ⎯ ${siteTitle}`
 	}
 
 	if ('meta' in doc) {

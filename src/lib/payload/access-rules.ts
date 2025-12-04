@@ -5,11 +5,11 @@ import type { User } from '$payload-types'
 type isAuthenticated = (args: AccessArgs<User>) => boolean
 
 export const authenticated: isAuthenticated = ({ req: { user } }) => {
-	return Boolean(user)
+	return !!user
 }
 
 export const authenticatedAdmin: isAuthenticated = ({ req: { user } }) => {
-	return user?.collection === 'users' && user.role === 'admin'
+	return user?.role === 'admin'
 }
 
 export const authenticatedAdminOrAuthor: Access = ({ data, req: { user } }) => {
@@ -25,11 +25,7 @@ export const authenticatedAdminOrAuthor: Access = ({ data, req: { user } }) => {
 		return data.author === user.id
 	}
 
-	if (!data?.author && !!user) {
-		return true
-	}
-
-	return false
+	return true
 }
 
 export const authenticatedOrPublished: Access = ({ req: { user } }) => {

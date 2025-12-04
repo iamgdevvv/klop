@@ -1,5 +1,7 @@
 export const slug404 = '404'
 
+export const slugCompanies = 'browse'
+
 export const slugAssessment = 'assessments'
 
 export const slugRegister = 'register'

@@ -1,8 +1,4 @@
-'use client'
-
 import {
-	Anchor,
-	Avatar,
 	Badge,
 	Box,
 	Button,
@@ -10,99 +6,48 @@ import {
 	Container,
 	Divider,
 	Group,
-	Image,
 	SimpleGrid,
 	Stack,
 	Text,
 	ThemeIcon,
 	Title,
+	type ContainerProps,
 } from '@mantine/core'
+import dayjs from 'dayjs'
 import {
 	Building,
 	Check,
 	Facebook,
-	Link as IconLink,
+	Globe,
 	Instagram,
 	Linkedin,
 	MapPin,
+	Music,
 	Twitter,
 	Users,
+	Youtube,
 } from 'lucide-react'
-import Link from 'next/link'
 
-// --- MOCK DATA ---
-const COMPANY_DATA = {
-	name: 'Tokopedia',
-	tagline: 'Selalu Ada Selalu Bisa',
-	industry: 'Internet',
-	location: 'Jakarta Pusat, DKI Jakarta, Indonesia',
-	employees: '1001 - 5000 karyawan',
-	status: 'Verified',
-	website: 'https://tokopedia.com',
-	description:
-		'Tokopedia is an Indonesian technology company that continues to transform into Super Ecosystem with a mission to democratize commerce through technology. Tokopedia is here for creating an ecosystem where anyone can start and discover anything.\n\nToday, Tokopedia empowers millions of sellers and users through marketplaces and digital products, fintech and payments, logistics and fulfillment, as well as Mitra Tokopedia.',
-	logo: 'https://assets.tokopedia.net/assets-tokopedia-lite/v2/zeus/kratos/60524cdd.png',
-	socials: [
-		{ icon: IconLink, label: 'Website', link: 'https://tokopedia.com' },
-		{ icon: Facebook, label: 'Facebook', link: '#' },
-		{ icon: Instagram, label: 'Instagram', link: '#' },
-		{ icon: Linkedin, label: 'LinkedIn', link: '#' },
-		{ icon: Twitter, label: 'X', link: '#' },
-	],
-	gallery: [
-		'https://images.glints.com/unsafe/glints-dashboard.s3.amazonaws.com/company-gallery/a699039a7b97394073d9370605030d97.png',
-		'https://images.glints.com/unsafe/glints-dashboard.s3.amazonaws.com/company-gallery/2d694539665795325956030999557375.jpg',
-		'https://images.glints.com/unsafe/glints-dashboard.s3.amazonaws.com/company-gallery/93392336336332306352929009772097.jpg',
-		'https://images.glints.com/unsafe/glints-dashboard.s3.amazonaws.com/company-gallery/83332766329003666699320399559300.jpg',
-	],
-}
+import Image from '$components/Image'
+import Link from '$components/Link'
+import Richtext from '$components/Richtext'
+import { vacancyEducation, vacancyLevel, vacancyType } from '$payload-libs/enum'
+import type { Company, Vacancy } from '$payload-types'
+import { formatCompactNumber } from '$utils/common'
 
-const JOBS_DATA = [
-	{
-		id: '1',
-		title: 'Senior Full Stack Programmer',
-		type: 'Penuh Waktu',
-		exp: '1-3 tahun',
-		salary: 'Rp9jt - Rp11jt',
-		location: 'Jakarta Pusat',
-		company: 'Tokopedia',
-	},
-	{
-		id: '2',
-		title: 'Sales Engineer',
-		type: 'Penuh Waktu',
-		exp: 'Kurang dari setahun',
-		salary: 'Rp4jt - Rp5,3jt',
-		location: 'Jakarta Pusat',
-		company: 'Tokopedia',
-	},
-	{
-		id: '3',
-		title: 'Marketing Manager',
-		type: 'Kontrak',
-		exp: '3-5 tahun',
-		salary: 'Rp12jt - Rp18jt',
-		location: 'Remote',
-		company: 'Tokopedia',
-	},
-	{
-		id: '4',
-		title: 'UI/UX Designer',
-		type: 'Penuh Waktu',
-		exp: '2-4 tahun',
-		salary: 'Rp8jt - Rp12jt',
-		location: 'Jakarta Selatan',
-		company: 'Tokopedia',
-	},
-]
+type Props = {
+	data: Company
+	vacancies?: Vacancy[]
+} & ContainerProps
 
-export function Company({ companySlug }: { companySlug: string }) {
+export function Company({ data, vacancies, ...props }: Props) {
+	const socials = data.socials ? Object.entries(data.socials).filter(([_, v]) => !!v) : []
+
 	return (
 		<Container
-			size="xl"
-			py={40}
+			{...props}
+			size={props.size || 'xl'}
 		>
-			{/* --- 1. HEADER PERUSAHAAN --- */}
 			<Card
 				withBorder
 				padding="xl"
@@ -115,11 +60,11 @@ export function Company({ companySlug }: { companySlug: string }) {
 					wrap="nowrap"
 				>
 					{/* Logo */}
-					<Avatar
-						src={COMPANY_DATA.logo}
-						size={100}
-						radius="md"
-						style={{ border: '1px solid var(--mantine-color-gray-2)' }}
+					<Image
+						src={data.logo || data.favicon || data.featuredImage}
+						width={100}
+						height={100}
+						className="size-[100px] object-contain"
 					/>
 
 					{/* Info */}
@@ -129,6 +74,13 @@ export function Company({ companySlug }: { companySlug: string }) {
 							gap="xs"
 							mb={4}
 						>
+							<Title
+								order={2}
+								size="h2"
+								fw={700}
+							>
+								{data.title}
+							</Title>
 							<ThemeIcon
 								size="xs"
 								radius="xl"
@@ -137,90 +89,185 @@ export function Company({ companySlug }: { companySlug: string }) {
 							>
 								<Check size={10} />
 							</ThemeIcon>
-							<Title
-								order={2}
-								size="h2"
-								fw={700}
-							>
-								{COMPANY_DATA.name}
-							</Title>
 						</Group>
-						<Text
-							c="dimmed"
-							size="md"
-							mb="lg"
-						>
-							{COMPANY_DATA.tagline}
-						</Text>
+						{data.excerpt ? (
+							<Text
+								c="dimmed"
+								size="md"
+								mb="lg"
+							>
+								{data.excerpt}
+							</Text>
+						) : null}
 
 						<Group
 							gap="xl"
 							mt="md"
 						>
-							<Group gap="xs">
-								<MapPin
-									size={18}
-									color="gray"
-								/>
-								<Text
-									size="sm"
-									c="dimmed"
-								>
-									{COMPANY_DATA.location}
-								</Text>
-							</Group>
-							<Group gap="xs">
-								<Users
-									size={18}
-									color="gray"
-								/>
-								<Text
-									size="sm"
-									c="dimmed"
-								>
-									{COMPANY_DATA.employees}
-								</Text>
-							</Group>
-						</Group>
-
-						<Group
-							gap="xl"
-							mt="xs"
-						>
-							<Group gap="xs">
-								<Building
-									size={18}
-									color="gray"
-								/>
-								<Text
-									size="sm"
-									c="dimmed"
-								>
-									{COMPANY_DATA.industry}
-								</Text>
-							</Group>
-							<Group gap="xs">
-								<Check
-									size={18}
-									color="var(--mantine-color-blue-6)"
-								/>
-								<Text
-									size="sm"
-									c="blue"
-									fw={500}
-								>
-									{COMPANY_DATA.status}
-								</Text>
-							</Group>
+							{data.location ? (
+								<Group gap="xs">
+									<MapPin
+										size={18}
+										color="gray"
+									/>
+									<Text c="dimmed">{data.location}</Text>
+								</Group>
+							) : null}
+							{data.totalEmployees ? (
+								<Group gap="xs">
+									<Users
+										size={18}
+										color="gray"
+									/>
+									<Text
+										size="sm"
+										c="dimmed"
+									>
+										{data.totalEmployees}
+									</Text>
+								</Group>
+							) : null}
+							{data.businessCategory ? (
+								<Group gap="xs">
+									<Building
+										size={18}
+										color="gray"
+									/>
+									<Text
+										size="sm"
+										c="dimmed"
+									>
+										{data.businessCategory}
+									</Text>
+								</Group>
+							) : null}
 						</Group>
 					</Box>
 				</Group>
 			</Card>
 
-			{/* --- 2. KONTEN (Disusun Vertikal Tanpa Tab) --- */}
-			<Stack gap={40}>
-				{/* Section: Deskripsi */}
-				<Box id="deskripsi">
+			<Stack gap="xl">
+				{vacancies?.length ? (
+					<Card
+						withBorder
+						radius="lg"
+						p="xl"
+					>
+						<Title
+							order={3}
+							mb="lg"
+						>
+							Lowongan di {data.title}
+						</Title>
+						<SimpleGrid
+							cols={{ base: 1, sm: 2, md: 3, lg: 4 }}
+							spacing="md"
+						>
+							{vacancies.map((vacancy, index) => (
+								<Card
+									key={`${vacancy.id}-${index}`}
+									shadow="sm"
+									padding="md"
+									radius="lg"
+									withBorder
+									bg="white"
+								>
+									<Text
+										fw={600}
+										mb={2}
+										lineClamp={2}
+									>
+										{vacancy.title}
+									</Text>
+									{vacancy.expiresAt ? (
+										<Text
+											size="sm"
+											c="dimmed"
+											mb="md"
+										>
+											Tutup pada{' '}
+											{dayjs(vacancy.expiresAt).format('DD MMMM YYYY')}
+										</Text>
+									) : null}
+
+									<Group
+										gap="xs"
+										pb="lg"
+									>
+										{vacancy.type ? (
+											<Badge
+												variant="light"
+												color="gray"
+												radius="sm"
+												size="sm"
+											>
+												{vacancyType.find(
+													(type) => type.value === vacancy.type,
+												)?.label || vacancy.type}
+											</Badge>
+										) : null}
+										{vacancy.level ? (
+											<Badge
+												variant="light"
+												color="gray"
+												radius="sm"
+												size="sm"
+											>
+												{vacancyLevel.find(
+													(level) => level.value === vacancy.level,
+												)?.label || vacancy.level}
+											</Badge>
+										) : null}
+										{vacancy.education ? (
+											<Badge
+												variant="light"
+												color="gray"
+												radius="sm"
+												size="sm"
+											>
+												{vacancyEducation.find(
+													(type) => type.value === vacancy.education,
+												)?.label || vacancy.education}
+											</Badge>
+										) : null}
+									</Group>
+
+									<Divider
+										mt="auto"
+										mb="xs"
+									/>
+
+									<Group
+										justify="space-between"
+										align="center"
+									>
+										<Text
+											fw={700}
+											size="sm"
+											c="blue"
+										>
+											{[vacancy.fromExpectedSalary, vacancy.toExpectedSalary]
+												.filter(Boolean)
+												.map((value) => formatCompactNumber(value!))
+												.join(' - ')}
+										</Text>
+										<Button
+											component={Link}
+											href={`/${data.slug}/${vacancy.slug}`}
+											variant="subtle"
+											size="sm"
+											color="gray"
+										>
+											Detail
+										</Button>
+									</Group>
+								</Card>
+							))}
+						</SimpleGrid>
+					</Card>
+				) : null}
+
+				{data.description ? (
 					<Card
 						withBorder
 						radius="lg"
@@ -232,87 +279,11 @@ export function Company({ companySlug }: { companySlug: string }) {
 						>
 							Tentang Perusahaan
 						</Title>
-						<Box mb="xl">
-							<Text
-								fw={700}
-								mb="xs"
-							>
-								Deskripsi
-							</Text>
-							<Text
-								c="dimmed"
-								style={{ whiteSpace: 'pre-line', lineHeight: 1.6 }}
-							>
-								{COMPANY_DATA.description}
-							</Text>
-						</Box>
+						<Richtext data={data.description} />
 					</Card>
-				</Box>
+				) : null}
 
-				{/* Section: Kultur */}
-				<Box id="kultur">
-					<Card
-						withBorder
-						radius="lg"
-						p="xl"
-					>
-						<Title
-							order={3}
-							mb="lg"
-						>
-							Kultur Perusahaan
-						</Title>
-						<Text c="dimmed">Perusahaan belum menambahkan bagian ini.</Text>
-					</Card>
-				</Box>
-
-				{/* Section: Hubungi Kami */}
-				<Box id="kontak">
-					<Card
-						withBorder
-						radius="lg"
-						p="xl"
-					>
-						<Title
-							order={3}
-							mb="lg"
-						>
-							Hubungi Kami
-						</Title>
-						<Text
-							fw={600}
-							mb="md"
-						>
-							Web dan Media Sosial
-						</Text>
-						<Group gap="xl">
-							{COMPANY_DATA.socials.map((item, index) => (
-								<Group
-									key={index}
-									gap={6}
-									style={{ cursor: 'pointer' }}
-								>
-									<item.icon
-										size={20}
-										color="gray"
-									/>
-									<Anchor
-										href={item.link}
-										target="_blank"
-										c="blue"
-										size="sm"
-										fw={500}
-									>
-										{item.label}
-									</Anchor>
-								</Group>
-							))}
-						</Group>
-					</Card>
-				</Box>
-
-				{/* Section: Galeri */}
-				<Box id="galeri">
+				{data.gallery && data.gallery.length ? (
 					<Card
 						withBorder
 						radius="lg"
@@ -328,128 +299,64 @@ export function Company({ companySlug }: { companySlug: string }) {
 							cols={{ base: 2, md: 4 }}
 							spacing="md"
 						>
-							{COMPANY_DATA.gallery.map((img, idx) => (
+							{data.gallery.map((img, idx) => (
 								<Image
 									key={idx}
 									src={img}
-									radius="md"
-									h={180}
-									fit="cover"
-									alt="Company Gallery"
-									style={{ border: '1px solid var(--mantine-color-gray-2)' }}
+									className="rounded-md h-[180px]"
 								/>
 							))}
 						</SimpleGrid>
 					</Card>
-				</Box>
+				) : null}
 
-				{/* Section: Loker (4 Kolom) */}
-				<Box id="loker">
+				{socials.length ? (
 					<Card
 						withBorder
 						radius="lg"
 						p="xl"
-						bg="gray.0"
 					>
 						<Title
 							order={3}
 							mb="lg"
 						>
-							Lowongan di {COMPANY_DATA.name}
+							Hubungi Kami
 						</Title>
-						{/* UPDATE: Menggunakan 4 kolom di layar besar (lg) */}
-						<SimpleGrid
-							cols={{ base: 1, sm: 2, md: 3, lg: 4 }}
-							spacing="md"
-						>
-							{JOBS_DATA.map((job) => (
-								<Card
-									key={job.id}
-									shadow="sm"
-									padding="md"
-									radius="md"
-									withBorder
-									bg="white"
+						<Group gap="xl">
+							{socials.map(([social, link], index) => (
+								<Group
+									key={`${link}-${index}`}
+									gap={6}
+									style={{ cursor: 'pointer' }}
 								>
-									<Group
-										align="start"
-										justify="space-between"
-										mb="xs"
-									>
-										<Group gap="xs">
-											<Check
-												size={14}
-												color="var(--mantine-color-blue-5)"
-											/>
-											<Text
-												fw={700}
-												size="xs"
-												c="dimmed"
-											>
-												{job.company}
-											</Text>
-										</Group>
-									</Group>
+									{social === 'website' ? (
+										<Globe size={20} />
+									) : social === 'facebook' ? (
+										<Facebook size={20} />
+									) : social === 'instagram' ? (
+										<Instagram size={20} />
+									) : social === 'linkedin' ? (
+										<Linkedin size={20} />
+									) : social === 'twitter' ? (
+										<Twitter size={20} />
+									) : social === 'youtube' ? (
+										<Youtube size={20} />
+									) : social === 'tiktok' ? (
+										<Music size={20} />
+									) : null}
 
-									<Text
-										fw={600}
-										size="sm"
-										mb={2}
-										lineClamp={2}
-										style={{ minHeight: 42 }}
+									<Link
+										href={link!}
+										target="_blank"
+										className="capitalize"
 									>
-										{job.title}
-									</Text>
-									<Text
-										size="xs"
-										c="dimmed"
-										mb="md"
-									>
-										{job.location}
-									</Text>
-
-									<Group
-										gap="xs"
-										mb="lg"
-									>
-										<Badge
-											variant="light"
-											color="gray"
-											radius="sm"
-											size="xs"
-										>
-											{job.type}
-										</Badge>
-									</Group>
-
-									<Divider mb="xs" />
-
-									<Group
-										justify="space-between"
-										align="center"
-									>
-										<Text
-											fw={700}
-											size="xs"
-											c="blue.6"
-										>
-											{job.salary}
-										</Text>
-										<Button
-											component={Link}
-											href={`/${companySlug}/vacancy-detail`}
-											variant="subtle"
-											size="xs"
-											color="gray"
-										>
-											Detail
-										</Button>
-									</Group>
-								</Card>
+										{social}
+									</Link>
+								</Group>
 							))}
-						</SimpleGrid>
+						</Group>
 					</Card>
-				</Box>
+				) : null}
 			</Stack>
 		</Container>
 	)

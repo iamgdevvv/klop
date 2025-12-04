@@ -24,3 +24,20 @@ export function assetUrl(asset: number | Asset | null | undefined): string | und
 
 	return undefined
 }
+
+export function printSalary(salary: number) {
+	return salary.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' })
+}
+
+export function formatCompactNumber(angka: number): string {
+	if (angka >= 1_000_000) {
+		const hasil = angka / 1_000_000
+
+		return `${parseFloat(hasil.toFixed(2))} juta`
+	} else if (angka >= 1_000) {
+		const hasil = angka / 1_000
+		return `${parseFloat(hasil.toFixed(2))} ribu`
+	}
+
+	return angka.toString()
+}

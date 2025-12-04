@@ -1,6 +1,6 @@
+import type { Assessment, AssessmentSubmission } from '$root/payload-types'
 import {
 	Box,
-	Button,
 	Card,
 	Container,
 	Divider,
@@ -11,36 +11,26 @@ import {
 	ThemeIcon,
 	Title,
 	rem,
+	type ContainerProps,
 } from '@mantine/core'
-import { ArrowRight, Check, RefreshCw, Sparkles, X } from 'lucide-react'
+import { Check, Sparkles, X } from 'lucide-react'
 
-interface AssessmentResultProps {
-	candidateName?: string
-	score?: number
-	passingScore?: number
-	correctAnswers?: number
-	totalQuestions?: number
-	assessmentTitle?: string
-	aiFeedback?: string
-}
+type Props = {
+	data: AssessmentSubmission
+	assessment: Assessment
+} & ContainerProps
 
-export function AssessmentResult({
-	candidateName = 'Peserta',
-	score = 80,
-	passingScore = 70,
-	correctAnswers = 12,
-	totalQuestions = 15,
-	assessmentTitle = 'Senior JavaScript Assessment',
-	aiFeedback,
-}: AssessmentResultProps) {
-	const isPassed = score >= passingScore
+export function AssessmentResult({ data, assessment, ...props }: Props) {
+	const isPassed = data.score >= (assessment.passingGrade || 70)
 	const statusColor = isPassed ? 'green' : 'red'
-	const StatusIcon = isPassed ? Check : X
+	const totalCorrectAnswers = data.assessmentResults?.filter(
+		(result) => result.isAnswerCorrect === true,
+	).length
 
 	return (
 		<Container
-			size="sm"
-			py={60}
+			{...props}
+			size={props.size || 'sm'}
 		>
 			<Card
 				padding={0}
@@ -66,7 +56,7 @@ export function AssessmentResult({
 						size="lg"
 						fw={500}
 					>
-						Hi {candidateName},
+						Hi {data.candidateName},
 					</Text>
 
 					<Text
@@ -74,14 +64,8 @@ export function AssessmentResult({
 						size={rem(100)}
 						lh={1}
 						c={statusColor}
-						variant="gradient"
-						gradient={
-							isPassed
-								? { from: 'green.6', to: 'teal.6', deg: 45 }
-								: { from: 'red.6', to: 'orange.6', deg: 45 }
-						}
 					>
-						{score}%
+						{data.score}%
 					</Text>
 
 					<Title
@@ -102,9 +86,9 @@ export function AssessmentResult({
 							fw={700}
 							c="dark.9"
 						>
-							{correctAnswers}
+							{totalCorrectAnswers}
 						</Text>{' '}
-						out of {totalQuestions} questions correctly
+						out of {assessment.questions?.length} questions correctly
 					</Text>
 
 					<Divider
@@ -130,7 +114,7 @@ export function AssessmentResult({
 								size="xl"
 								c={statusColor}
 							>
-								{score}%
+								{data.score}%
 							</Text>
 						</Box>
 						<Divider
@@ -150,7 +134,7 @@ export function AssessmentResult({
 								size="xl"
 								c="gray.7"
 							>
-								{passingScore}%
+								{assessment?.passingGrade || 70}%
 							</Text>
 						</Box>
 					</Group>
@@ -178,30 +162,31 @@ export function AssessmentResult({
 							</Text>
 						</Group>
 
-						<Paper
-							withBorder
-							p="md"
-							radius="md"
-							bg="gray.0"
-							style={{
-								borderLeft: `4px solid var(--mantine-color-${statusColor}-5)`,
-							}}
-						>
-							<Text
-								size="sm"
-								c="dark.8"
-								lh={1.6}
-								ta="justify"
+						{data.summary ? (
+							<Paper
+								withBorder
+								p="md"
+								radius="md"
+								bg="gray.0"
+								style={{
+									borderLeft: `4px solid var(--mantine-color-${statusColor}-5)`,
+								}}
 							>
-								{aiFeedback ||
-									'AI sedang menganalisis pola jawaban Anda. Hasil ini menunjukkan pemahaman yang kuat pada konsep dasar, namun perlu peningkatan pada studi kasus kompleks.'}
-							</Text>
-						</Paper>
+								<Text
+									size="sm"
+									c="dark.8"
+									lh={1.6}
+									ta="justify"
+								>
+									{data.summary}
+								</Text>
+							</Paper>
+						) : null}
 					</Box>
 				</Stack>
 
 				<Box
-					bg={isPassed ? 'green.6' : 'red.6'}
+					bg={statusColor}
 					p="lg"
 				>
 					<Stack
@@ -210,17 +195,12 @@ export function AssessmentResult({
 					>
 						<Group gap="xs">
 							<ThemeIcon
-								color="white"
+								color={statusColor}
 								variant="white"
 								size="sm"
 								radius="xl"
-								style={{
-									color: isPassed
-										? 'var(--mantine-color-green-6)'
-										: 'var(--mantine-color-red-6)',
-								}}
 							>
-								<StatusIcon size={14} />
+								{isPassed ? <Check size={14} /> : <X size={14} />}
 							</ThemeIcon>
 							<Text
 								fw={800}
@@ -236,32 +216,11 @@ export function AssessmentResult({
 							c="white"
 							style={{ opacity: 0.9 }}
 						>
-							Assessment: {assessmentTitle}
+							Assessment: {assessment?.title}
 						</Text>
 					</Stack>
 				</Box>
 			</Card>
-
-			<Group
-				mt="xl"
-				justify="center"
-			>
-				<Button
-					variant="default"
-					leftSection={<RefreshCw size={16} />}
-					onClick={() => window.location.reload()}
-				>
-					Retake Assessment
-				</Button>
-				<Button
-					color="dark"
-					rightSection={<ArrowRight size={16} />}
-					component="a"
-					href="/"
-				>
-					Back to Dashboard
-				</Button>
-			</Group>
 		</Container>
 	)
 }

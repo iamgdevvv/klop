@@ -85,6 +85,7 @@ export default function Header({ user, showActions, ...props }: HeaderProps) {
 								</ActionIcon>
 								<ActionIcon
 									component={Link}
+									variant="subtle"
 									href={`/${slugDashboardLogin}`}
 									hiddenFrom="md"
 								>

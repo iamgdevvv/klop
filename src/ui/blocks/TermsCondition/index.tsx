@@ -1,15 +1,24 @@
-import { Alert, Box, Container, List, ListItem, Stack, Text, ThemeIcon, Title } from '@mantine/core'
+import {
+	Alert,
+	Box,
+	Card,
+	Container,
+	Divider,
+	List,
+	ListItem,
+	Stack,
+	Text,
+	ThemeIcon,
+	Title,
+} from '@mantine/core'
 import { AlertCircle, Check } from 'lucide-react'
 
 export function TermsConditions() {
 	return (
-		<Container
-			size="md"
-			py={60}
-		>
-			{/* --- HEADER POLOS (Sama seperti Privacy Policy) --- */}
-			<Box
-				mb={50}
+		<Container size="md">
+			<Stack
+				gap="sm"
+				mb="xl"
 				ta="center"
 			>
 				<Title
@@ -23,33 +32,23 @@ export function TermsConditions() {
 				</Title>
 				<Text
 					c="dimmed"
-					mt="sm"
 					fz="lg"
 				>
 					Terakhir diperbarui: Desember 2025
 				</Text>
-			</Box>
+			</Stack>
 
-			{/* --- KONTEN DOCUMENT --- */}
-			{/* Box Putih dengan Border Tipis */}
-			<Box
-				bg="white"
-				p={{ base: 'md', md: 50 }}
-				style={{
-					border: '1px solid var(--mantine-color-gray-2)',
-					borderRadius: 8,
+			<Card
+				withBorder
+				radius="xl"
+				p={{
+					base: 'xl',
+					md: 80,
 				}}
 			>
 				<Stack gap="xl">
-					{/* Section 1 */}
-					<Box>
-						<Title
-							order={3}
-							c="blue.7"
-							mb="sm"
-						>
-							1. Persetujuan Syarat
-						</Title>
+					<Stack gap="sm">
+						<Title order={3}>1. Persetujuan Syarat</Title>
 						<Text
 							lh={1.6}
 							c="dimmed"
@@ -58,7 +57,6 @@ export function TermsConditions() {
 							<Text
 								span
 								fw={700}
-								c="dark.9"
 							>
 								Klop!
 							</Text>
@@ -66,21 +64,11 @@ export function TermsConditions() {
 							tidak setuju dengan bagian mana pun dari syarat ini, mohon untuk tidak
 							menggunakan layanan kami.
 						</Text>
-					</Box>
+					</Stack>
 
-					{/* Section 2 */}
-					<Box>
-						<Title
-							order={3}
-							c="blue.7"
-							mb="sm"
-						>
-							2. Lisensi Penggunaan
-						</Title>
-						<Text
-							mb="sm"
-							c="dimmed"
-						>
+					<Stack gap="sm">
+						<Title order={3}>2. Lisensi Penggunaan</Title>
+						<Text c="dimmed">
 							Kami memberikan lisensi terbatas untuk mengakses layanan asesmen AI
 							kami. Anda setuju untuk{' '}
 							<Text
@@ -99,6 +87,8 @@ export function TermsConditions() {
 									size={6}
 									color="red"
 									radius="xl"
+									pos="relative"
+									top={-5}
 								>
 									<Box />
 								</ThemeIcon>
@@ -121,17 +111,10 @@ export function TermsConditions() {
 								</Text>
 							</ListItem>
 						</List>
-					</Box>
+					</Stack>
 
-					{/* Section 3 (Penting untuk App Ujian) */}
-					<Box>
-						<Title
-							order={3}
-							c="blue.7"
-							mb="sm"
-						>
-							3. Integritas Asesmen
-						</Title>
+					<Stack gap="sm">
+						<Title order={3}>3. Integritas Asesmen</Title>
 						<Alert
 							variant="light"
 							color="blue"
@@ -142,23 +125,18 @@ export function TermsConditions() {
 							kecurangan, joki, atau penggunaan alat bantu AI lain tanpa izin akan
 							mengakibatkan diskualifikasi instan.
 						</Alert>
-					</Box>
+					</Stack>
 
-					{/* Section 4 */}
-					<Box>
-						<Title
-							order={3}
-							c="blue.7"
-							mb="sm"
-						>
-							4. Akun Pengguna
-						</Title>
+					<Stack gap="sm">
+						<Title order={3}>4. Akun Pengguna</Title>
 						<List
 							spacing="xs"
 							icon={
 								<ThemeIcon
 									color="transparent"
 									c="blue.6"
+									pos="relative"
+									top={2}
 								>
 									<Check size={18} />
 								</ThemeIcon>
@@ -180,21 +158,12 @@ export function TermsConditions() {
 								</Text>
 							</ListItem>
 						</List>
-					</Box>
+					</Stack>
 
-					{/* Footer Contact */}
-					<Box
-						mt="xl"
-						pt="xl"
-						style={{ borderTop: '1px dashed var(--mantine-color-gray-3)' }}
-					>
-						<Title
-							order={4}
-							c="dark.9"
-							mb="xs"
-						>
-							Pertanyaan Hukum?
-						</Title>
+					<Divider />
+
+					<Stack gap="sm">
+						<Title order={4}>Pertanyaan Hukum?</Title>
 						<Text c="dimmed">
 							Hubungi tim legal kami:{' '}
 							<Text
@@ -206,9 +175,9 @@ export function TermsConditions() {
 								legal@klop.ai
 							</Text>
 						</Text>
-					</Box>
+					</Stack>
 				</Stack>
-			</Box>
+			</Card>
 		</Container>
 	)
 }

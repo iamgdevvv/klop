@@ -1,23 +1,26 @@
-export const vacancyType = [
+export const vacancyType: {
+	label: string
+	value: 'fullTime' | 'partTime' | 'contract' | 'internship'
+}[] = [
 	{
-		label: 'Full Time',
+		label: 'Penuh Waktu',
 		value: 'fullTime',
 	},
 	{
-		label: 'Part Time',
+		label: 'Paruh Waktu',
 		value: 'partTime',
 	},
 	{
-		label: 'Contract',
+		label: 'Kontrak',
 		value: 'contract',
 	},
 	{
-		label: 'Internship',
+		label: 'Magang',
 		value: 'internship',
 	},
 ]
 
-export const vacancyLevel = [
+export const vacancyLevel: { label: string; value: 'senior' | 'medior' | 'junior' }[] = [
 	{
 		label: 'Senior',
 		value: 'senior',
@@ -32,13 +35,16 @@ export const vacancyLevel = [
 	},
 ]
 
-export const vacancyEducation = [
+export const vacancyEducation: {
+	label: string
+	value: 'bachelor' | 'master' | 'diploma' | 'highSchool' | 'middleSchool' | 'elementarySchool'
+}[] = [
 	{
-		label: 'Bachelor',
+		label: 'Sarjana',
 		value: 'bachelor',
 	},
 	{
-		label: 'Master',
+		label: 'Magister',
 		value: 'master',
 	},
 	{
@@ -46,26 +52,26 @@ export const vacancyEducation = [
 		value: 'diploma',
 	},
 	{
-		label: 'High School',
+		label: 'Sekolah Menengah Atas',
 		value: 'highSchool',
 	},
 	{
-		label: 'Middle School',
+		label: 'Sekolah Menengah Pertama',
 		value: 'middleSchool',
 	},
 	{
-		label: 'Elementary School',
+		label: 'Sekolah Dasar',
 		value: 'elementarySchool',
 	},
 ]
 
-export const candidateGender = [
+export const candidateGender: { label: string; value: 'male' | 'female' }[] = [
 	{
-		label: 'Male',
+		label: 'Laki-laki',
 		value: 'male',
 	},
 	{
-		label: 'Female',
+		label: 'Perempuan',
 		value: 'female',
 	},
 ]

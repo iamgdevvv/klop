@@ -2,7 +2,6 @@
 
 .inner {
 	@apply flex flex-col-reverse md:flex-row justify-between items-center;
-	@apply text-center md:text-left;
 	@apply gap-8 md:gap-12;
 }
 

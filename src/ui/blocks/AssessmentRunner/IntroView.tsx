@@ -1,5 +1,4 @@
 'use client'
-
 import {
 	Box,
 	Button,
@@ -9,72 +8,175 @@ import {
 	Grid,
 	Group,
 	List,
-	ListItem,
+	Radio,
+	RadioGroup,
 	SimpleGrid,
 	Stack,
 	Text,
 	TextInput,
 	ThemeIcon,
 	Title,
+	type ContainerProps,
 } from '@mantine/core'
-import { useForm } from '@mantine/form'
-import { Brain, Check, Clock, ListFilter, Trophy } from 'lucide-react'
+import { useForm, type TransformedValues } from '@mantine/form'
+import { Check, Clock, ListFilter, Trophy } from 'lucide-react'
+import { zod4Resolver } from 'mantine-form-zod-resolver'
+import { useCallback, useMemo, useTransition } from 'react'
 
-interface IntroViewProps {
-	onStart: (candidateData: { name: string; phone: string }) => void
-	title: string
-}
+import Richtext from '$components/Richtext'
+import { candidateGender, vacancyEducation, vacancyLevel, vacancyType } from '$payload-libs/enum'
+import type { Assessment } from '$payload-types'
+import { queryAssessmentSubmissions } from '$root/lib/server-functions/assessmentSubmission'
+import {
+	PayloadCandidateAssessmentSchema,
+	type PayloadCandidateAssessment,
+} from '$schema/assesment'
+import { printSalary } from '$utils/common'
 
-export function IntroView({ onStart, title }: IntroViewProps) {
-	const form = useForm({
-		initialValues: { name: '', phone: '' },
-		validate: {
-			name: (val) => (val.length < 3 ? 'Nama wajib diisi' : null),
-			phone: (val) => (val.length < 10 ? 'Nomor HP tidak valid' : null),
-		},
+type Props = {
+	data: Assessment
+	onSubmit: (payload: PayloadCandidateAssessment) => void
+} & Omit<ContainerProps, 'onSubmit'>
+
+export function IntroView({ data, onSubmit, ...props }: Props) {
+	const [isLoadingCandidateExist, startActionCandidateExist] = useTransition()
+
+	const form = useForm<PayloadCandidateAssessment>({
+		mode: 'uncontrolled',
+		validate: zod4Resolver(PayloadCandidateAssessmentSchema),
+		validateInputOnBlur: true,
 	})
+
+	const vacancy = useMemo(() => {
+		if (typeof data.vacancy === 'object') {
+			return data.vacancy
+		}
+
+		return null
+	}, [data.vacancy])
+
+	const closeVacancy = useMemo(() => {
+		if (typeof vacancy?.closeVacancy === 'boolean') {
+			return vacancy.closeVacancy
+		}
+
+		return false
+	}, [vacancy])
+
+	const company = useMemo(() => {
+		if (typeof vacancy?.company === 'object') {
+			return vacancy.company
+		}
+
+		return null
+	}, [vacancy])
+
+	const vacancyMetadata = useMemo(() => {
+		const salary = [vacancy?.fromExpectedSalary, vacancy?.toExpectedSalary]
+			.filter(Boolean)
+			.map((salary) => printSalary(salary!))
+			.join(' - ')
+
+		return [
+			vacancy?.title,
+			vacancyType.find((type) => type.value === vacancy?.type)?.label,
+			vacancyLevel.find((level) => level.value === vacancy?.level)?.label,
+			vacancyEducation.find((education) => education.value === vacancy?.education)?.label,
+			salary,
+		]
+			.filter(Boolean)
+			.join(' • ')
+	}, [vacancy])
+
+	const handlerSubmit = useCallback(
+		(payload: TransformedValues<typeof form>) => {
+			startActionCandidateExist(async () => {
+				const assessmentSubmissionsCandidateExist = await queryAssessmentSubmissions({
+					limit: 1,
+					whereAnd: [
+						{
+							assessment: {
+								equals: data.id,
+							},
+						},
+					],
+					whereOr: [
+						{
+							['candidate.email']: {
+								equals: payload.email,
+							},
+						},
+						{
+							['candidate.phone']: {
+								equals: payload.phone,
+							},
+						},
+					],
+				})
+
+				if (assessmentSubmissionsCandidateExist?.docs.length) {
+					const candidate = assessmentSubmissionsCandidateExist.docs[0].candidate
+
+					if (candidate?.phone === payload.phone) {
+						form.setFieldError(
+							'phone',
+							'Candidate already exist with this phone number',
+						)
+					}
+
+					if (candidate?.email === payload.email) {
+						form.setFieldError('email', 'Candidate already exist with this email')
+					}
+				} else {
+					onSubmit(payload)
+				}
+			})
+		},
+		[data.id, form, onSubmit],
+	)
 
 	return (
 		<Container
-			size="xl"
-			py={60}
+			{...props}
+			size={props.size || 'xl'}
 		>
 			<Stack gap="xl">
 				<Card
-					radius="lg"
+					radius="xl"
 					p={{ base: 'md', md: 50 }}
 					bg="white"
 					withBorder
 					shadow="sm"
 				>
-					<Box mb="xl">
-						<Text
-							size="sm"
-							c="dimmed"
-							fw={700}
-							mb={5}
-							tt="uppercase"
-							style={{ letterSpacing: '1px' }}
-						>
-							PT. Tech Solutions
-						</Text>
+					<Stack gap="xs">
+						{company ? (
+							<Text
+								size="sm"
+								c="dimmed"
+								fw={700}
+								mb={5}
+								tt="uppercase"
+							>
+								{company.title}
+							</Text>
+						) : null}
 						<Title
 							order={1}
 							size={42}
 							fw={900}
 							c="dark.9"
-							style={{ letterSpacing: -1 }}
 						>
-							{title}
+							{vacancy?.title || 'Assessment'}
 						</Title>
-						<Text
-							c="dimmed"
-							size="lg"
-							mt={5}
-						>
-							for: Senior JavaScript Developer
-						</Text>
-					</Box>
+						{vacancyMetadata ? (
+							<Text
+								c="dimmed"
+								mt={5}
+							>
+								{vacancyMetadata}
+							</Text>
+						) : null}
+					</Stack>
 
 					<Divider my="xl" />
 
@@ -109,7 +211,7 @@ export function IntroView({ onStart, title }: IntroViewProps) {
 									size="xl"
 									c="dark.8"
 								>
-									45 min
+									{data.duration || 20} min
 								</Text>
 							</Group>
 						</Box>
@@ -140,38 +242,7 @@ export function IntroView({ onStart, title }: IntroViewProps) {
 									size="xl"
 									c="dark.8"
 								>
-									15 Butir
-								</Text>
-							</Group>
-						</Box>
-						<Box>
-							<Text
-								size="xs"
-								c="dimmed"
-								fw={700}
-								tt="uppercase"
-								mb={5}
-							>
-								Difficulty
-							</Text>
-							<Group
-								gap={10}
-								align="center"
-							>
-								<ThemeIcon
-									variant="light"
-									color="orange"
-									size="md"
-									radius="xl"
-								>
-									<Brain size={18} />
-								</ThemeIcon>
-								<Text
-									fw={700}
-									size="xl"
-									c="orange.7"
-								>
-									Hard
+									{data.questions?.length || 0} Butir
 								</Text>
 							</Group>
 						</Box>
@@ -202,7 +273,7 @@ export function IntroView({ onStart, title }: IntroViewProps) {
 									size="xl"
 									c="green.7"
 								>
-									70%
+									{data.passingGrade || 70}%
 								</Text>
 							</Group>
 						</Box>
@@ -210,113 +281,57 @@ export function IntroView({ onStart, title }: IntroViewProps) {
 				</Card>
 
 				<Grid gutter="xl">
-					{/* KIRI: Instruksi */}
 					<Grid.Col span={{ base: 12, md: 8 }}>
 						<Card
 							withBorder
 							shadow="sm"
-							radius="lg"
+							radius="xl"
 							p="xl"
 							h="100%"
 						>
+							{data.description ? (
+								<>
+									<Title
+										order={5}
+										mb="sm"
+									>
+										Deskripsi Assessment
+									</Title>
+									<Richtext
+										data={data.description}
+										mb="xl"
+									/>
+								</>
+							) : null}
 							<Title
-								order={3}
-								mb="lg"
-								c="dark.9"
+								order={5}
+								mb="sm"
 							>
-								Instruksi Pengerjaan
+								Perhatian & Persyaratan Assessment
 							</Title>
 							<List
-								spacing="md"
 								icon={
 									<ThemeIcon
-										color="blue.6"
-										size={24}
+										size={20}
 										radius="xl"
 									>
-										<Check size={14} />
+										<Check size={12} />
 									</ThemeIcon>
 								}
 							>
-								<ListItem>
-									<Text
-										span
-										fw={600}
-										c="dark.9"
-									>
-										Waktu pengerjaan 45 menit.
-									</Text>{' '}
-									<Text
-										span
-										c="dimmed"
-									>
-										Timer akan berjalan otomatis saat tombol Mulai ditekan.
-									</Text>
-								</ListItem>
-								<ListItem>
-									<Text
-										span
-										fw={600}
-										c="dark.9"
-									>
-										15 Soal Pilihan Ganda.
-									</Text>{' '}
-									<Text
-										span
-										c="dimmed"
-									>
-										Setiap soal memiliki 4 pilihan jawaban, pilih satu yang
-										paling tepat.
-									</Text>
-								</ListItem>
-								<ListItem>
-									<Text
-										span
-										fw={600}
-										c="dark.9"
-									>
-										Dilarang curang.
-									</Text>{' '}
-									<Text
-										span
-										c="dimmed"
-									>
-										Sistem akan mendeteksi jika Anda membuka tab lain atau
-										aplikasi tambahan.
-									</Text>
-								</ListItem>
-								<ListItem>
-									<Text
-										span
-										fw={600}
-										c="dark.9"
-									>
-										Passing Score 70%.
-									</Text>{' '}
-									<Text
-										span
-										c="dimmed"
-									>
-										Anda harus menjawab benar minimal 11 soal untuk dinyatakan
-										lulus.
-									</Text>
-								</ListItem>
-								<ListItem>
-									<Text
-										span
-										fw={600}
-										c="dark.9"
-									>
-										Review Jawaban.
-									</Text>{' '}
-									<Text
-										span
-										c="dimmed"
-									>
-										Anda dapat kembali ke soal sebelumnya selama waktu masih
-										tersedia.
-									</Text>
-								</ListItem>
+								<List.Item>
+									<strong>Koneksi Stabil</strong> - Peserta wajib menggunakan
+									jaringan internet yang stabil selama ujian.
+								</List.Item>
+								<List.Item>
+									<strong>Mode Layar Penuh</strong> - Peserta harus tetap berada
+									dalam mode layar penuh selama assessment berlangsung.
+								</List.Item>
+								<List.Item>
+									<strong>Tidak Berpindah Tab/Aplikasi</strong> - Perpindahan tab
+									atau aplikasi tidak diperbolehkan dan akan tercatat sebagai
+									pelanggaran.
+								</List.Item>
 							</List>
 						</Card>
 					</Grid.Col>
@@ -324,7 +339,7 @@ export function IntroView({ onStart, title }: IntroViewProps) {
 					<Grid.Col span={{ base: 12, md: 4 }}>
 						<Card
 							shadow="sm"
-							radius="lg"
+							radius="xl"
 							p="xl"
 							withBorder
 							style={{
@@ -334,53 +349,75 @@ export function IntroView({ onStart, title }: IntroViewProps) {
 								justifyContent: 'center',
 							}}
 						>
-							<Box mb="xl">
-								<Title
-									order={3}
-									size="h3"
-									c="dark.9"
-								>
-									Siap Memulai?
-								</Title>
-								<Text
-									c="dimmed"
-									size="sm"
-								>
-									Lengkapi data diri Anda untuk masuk ke ujian.
-								</Text>
-							</Box>
+							<Title
+								order={4}
+								mb="xs"
+							>
+								Siap Memulai?
+							</Title>
+							<Text
+								c="dimmed"
+								size="sm"
+								mb="md"
+							>
+								Lengkapi data diri Anda untuk masuk ke ujian.
+							</Text>
 
-							<form onSubmit={form.onSubmit((values) => onStart(values))}>
-								<Stack>
+							<form onSubmit={form.onSubmit(handlerSubmit)}>
+								<Stack gap="xs">
 									<TextInput
 										label="Nama Lengkap"
-										placeholder="Contoh: Budi Santoso"
-										radius="md"
-										size="md"
-										required
+										readOnly={isLoadingCandidateExist}
+										key={form.key('name')}
 										{...form.getInputProps('name')}
 									/>
 									<TextInput
+										type="email"
+										label="Email"
+										readOnly={isLoadingCandidateExist}
+										key={form.key('email')}
+										{...form.getInputProps('email')}
+									/>
+									<TextInput
+										type="tel"
 										label="Nomor WhatsApp"
 										placeholder="0812..."
-										radius="md"
-										size="md"
-										required
-										type="tel"
+										readOnly={isLoadingCandidateExist}
+										key={form.key('phone')}
 										{...form.getInputProps('phone')}
 									/>
-
-									<Button
-										type="submit"
-										fullWidth
-										size="lg"
-										radius="md"
-										mt="md"
-										color="blue"
+									<RadioGroup
+										label="Jenis Kelamin"
+										readOnly={isLoadingCandidateExist}
+										{...form.getInputProps('gender')}
 									>
-										Mulai Asesmen
-									</Button>
+										<Stack
+											gap="xs"
+											mt={4}
+										>
+											{candidateGender.map((item, index) => (
+												<Radio
+													key={`${item.value}-${index}`}
+													value={item.value}
+													label={item.label}
+												/>
+											))}
+										</Stack>
+									</RadioGroup>
 								</Stack>
+
+								<Button
+									type="submit"
+									fullWidth
+									size="lg"
+									radius="md"
+									mt="md"
+									color="blue"
+									loading={isLoadingCandidateExist}
+									disabled={closeVacancy}
+								>
+									Mulai Asesmen
+								</Button>
 							</form>
 						</Card>
 					</Grid.Col>

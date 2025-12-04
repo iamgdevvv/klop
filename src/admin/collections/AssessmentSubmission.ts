@@ -113,6 +113,14 @@ export const AssessmentSubmissions: CollectionConfig = {
 											},
 										},
 										{
+											name: 'email',
+											type: 'email',
+											admin: {
+												width: '50%',
+												readOnly: true,
+											},
+										},
+										{
 											name: 'phone',
 											type: 'text',
 											admin: {
@@ -288,25 +296,25 @@ export const AssessmentSubmissions: CollectionConfig = {
 										readOnly: true,
 										width: '33.3333%',
 									},
-									filterOptions: ({ user }) => {
-										if (user?.role === 'candidate') {
-											return {
-												role: {
-													equals: 'company',
-												},
-											}
-										}
+									// filterOptions: ({ user }) => {
+									// 	if (user?.role === 'candidate') {
+									// 		return {
+									// 			role: {
+									// 				equals: 'company',
+									// 			},
+									// 		}
+									// 	}
 
-										if (user?.role === 'company') {
-											return {
-												role: {
-													equals: 'candidate',
-												},
-											}
-										}
+									// 	if (user?.role === 'company') {
+									// 		return {
+									// 			role: {
+									// 				equals: 'candidate',
+									// 			},
+									// 		}
+									// 	}
 
-										return false
-									},
+									// 	return false
+									// },
 								},
 								{
 									type: 'number',

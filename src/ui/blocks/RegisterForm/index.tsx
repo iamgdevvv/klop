@@ -1,25 +1,32 @@
 'use client'
 
 import {
-	Anchor,
+	Alert,
 	Button,
 	Paper,
 	PasswordInput,
 	SimpleGrid,
 	Stack,
-	Text,
 	TextInput,
+	type PaperProps,
 } from '@mantine/core'
 import { useForm, type TransformedValues } from '@mantine/form'
 import { zod4Resolver } from 'mantine-form-zod-resolver'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useState, useTransition } from 'react'
 
-import { slugDashboard, slugDashboardLogin } from '$root/lib/modules/vars'
+import { slugCompanies, slugDashboard } from '$modules/vars'
+import type { User } from '$payload-types'
 import { PayloadRegisterSchema, type PayloadRegister } from '$schema/register'
 import { actionRegisterAuth } from '$server-functions/auth'
 
-export function RegisterForm() {
+type Props = {
+	role?: User['role']
+	redirect?: string
+} & PaperProps
+
+export function RegisterForm({ role, redirect, ...props }: Props) {
+	const searchParams = useSearchParams()
 	const router = useRouter()
 	const [isLoadingRegister, startActionRegister] = useTransition()
 	const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -36,21 +43,32 @@ export function RegisterForm() {
 	const handlerSubmit = useCallback(
 		(payload: TransformedValues<typeof form>) => {
 			startActionRegister(async () => {
-				const action = await actionRegisterAuth('company', payload)
+				const action = await actionRegisterAuth(role || 'company', payload)
 
 				if (action.success === false) {
 					setErrorMessage(action.error)
 					return
 				}
 
-				router.replace(`/${slugDashboard}/collections/companies/create`)
+				const redirectSearchParam = searchParams.get('redirect')
+
+				if (redirectSearchParam) {
+					router.replace(redirectSearchParam)
+				} else if (redirect) {
+					router.replace(redirect)
+				} else if (action.data.role === 'company') {
+					router.replace(`/${slugDashboard}/collections/companies/create`)
+				} else {
+					router.replace(`/${slugCompanies}`)
+				}
 			})
 		},
-		[router],
+		[redirect, role, router, searchParams],
 	)
 
 	return (
 		<Paper
+			{...props}
 			component="form"
 			withBorder
 			shadow="md"
@@ -61,13 +79,13 @@ export function RegisterForm() {
 			onReset={form.onReset}
 		>
 			{errorMessage ? (
-				<Text
-					c="primary"
-					size="xs"
+				<Alert
+					variant="light"
+					color="red"
 					mb="lg"
 				>
 					{errorMessage}
-				</Text>
+				</Alert>
 			) : null}
 
 			<Stack gap="lg">
@@ -77,7 +95,6 @@ export function RegisterForm() {
 					readOnly={isLoadingRegister}
 					{...form.getInputProps('name')}
 				/>
-
 				<TextInput
 					type="email"
 					label="Email"
@@ -85,7 +102,6 @@ export function RegisterForm() {
 					readOnly={isLoadingRegister}
 					{...form.getInputProps('email')}
 				/>
-
 				<SimpleGrid
 					cols={{ base: 1, sm: 2 }}
 					spacing="md"
@@ -114,19 +130,6 @@ export function RegisterForm() {
 			>
 				Create Account
 			</Button>
-
-			<Text
-				ta="center"
-				mt="md"
-			>
-				Already have an account?{' '}
-				<Anchor
-					href={`/${slugDashboardLogin}`}
-					fw={700}
-				>
-					Login
-				</Anchor>
-			</Text>
 		</Paper>
 	)
 }

@@ -19,6 +19,7 @@ export type ReturnAuth =
 	  }
 
 export const getAuthUser = async () => {
+	'use cache: private'
 	try {
 		const headers = await getHeaders()
 		const payload = await getPayload({ config: configPromise })

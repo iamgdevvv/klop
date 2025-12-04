@@ -14,6 +14,7 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 	const imagePayload = await payload.findByID({
 		collection: 'asset',
 		id,
+		overrideAccess: true,
 	})
 
 	if (!imagePayload.url) {

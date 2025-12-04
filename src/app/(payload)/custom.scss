@@ -21,3 +21,12 @@ html:root {
 .payload-settings {
 	display: none;
 }
+
+.field-type.textarea textarea:disabled,
+.react-select.rs--is-disabled .rs__control,
+.field-type.number:not(.has-many) input:disabled,
+.field-type.text:not(.has-many) input:disabled,
+.checkbox-input__input input[type='checkbox']:disabled,
+.field-type.email input:disabled {
+	background-color: #f6f6f6;
+}

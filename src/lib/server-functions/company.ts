@@ -4,16 +4,16 @@ import type { Options } from 'node_modules/payload/dist/collections/operations/l
 import { getPayload, type PaginatedDocs, type Where } from 'payload'
 
 import configPromise from '$payload-config'
-import type { Vacancy } from '$payload-types'
+import type { Company } from '$payload-types'
 
-export type OptionsQueryVacancies = Omit<
-	Options<'vacancies', Record<keyof Vacancy, true>>,
+export type OptionsQueryCompanies = Omit<
+	Options<'companies', Record<keyof Company, true>>,
 	'collection'
 > & {
 	whereAnd?: Where['and']
 	whereOr?: Where['or']
 	search?: string
-	queried?: Vacancy
+	queried?: Company
 	filter?: {
 		ids?: number[]
 		toolIds?: number[]
@@ -22,10 +22,10 @@ export type OptionsQueryVacancies = Omit<
 
 const fieldSearch = ['type', 'level', 'education', 'education', 'title', 'excerpt']
 
-export const queryVacancies = async <T extends Partial<Record<keyof Vacancy, true>> | undefined>(
-	options?: OptionsQueryVacancies,
+export const queryCompanies = async <T extends Partial<Record<keyof Company, true>> | undefined>(
+	options?: OptionsQueryCompanies,
 	select?: T,
-): Promise<PaginatedDocs<Pick<Vacancy, T extends undefined ? keyof Vacancy : keyof T>> | null> => {
+): Promise<PaginatedDocs<Pick<Company, T extends undefined ? keyof Company : keyof T>> | null> => {
 	'use cache'
 	try {
 		const payload = await getPayload({ config: configPromise })
@@ -82,7 +82,7 @@ export const queryVacancies = async <T extends Partial<Record<keyof Vacancy, tru
 		}
 
 		const result = await payload.find({
-			collection: 'vacancies',
+			collection: 'companies',
 			limit,
 			page,
 			sort,
@@ -95,11 +95,11 @@ export const queryVacancies = async <T extends Partial<Record<keyof Vacancy, tru
 			},
 		})
 
-		cacheTag('collection', 'collection:vacancies')
+		cacheTag('collection', 'collection:companies')
 
 		return result
 	} catch (error) {
-		console.log('Error fetching vacancies', { error })
+		console.log('Error fetching companies', { error })
 		return null
 	}
 }

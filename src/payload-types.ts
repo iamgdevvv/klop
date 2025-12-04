@@ -357,6 +357,7 @@ export interface AssessmentSubmission {
   candidateName: string;
   candidate?: {
     avatar?: (number | null) | Asset;
+    email?: string | null;
     phone?: string | null;
     gender?: ('male' | 'female') | null;
     education?: ('bachelor' | 'master' | 'diploma' | 'highSchool' | 'middleSchool' | 'elementarySchool') | null;
@@ -693,6 +694,7 @@ export interface AssessmentSubmissionsSelect<T extends boolean = true> {
     | T
     | {
         avatar?: T;
+        email?: T;
         phone?: T;
         gender?: T;
         education?: T;

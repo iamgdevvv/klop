@@ -26,7 +26,7 @@ export const Companies: CollectionConfig = {
 			'businessCategory',
 			'location',
 			'totalEmployees',
-			'updatedAt',
+			'author',
 		],
 		group: 'Company',
 		baseFilter({ req }) {

@@ -1,45 +1,176 @@
-'use client';
+'use client'
 
-import { Button, Center, Container, Text, Title } from '@mantine/core';
-import { useState } from 'react';
-import { ExamView } from './ExamView';
-import { IntroView } from './IntroView';
+import { Alert, Center, Container, Loader, type ContainerProps } from '@mantine/core'
+import { useFullscreen, useSetState } from '@mantine/hooks'
+import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
+import { useRouter } from 'next/navigation'
+import { useCallback, useEffect, useState, useTransition } from 'react'
 
-export function AssessmentRunner() {
-    // STATE: 'INTRO' | 'EXAM' | 'FINISHED'
-    const [step, setStep] = useState<'INTRO' | 'EXAM' | 'FINISHED'>('EXAM');
+import type { Assessment } from '$payload-types'
+import { slugAssessment } from '$root/lib/modules/vars'
+import { actionAssessmentSubmission } from '$root/lib/server-functions/assessmentSubmission'
+import type { PayloadCandidateAssessment, PayloadExamAssessment } from '$schema/assesment'
+import { ExamView } from './ExamView'
+import { IntroView } from './IntroView'
 
-    // Simpan data biodata peserta
-    const [candidate, setCandidate] = useState({ name: '', phone: '' });
+type Props = {
+	data: Assessment
+} & ContainerProps
 
-    const handleStart = (data: { name: string; phone: string }) => {
-        setCandidate(data);
-        setStep('EXAM');
-    };
+export function AssessmentRunner({ data, ...props }: Props) {
+	const [fullscreenOffCount, setFullscreenOffCount] = useState(0)
+	const { toggle: toggleFullscreen, fullscreen } = useFullscreen()
+	const router = useRouter()
+	const [isLoadingActionAssessmentSubmission, startActionAssessmentSubmission] = useTransition()
+	const [errorMessage, setErrorMessage] = useState<string | null>(null)
+	const [step, setStep] = useState<'INTRO' | 'EXAM' | null>('INTRO')
+	const [payload, setPayload] = useSetState<{
+		candidate: PayloadCandidateAssessment | null
+		exams: (PayloadExamAssessment & {
+			expectedAnswer: string
+		})[]
+	}>({
+		candidate: null,
+		exams: [],
+	})
 
-    const handleFinish = () => {
-        setStep('FINISHED');
-        console.log("Ujian Selesai! Data:", candidate);
-    };
+	const handlerAsessmentSubmission = useCallback(
+		(formData: typeof payload) => {
+			if (fullscreen) {
+				toggleFullscreen()
+			}
 
-    // --- RENDER LOGIC ---
+			setStep(null)
 
-    if (step === 'INTRO') {
-        return <IntroView title="Senior JavaScript Assessment" onStart={handleStart} />;
-    }
+			startActionAssessmentSubmission(async () => {
+				const vacancy = typeof data.vacancy === 'object' ? data.vacancy : null
+				const company = typeof vacancy?.company === 'object' ? vacancy.company : null
+				const companyUserId =
+					typeof company?.author === 'number' ? company.author : company?.author?.id
 
-    if (step === 'EXAM') {
-        return <ExamView candidate={candidate} onFinish={handleFinish} />;
-    }
+				if (company && formData.candidate && companyUserId) {
+					try {
+						const assessmentSubmission = await actionAssessmentSubmission({
+							companyUserId,
+							assessment: {
+								id: data.id,
+								title: data.title,
+								description: data.description
+									? convertLexicalToPlaintext({
+											data: data.description,
+										})
+									: '',
+							},
+							candidate: formData.candidate,
+							exams: formData.exams,
+						})
 
-    // Tampilan Selesai Sederhana
-    return (
-        <Center h="60vh">
-            <Container ta="center">
-                <Title>Asesmen Selesai!</Title>
-                <Text c="dimmed" mt="md">Terima kasih {candidate.name}, jawaban Anda telah kami rekam.</Text>
-                <Button mt="xl" onClick={() => window.location.href = '/'}>Kembali ke Beranda</Button>
-            </Container>
-        </Center>
-    );
+						if (assessmentSubmission.success) {
+							router.replace(
+								`/${slugAssessment}/${data.slug}/${assessmentSubmission.data.id}`,
+							)
+						} else {
+							setErrorMessage(assessmentSubmission.error)
+						}
+					} catch {
+						setErrorMessage('Something went wrong')
+					}
+				} else {
+					setErrorMessage('Something went wrong')
+				}
+			})
+		},
+		[
+			data.description,
+			data.id,
+			data.slug,
+			data.title,
+			data.vacancy,
+			fullscreen,
+			router,
+			toggleFullscreen,
+		],
+	)
+
+	useEffect(() => {
+		if (!fullscreen) {
+			// eslint-disable-next-line react-hooks/set-state-in-effect
+			setFullscreenOffCount((p) => p + 1)
+		}
+	}, [fullscreen])
+
+	useEffect(() => {
+		if (fullscreenOffCount > 1 && !isLoadingActionAssessmentSubmission) {
+			// eslint-disable-next-line react-hooks/set-state-in-effect
+			handlerAsessmentSubmission({
+				...payload,
+				exams: payload.exams.map((exam) => ({
+					...exam,
+					answer: '',
+				})),
+			})
+		}
+	}, [
+		fullscreenOffCount,
+		handlerAsessmentSubmission,
+		isLoadingActionAssessmentSubmission,
+		payload,
+	])
+
+	if (step === 'INTRO') {
+		return (
+			<IntroView
+				{...props}
+				data={data}
+				onSubmit={(submitData) => {
+					setPayload({
+						candidate: submitData,
+					})
+					setStep('EXAM')
+					toggleFullscreen()
+				}}
+			/>
+		)
+	}
+
+	if (step === 'EXAM' && payload.candidate) {
+		return (
+			<ExamView
+				{...props}
+				candidate={payload.candidate}
+				data={data}
+				onSubmit={(submitData) => {
+					setPayload({
+						exams: submitData,
+					})
+					handlerAsessmentSubmission({
+						...payload,
+						exams: submitData,
+					})
+				}}
+			/>
+		)
+	}
+
+	return (
+		<Container
+			{...props}
+			size={props.size || 'xl'}
+		>
+			{errorMessage ? (
+				<Center>
+					<Alert
+						variant="light"
+						color="red"
+					>
+						{errorMessage}
+					</Alert>
+				</Center>
+			) : isLoadingActionAssessmentSubmission ? (
+				<Center>
+					<Loader />
+				</Center>
+			) : null}
+		</Container>
+	)
 }

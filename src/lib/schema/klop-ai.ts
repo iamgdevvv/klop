@@ -33,7 +33,7 @@ const PayloadExpectedAnswerOptionsSchema = z.object({
 
 const PayloadAssessmentScoringSchema = z.object({
 	...PayloadQuestionGenerateSchema.shape,
-	question: z
+	questions: z
 		.object({
 			question: z.string(),
 			answer: z.string(),
@@ -70,11 +70,13 @@ const ExpectedAnswerOptionsSchema = z.object({
 
 const AssessmentScoringSchema = z.object({
 	summary: z.string(),
-	questions: z.object({
-		question: z.string(),
-		answer: z.string(),
-		isAnswerCorrect: z.boolean(),
-	}),
+	questions: z
+		.object({
+			question: z.string(),
+			answer: z.string(),
+			isAnswerCorrect: z.boolean(),
+		})
+		.array(),
 })
 
 type PayloadQuestionGenerate = z.infer<typeof PayloadQuestionGenerateSchema>
