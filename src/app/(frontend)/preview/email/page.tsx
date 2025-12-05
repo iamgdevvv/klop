@@ -1,0 +1,68 @@
+import { Box } from '@mantine/core';
+
+// Ini adalah string HTML email yang sudah kita buat sebelumnya.
+// Di dunia nyata, ini bisa di-import dari file .html atau .hbs
+const EMAIL_HTML_TEMPLATE = `
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: 'Helvetica', 'Arial', sans-serif; background-color: #f8f9fa; margin: 0; padding: 0; }
+        .container { max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .header { background-color: #228be6; padding: 30px; text-align: center; }
+        .header h1 { color: #ffffff; margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.5px; }
+        .content { padding: 40px 30px; color: #343a40; text-align: center; }
+        .score-box { background-color: #ebfbee; color: #2f9e44; padding: 20px; border-radius: 12px; display: inline-block; margin: 20px 0; }
+        .score { font-size: 48px; font-weight: 900; line-height: 1; }
+        .label { font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #2b8a3e; }
+        .btn { display: inline-block; background-color: #228be6; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-weight: 600; margin-top: 20px; }
+        .footer { background-color: #f1f3f5; padding: 20px; text-align: center; font-size: 12px; color: #868e96; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Klop! Assessment</h1>
+        </div>
+        <div class="content">
+            <p style="font-size: 18px; margin-bottom: 5px;">Hi <strong>Rafi Guchan</strong>,</p>
+            <p style="color: #868e96;">Berikut adalah hasil asesmen terbaru Anda:</p>
+            
+            <div class="score-box">
+                <div class="score">85%</div>
+                <div class="label">LULUS / PASSED</div>
+            </div>
+
+            <p style="line-height: 1.6;">
+                Selamat! Anda telah menyelesaikan <strong>Senior Frontend Assessment</strong>. 
+                Kami telah mengirimkan hasil ini ke <strong>Tokopedia</strong>.
+            </p>
+
+            <a href="#" class="btn">Lihat Detail Lengkap</a>
+        </div>
+        <div class="footer">
+            &copy; 2025 Klop! Inc. All rights reserved.<br>
+            Jakarta, Indonesia
+        </div>
+    </div>
+</body>
+</html>
+`;
+
+export default function PreviewEmailPage() {
+    return (
+        <Box
+            style={{
+                minHeight: '100vh',
+                backgroundColor: '#e9ecef',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: '20px'
+            }}
+        >
+            {/* Render HTML mentah di dalam iframe atau div */}
+            <div dangerouslySetInnerHTML={{ __html: EMAIL_HTML_TEMPLATE }} />
+        </Box>
+    );
+}
