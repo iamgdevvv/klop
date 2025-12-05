@@ -30,14 +30,14 @@ export default function Footer(props: FooterProps) {
 						href={`/${slugPrivacyPolicy}`}
 						target="_blank"
 					>
-						Privacy Policy
+						Kebijakan Privasi
 					</Anchor>
 					<Anchor
 						component={Link}
 						href={`/${slugTermCondition}`}
 						target="_blank"
 					>
-						Term & Condition
+						Syarat & Ketentuan
 					</Anchor>
 				</Group>
 			</Group>

@@ -1,17 +1,19 @@
+'use client';
+
 import {
 	Button,
 	Container,
 	Group,
 	Image,
 	List,
-	ListItem,
 	Text,
 	ThemeIcon,
 	Title,
-} from '@mantine/core'
-import { Check } from 'lucide-react'
+} from '@mantine/core';
+import { Check } from 'lucide-react';
+import Link from 'next/link';
 
-import classes from '$styles/blocks/HeroBullets.module.css'
+import classes from '$styles/blocks/HeroBullets.module.css';
 
 interface HeroBulletsProps {
 	description?: string
@@ -23,9 +25,8 @@ export function HeroBullets({ description, imageSrc = '' }: HeroBulletsProps) {
 		<Container size="md">
 			<div className={classes.inner}>
 				<div className={classes.content}>
-					<Title>
-						Temukan Kandidat yang <span className={classes.highlight}>Klop!</span>{' '}
-						dengan Bantuan AI
+					<Title className={classes.title}>
+						Satu Dashboard untuk Rekrutmen yang <span className={classes.highlight}>Klop!</span>
 					</Title>
 
 					<Text
@@ -33,7 +34,7 @@ export function HeroBullets({ description, imageSrc = '' }: HeroBulletsProps) {
 						mt="md"
 					>
 						{description ||
-							'Rekrutmen bukan sekadar mencari nilai tinggi, tapi menemukan kecocokan. Klop! membantu Anda meracik asesmen, menilai secara objektif, dan menemukan talenta yang benar-benar pas dengan kultur perusahaan.'}
+							'Solusi lengkap bagi perusahaan: Kelola data perusahaan & lowongan, buat asesmen instan berbasis AI, bagikan tautan seleksi, dan tinjau hasil kandidat secara terpusat dan efisien.'}
 					</Text>
 
 					<List
@@ -49,45 +50,45 @@ export function HeroBullets({ description, imageSrc = '' }: HeroBulletsProps) {
 							</ThemeIcon>
 						}
 					>
-						<ListItem>
-							<b>Asesmen Otomatis</b> – AI meracik pertanyaan yang relevan dan
-							presisi.
-						</ListItem>
-						<ListItem>
-							<b>Penilaian Objektif</b> – Hilangkan bias dengan *scoring* instan dan
-							adil.
-						</ListItem>
-						<ListItem>
-							<b>Insight Kandidat</b> – Keputusan lebih percaya diri dengan data
-							kecocokan.
-						</ListItem>
+						<List.Item>
+							<b>Manajemen Data Terpusat</b> – Buat profil perusahaan & lowongan, langsung aktif di dashboard.
+						</List.Item>
+						<List.Item>
+							<b>AI Assessment Generator</b> – Otomatis buat soal, opsi jawaban, dan kunci jawaban presisi.
+						</List.Item>
+						<List.Item>
+							<b>Bagikan & Tinjau</b> – Salin link seleksi ke mana saja & review submission kandidat dengan mudah.
+						</List.Item>
 					</List>
 
 					<Group mt={30}>
 						<Button
+							component={Link}
+							href="/register"
 							radius="xl"
 							size="md"
 							className={classes.control}
 						>
-							Coba Klop! Sekarang
+							Daftar Perusahaan
 						</Button>
 						<Button
+							component={Link}
+							href="/login"
 							variant="default"
 							radius="xl"
 							size="md"
 							className={classes.control}
 						>
-							Pelajari Cara Kerja
+							Masuk Dashboard
 						</Button>
 					</Group>
 				</div>
 
 				{/* Gambar Ilustrasi */}
-				{/* Class image di CSS sudah mengatur agar responsive */}
 				<Image
 					src={imageSrc}
 					className={classes.image}
-					alt="Ilustrasi Seleksi Kandidat Klop"
+					alt="Ilustrasi Dashboard Owner Klop"
 				/>
 			</div>
 		</Container>

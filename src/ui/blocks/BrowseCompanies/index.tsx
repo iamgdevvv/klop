@@ -4,7 +4,7 @@ import {
     Avatar, Badge, Box, Button, Card, Container, Group,
     SimpleGrid, Stack, Text, TextInput, Title
 } from '@mantine/core';
-import { IconArrowRight, IconBuildingSkyscraper, IconMapPin, IconSearch } from '@tabler/icons-react';
+import { ArrowRight, Building2, MapPin, Search } from 'lucide-react';
 import Link from 'next/link';
 
 // --- MOCK DATA ---
@@ -36,7 +36,7 @@ export function BrowseCompanies() {
                         placeholder="Cari nama perusahaan..."
                         size="xl"
                         radius="xl"
-                        leftSection={<IconSearch size={20} />}
+                        leftSection={<Search size={20} />}
                         rightSection={
                             <Button radius="xl" size="sm" color="blue">Cari</Button>
                         }
@@ -55,7 +55,7 @@ export function BrowseCompanies() {
                         radius="lg"
                         withBorder
                         bg="white"
-                        className="hover-card" // Style hover bisa ditambah di global.css
+                        className="hover-card"
                         style={{ transition: 'transform 0.2s, box-shadow 0.2s' }}
                     >
                         <Group justify="space-between" mb="lg">
@@ -72,23 +72,23 @@ export function BrowseCompanies() {
 
                         <Stack gap="xs" mb="xl">
                             <Group gap={6}>
-                                <IconBuildingSkyscraper size={16} color="gray" />
+                                <Building2 size={16} color="gray" />
                                 <Text size="sm" c="dimmed">{company.industry}</Text>
                             </Group>
                             <Group gap={6}>
-                                <IconMapPin size={16} color="gray" />
+                                <MapPin size={16} color="gray" />
                                 <Text size="sm" c="dimmed">{company.location}</Text>
                             </Group>
                         </Stack>
 
                         <Button
                             component={Link}
-                            href={`/${company.slug}`} // Link ke Company Profile
+                            href={`/${company.slug}`}
                             variant="light"
                             color="blue"
                             fullWidth
                             radius="md"
-                            rightSection={<IconArrowRight size={16} />}
+                            rightSection={<ArrowRight size={16} />}
                         >
                             Lihat Profil
                         </Button>

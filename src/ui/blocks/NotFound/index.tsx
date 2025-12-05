@@ -1,4 +1,7 @@
-import { Box, Button, Container, Group, Text, Title } from '@mantine/core'
+'use client';
+
+import { Box, Button, Container, Group, Text, Title } from '@mantine/core';
+import Link from 'next/link';
 
 function Illustration(props: React.ComponentPropsWithoutRef<'svg'>) {
 	return (
@@ -19,6 +22,7 @@ export function NothingFoundBackground() {
 	return (
 		<Container py={80}>
 			<Box style={{ position: 'relative' }}>
+				{/* Ilustrasi Background */}
 				<Illustration
 					style={{
 						position: 'absolute',
@@ -30,6 +34,7 @@ export function NothingFoundBackground() {
 					}}
 				/>
 
+				{/* Konten Text */}
 				<Box
 					pt={{ base: 120, sm: 220 }}
 					style={{ position: 'relative', zIndex: 1 }}
@@ -39,7 +44,7 @@ export function NothingFoundBackground() {
 						fw={900}
 						fz={{ base: 32, sm: 40 }}
 					>
-						Nothing to see here
+						Halaman Tidak Ditemukan
 					</Title>
 					<Text
 						c="dimmed"
@@ -50,17 +55,18 @@ export function NothingFoundBackground() {
 						mb={45}
 						maw={540}
 					>
-						Page you are trying to open does not exist. You may have mistyped the
-						address, or the page has been moved to another URL. If you think this is an
-						error contact support.
+						Halaman yang Anda cari mungkin telah dipindahkan, dihapus, atau alamat URL yang Anda masukkan salah.
+						Silakan periksa kembali tautan Anda.
 					</Text>
 					<Group justify="center">
 						<Button
+							component={Link}
+							href="/"
 							size="md"
 							radius="xl"
 							variant="outline"
 						>
-							Take me back to home page
+							Kembali ke Beranda
 						</Button>
 					</Group>
 				</Box>

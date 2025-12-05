@@ -11,11 +11,8 @@ import {
 } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import {
-    IconArrowRight,
-    IconBuilding,
-    IconCheck, IconLink,
-    IconMapPin
-} from '@tabler/icons-react';
+    ArrowRight, Building, Check, Link as LinkIcon, MapPin
+} from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
@@ -64,8 +61,7 @@ export function VacancyView({ companySlug, vacancySlug }: { companySlug: string,
 
     const handleSubmit = (values: typeof form.values) => {
         console.log("Application Data:", values);
-        // Redirect ke halaman assessment dengan membawa data (bisa via query param atau state management)
-        // Di sini kita simulasi redirect langsung
+        // Redirect ke halaman assessment
         router.push(`/assessments/${vacancySlug}`);
     };
 
@@ -126,11 +122,11 @@ export function VacancyView({ companySlug, vacancySlug }: { companySlug: string,
                                 <Title order={2} mb="xs">{CURRENT_JOB.title}</Title>
                                 <Group gap="md">
                                     <Group gap={6}>
-                                        <IconBuilding size={18} color="gray" />
+                                        <Building size={18} color="gray" />
                                         <Text size="sm" c="dimmed">{CURRENT_JOB.company}</Text>
                                     </Group>
                                     <Group gap={6}>
-                                        <IconMapPin size={18} color="gray" />
+                                        <MapPin size={18} color="gray" />
                                         <Text size="sm" c="dimmed">{CURRENT_JOB.location}</Text>
                                     </Group>
                                 </Group>
@@ -150,7 +146,7 @@ export function VacancyView({ companySlug, vacancySlug }: { companySlug: string,
 
                             <Box>
                                 <Title order={4} mb="md">Requirements</Title>
-                                <List spacing="sm" icon={<ThemeIcon color="blue.6" size={20} radius="xl"><IconCheck size={12} /></ThemeIcon>}>
+                                <List spacing="sm" icon={<ThemeIcon color="blue.6" size={20} radius="xl"><Check size={12} /></ThemeIcon>}>
                                     {CURRENT_JOB.requirements.map((req, i) => (
                                         <List.Item key={i}><Text c="dimmed">{req}</Text></List.Item>
                                     ))}
@@ -202,7 +198,7 @@ export function VacancyView({ companySlug, vacancySlug }: { companySlug: string,
                                             placeholder="https://..."
                                             radius="md"
                                             bg="white"
-                                            leftSection={<IconLink size={16} />}
+                                            leftSection={<LinkIcon size={16} />}
                                             {...form.getInputProps('cvLink')}
                                         />
                                     </Grid.Col>
@@ -212,7 +208,7 @@ export function VacancyView({ companySlug, vacancySlug }: { companySlug: string,
                                             placeholder="https://..."
                                             radius="md"
                                             bg="white"
-                                            leftSection={<IconLink size={16} />}
+                                            leftSection={<LinkIcon size={16} />}
                                             {...form.getInputProps('portfolioLink')}
                                         />
                                     </Grid.Col>
@@ -225,7 +221,7 @@ export function VacancyView({ companySlug, vacancySlug }: { companySlug: string,
                                     color="blue"
                                     radius="md"
                                     mt="xl"
-                                    rightSection={<IconArrowRight size={18} />}
+                                    rightSection={<ArrowRight size={18} />}
                                 >
                                     Lanjut ke Asesmen
                                 </Button>
