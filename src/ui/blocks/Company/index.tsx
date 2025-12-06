@@ -303,6 +303,8 @@ export function Company({ data, vacancies, ...props }: Props) {
 								<Image
 									key={idx}
 									src={img}
+									width={300}
+									height={180}
 									className="rounded-md h-[180px]"
 								/>
 							))}

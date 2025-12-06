@@ -40,6 +40,8 @@ export function BrowseCompanies({ companies, ...props }: Props) {
 
 	const handlerQueryCompanies = useCallback(
 		(search: string | undefined) => {
+			if (searchParams.get('search') === search) return
+
 			setQuerying(true)
 			if (search) {
 				router.push(`/${slugCompanies}?search=${search}`)
@@ -47,7 +49,7 @@ export function BrowseCompanies({ companies, ...props }: Props) {
 				router.push(`/${slugCompanies}`)
 			}
 		},
-		[router],
+		[router, searchParams],
 	)
 
 	return (

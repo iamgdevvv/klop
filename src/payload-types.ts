@@ -343,6 +343,11 @@ export interface Assessment {
   excerpt?: string | null;
   featuredImage?: (number | null) | Asset;
   vacancy?: (number | null) | Vacancy;
+  mustSelectedCandidate?: boolean | null;
+  /**
+   * The candidates who took this assessment.
+   */
+  candidates?: (number | User)[] | null;
   publishedAt?: string | null;
   author?: (number | null) | User;
   updatedAt: string;
@@ -681,6 +686,8 @@ export interface AssessmentsSelect<T extends boolean = true> {
   excerpt?: T;
   featuredImage?: T;
   vacancy?: T;
+  mustSelectedCandidate?: T;
+  candidates?: T;
   publishedAt?: T;
   author?: T;
   updatedAt?: T;

@@ -1,4 +1,5 @@
 import {
+	Alert,
 	Anchor,
 	Badge,
 	Card,
@@ -266,6 +267,20 @@ export function VacancyView({
 												.
 											</Text>
 										</>
+									) : isExpired ? (
+										<Alert
+											color="orange"
+											variant="light"
+										>
+											Lowongan Berakhir
+										</Alert>
+									) : data.closeVacancy ? (
+										<Alert
+											color="red"
+											variant="light"
+										>
+											Lowongan Tutup
+										</Alert>
 									) : (
 										<>
 											<Title

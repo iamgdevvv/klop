@@ -34,7 +34,7 @@ export const VacancySubmissions: CollectionConfig = {
 		useAsTitle: 'candidateName',
 		defaultColumns: ['candidateName', 'vacancy', 'vacancyReference', 'createdAt'],
 		group: 'Submissions',
-		// hideAPIURL: true,
+		hideAPIURL: true,
 		baseFilter({ req }) {
 			if (req?.user) {
 				if (req.user.role === 'admin') {

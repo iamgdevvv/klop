@@ -29,7 +29,7 @@ export default function Footer(props: FooterProps) {
 						component={Link}
 						href={`/${slugCompanies}`}
 					>
-						Browse
+						Telusuri Perusahaan
 					</Anchor>
 					<Anchor
 						component={Link}

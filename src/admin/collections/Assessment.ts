@@ -5,6 +5,7 @@ import { metafield } from '$payload-fields/metadata'
 import { authenticated, authenticatedAdminOrAuthor } from '$payload-libs/access-rules'
 import { revalidateChange, revalidateDelete } from '$payload-libs/hooks/revalidate'
 import { generatePreviewPath } from '$payload-libs/preview-path'
+import { queryVacancySubmissions } from '$root/lib/server-functions/vacancySubmission'
 
 export const Assessments: CollectionConfig = {
 	slug: 'assessments',
@@ -22,7 +23,7 @@ export const Assessments: CollectionConfig = {
 		},
 		useAsTitle: 'title',
 		defaultColumns: ['title', 'slug', 'updatedAt'],
-		// hideAPIURL: true,
+		hideAPIURL: true,
 		group: 'Company',
 		baseFilter({ req }) {
 			if (req?.user) {
@@ -227,6 +228,65 @@ export const Assessments: CollectionConfig = {
 								not_equals: true,
 							},
 						}
+					},
+				},
+				{
+					type: 'checkbox',
+					name: 'mustSelectedCandidate',
+				},
+				{
+					type: 'relationship',
+					name: 'candidates',
+					relationTo: 'users',
+					hasMany: true,
+					admin: {
+						description: 'The candidates who took this assessment.',
+						condition: (_, siblingData) => siblingData?.mustSelectedCandidate === true,
+					},
+					filterOptions: async ({ siblingData }) => {
+						if (
+							siblingData &&
+							typeof siblingData === 'object' &&
+							'vacancy' in siblingData &&
+							typeof siblingData.vacancy === 'number'
+						) {
+							const vacancyId = siblingData.vacancy
+
+							const vacancySubmissions = await queryVacancySubmissions(
+								{
+									limit: 999999999999999,
+									where: {
+										vacancyReference: {
+											equals: vacancyId,
+										},
+									},
+								},
+								{
+									userCandidateCompany: true,
+								},
+							)
+
+							const userCandidateIds: number[] = []
+
+							vacancySubmissions?.docs.forEach((vacancySubmission) => {
+								vacancySubmission.userCandidateCompany?.map((userCandidate) => {
+									if (
+										typeof userCandidate === 'object' &&
+										userCandidate.role === 'candidate'
+									) {
+										userCandidateIds.push(userCandidate.id)
+									}
+								})
+							})
+
+							return {
+								id: {
+									in: userCandidateIds,
+								},
+							}
+						}
+
+						return false
 					},
 				},
 			],

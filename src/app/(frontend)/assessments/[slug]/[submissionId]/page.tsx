@@ -26,12 +26,32 @@ export default async function assessmentSubmissionPage({ params }: Args) {
 		getAssessmentSubmission(Number(submissionId)),
 	])
 
+	if (!authUser) {
+		return redirect(`/${slug404}`)
+	}
+
 	const assessment =
 		typeof assessmentSubmission?.assessment === 'object'
 			? assessmentSubmission?.assessment
 			: null
 
 	if (!assessmentSubmission || !assessment || assessment.slug !== slug) {
+		return redirect(`/${slug404}`)
+	}
+
+	if (!assessmentSubmission.userCandidateCompany) {
+		return redirect(`/${slug404}`)
+	}
+
+	const isCandidateExist = assessmentSubmission.userCandidateCompany.some((item) => {
+		if (typeof item === 'number') {
+			return item === authUser.id
+		}
+
+		return item.id === authUser.id
+	})
+
+	if (!isCandidateExist) {
 		return redirect(`/${slug404}`)
 	}
 

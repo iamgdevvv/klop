@@ -1,9 +1,9 @@
 import { ActionIcon, Button, Group, Stack, type StackProps } from '@mantine/core'
-import { LogIn, Settings, UserRoundPlus } from 'lucide-react'
+import { Briefcase, LogIn, Settings, UserRoundPlus } from 'lucide-react'
 
 import Image from '$components/Image'
 import Link from '$components/Link'
-import { slugDashboard, slugDashboardLogin, slugRegister } from '$modules/vars'
+import { slugCompanies, slugDashboard, slugDashboardLogin, slugRegister } from '$modules/vars'
 import type { User } from '$payload-types'
 import { cx } from '$utils/styles'
 
@@ -45,11 +45,27 @@ export default function Header({ user, showActions, ...props }: HeaderProps) {
 							<>
 								<Button
 									component={Link}
+									variant="subtle"
+									href={`/${slugCompanies}`}
+									visibleFrom="lg"
+								>
+									Telusuri Perusahaan
+								</Button>
+								<Button
+									component={Link}
 									href={`/${slugDashboard}`}
 									visibleFrom="lg"
 								>
 									Dashboard
 								</Button>
+								<ActionIcon
+									component={Link}
+									variant="subtle"
+									href={`/${slugCompanies}`}
+									hiddenFrom="lg"
+								>
+									<Briefcase />
+								</ActionIcon>
 								<ActionIcon
 									component={Link}
 									variant="subtle"
@@ -61,6 +77,14 @@ export default function Header({ user, showActions, ...props }: HeaderProps) {
 							</>
 						) : (
 							<>
+								<Button
+									component={Link}
+									variant="subtle"
+									href={`/${slugCompanies}`}
+									visibleFrom="lg"
+								>
+									Telusuri Perusahaan
+								</Button>
 								<Button
 									component={Link}
 									variant="subtle"
@@ -76,6 +100,14 @@ export default function Header({ user, showActions, ...props }: HeaderProps) {
 								>
 									Sign in
 								</Button>
+								<ActionIcon
+									component={Link}
+									variant="subtle"
+									href={`/${slugCompanies}`}
+									hiddenFrom="lg"
+								>
+									<Briefcase />
+								</ActionIcon>
 								<ActionIcon
 									component={Link}
 									variant="subtle"

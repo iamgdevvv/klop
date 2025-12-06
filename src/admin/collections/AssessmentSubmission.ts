@@ -34,7 +34,7 @@ export const AssessmentSubmissions: CollectionConfig = {
 		useAsTitle: 'candidateName',
 		defaultColumns: ['candidateName', 'assessment', 'score', 'createdAt'],
 		group: 'Submissions',
-		// hideAPIURL: true,
+		hideAPIURL: true,
 		baseFilter({ req }) {
 			if (req?.user) {
 				if (req.user.role === 'admin') {

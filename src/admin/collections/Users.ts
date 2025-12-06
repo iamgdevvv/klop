@@ -6,7 +6,7 @@ import { candidateGender, vacancyEducation } from '$payload-libs/enum'
 export const Users: CollectionConfig = {
 	slug: 'users',
 	admin: {
-		// hideAPIURL: true,
+		hideAPIURL: true,
 		useAsTitle: 'email',
 		hidden: ({ user }) => {
 			return user?.role !== 'admin'

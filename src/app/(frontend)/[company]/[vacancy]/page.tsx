@@ -103,9 +103,9 @@ export default async function vacancyPage({ params }: Args) {
 		return redirect(`/${companyData.slug}`)
 	}
 
-	const vacancData = vacancies.docs.find((v) => v.slug === vacancy)
+	const vacancyData = vacancies.docs.find((v) => v.slug === vacancy)
 
-	if (!vacancData) {
+	if (!vacancyData) {
 		return redirect(`/${companyData.slug}`)
 	}
 
@@ -117,7 +117,7 @@ export default async function vacancyPage({ params }: Args) {
 			whereOr: [
 				{
 					vacancyReference: {
-						equals: vacancData.id,
+						equals: vacancyData.id,
 					},
 				},
 				{
@@ -140,6 +140,15 @@ export default async function vacancyPage({ params }: Args) {
 
 		if (vacancySubmissionResult?.docs.length) {
 			userVacancySubmission = vacancySubmissionResult.docs[0]
+
+			const vacancyIdSubmissionResult: number | undefined =
+				typeof userVacancySubmission.vacancyReference === 'number'
+					? userVacancySubmission.vacancyReference
+					: userVacancySubmission.vacancyReference?.id
+
+			if (!vacancyIdSubmissionResult || vacancyIdSubmissionResult !== vacancyData.id) {
+				userVacancySubmission = null
+			}
 		}
 	}
 
@@ -155,7 +164,7 @@ export default async function vacancyPage({ params }: Args) {
 
 			<main className="main">
 				<VacancyView
-					data={vacancData}
+					data={vacancyData}
 					company={companyData}
 					vacancies={vacancies.docs}
 					authUser={authUser}

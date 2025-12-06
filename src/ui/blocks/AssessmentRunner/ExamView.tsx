@@ -325,6 +325,8 @@ export function ExamView({ data, candidate, onSubmit, ...props }: Props) {
 						{questions[currentIndexQuestion].questionMedia ? (
 							<Image
 								src={questions[currentIndexQuestion].questionMedia}
+								width={600}
+								height={600}
 								className="w-auto max-w-full max-h-xl mt-md"
 							/>
 						) : null}

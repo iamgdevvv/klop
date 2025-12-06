@@ -93,6 +93,8 @@ export function HeroBullets({ description, imageSrc = '' }: HeroBulletsProps) {
 				<Image
 					src={imageSrc}
 					className={classes.image}
+					width={400}
+					height={400}
 					alt="Ilustrasi Dashboard Owner Klop"
 				/>
 			</div>

@@ -42,7 +42,28 @@ export default async function assessmentPage({ params }: Args) {
 
 	let userAssessmentSubmission: AssessmentSubmission | null = null
 
+	if (
+		assessment.mustSelectedCandidate &&
+		(!assessment.candidates || assessment.candidates.length === 0)
+	) {
+		return redirect(`/${slug404}`)
+	}
+
 	if (authUser) {
+		if (assessment.mustSelectedCandidate) {
+			const isCandidateSelected = assessment.candidates?.some((candidate) => {
+				if (typeof candidate === 'number') {
+					return candidate === authUser.id
+				}
+
+				return candidate.id === authUser.id
+			})
+
+			if (!isCandidateSelected) {
+				return redirect(`/${slug404}`)
+			}
+		}
+
 		const assessmentSubmissionResult = await queryAssessmentSubmissions({
 			limit: 1,
 			whereOr: [
@@ -71,6 +92,15 @@ export default async function assessmentPage({ params }: Args) {
 
 		if (assessmentSubmissionResult?.docs.length) {
 			userAssessmentSubmission = assessmentSubmissionResult.docs[0]
+
+			const assessmentIdSubmissionResult: number | undefined =
+				typeof userAssessmentSubmission.assessment === 'number'
+					? userAssessmentSubmission.assessment
+					: userAssessmentSubmission.assessment?.id
+
+			if (!assessmentIdSubmissionResult || assessmentIdSubmissionResult !== assessment.id) {
+				userAssessmentSubmission = null
+			}
 		}
 	}
 
