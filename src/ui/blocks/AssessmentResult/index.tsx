@@ -1,4 +1,3 @@
-import type { Assessment, AssessmentSubmission } from '$root/payload-types'
 import {
 	Box,
 	Card,
@@ -14,6 +13,8 @@ import {
 	type ContainerProps,
 } from '@mantine/core'
 import { Check, Sparkles, X } from 'lucide-react'
+
+import type { Assessment, AssessmentSubmission } from '$payload-types'
 
 type Props = {
 	data: AssessmentSubmission

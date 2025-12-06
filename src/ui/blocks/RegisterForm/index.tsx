@@ -158,6 +158,8 @@ export function RegisterCandidateForm({ redirect, ...props }: Props) {
 
 	const handlerSubmit = useCallback(
 		(payload: TransformedValues<typeof form>) => {
+			setErrorMessage(null)
+
 			startActionRegister(async () => {
 				const action = await actionRegisterAuth('candidate', payload)
 

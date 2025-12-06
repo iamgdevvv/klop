@@ -19,9 +19,9 @@ import { Building, FolderClock, GraduationCap, PersonStanding } from 'lucide-rea
 import Link from '$components/Link'
 import Richtext from '$components/Richtext'
 import FormApplyVacancy from '$forms/ApplyVacancy'
+import { slugDashboard } from '$modules/vars'
 import { vacancyEducation, vacancyLevel, vacancyType } from '$payload-libs/enum'
 import type { Company, User, Vacancy, VacancySubmission } from '$payload-types'
-import { slugDashboard } from '$root/lib/modules/vars'
 import { formatCompactNumber } from '$utils/common'
 import { cx } from '$utils/styles'
 
@@ -92,8 +92,8 @@ export function VacancyView({
 								>
 									<Title
 										order={5}
-										size="sm"
-										mb={4}
+										size="h6"
+										mb="sm"
 										c={isActive ? 'blue.9' : 'dark.9'}
 									>
 										{vacancy.title}
@@ -226,68 +226,73 @@ export function VacancyView({
 
 						<Richtext data={data.description} />
 
-						<Divider
-							mt="lg"
-							mb="xl"
-						/>
+						{!authUser || authUser.role === 'candidate' ? (
+							<>
+								<Divider
+									mt="lg"
+									mb="xl"
+								/>
 
-						<Paper
-							p="xl"
-							radius="lg"
-							bg="gray.0"
-							withBorder
-						>
-							{userVacancySubmission ? (
-								<>
-									<Title
-										order={3}
-										mb="sm"
-										size="h4"
-										c="green.5"
-									>
-										Anda Telah Melamar
-									</Title>
-									<Text
-										c="dimmed"
-										mb="lg"
-									>
-										Anda telah melamar pada lowongan ini, lihat status lamaran
-										Anda di{' '}
-										<Anchor
-											component={Link}
-											c="green.5"
-											href={`/${slugDashboard}/collections/vacancySubmissions/${userVacancySubmission.id}`}
-											target="_blank"
-										>
-											Lamaran Saya
-										</Anchor>
-										.
-									</Text>
-								</>
-							) : (
-								<>
-									<Title
-										order={3}
-										mb="sm"
-										size="h4"
-									>
-										Lamar Sekarang
-									</Title>
-									<Text
-										size="sm"
-										c="dimmed"
-										mb="lg"
-									>
-										Isi data singkat Anda untuk melanjutkan ke tahap asesmen.
-									</Text>
+								<Paper
+									p="xl"
+									radius="lg"
+									bg="gray.0"
+									withBorder
+								>
+									{userVacancySubmission ? (
+										<>
+											<Title
+												order={3}
+												mb="sm"
+												size="h4"
+												c="green.5"
+											>
+												Anda Telah Melamar
+											</Title>
+											<Text
+												c="dimmed"
+												mb="lg"
+											>
+												Anda telah melamar pada lowongan ini, lihat riwayat
+												lamaran Anda di{' '}
+												<Anchor
+													component={Link}
+													c="green.5"
+													href={`/${slugDashboard}/collections/vacancySubmissions/${userVacancySubmission.id}`}
+													target="_blank"
+												>
+													Lamaran Saya
+												</Anchor>
+												.
+											</Text>
+										</>
+									) : (
+										<>
+											<Title
+												order={3}
+												mb="sm"
+												size="h4"
+											>
+												Lamar Sekarang
+											</Title>
+											<Text
+												size="sm"
+												c="dimmed"
+												mb="lg"
+											>
+												Isi data singkat Anda untuk melanjutkan ke tahap
+												asesmen.
+											</Text>
 
-									<FormApplyVacancy
-										vacancy={data}
-										authUser={authUser}
-									/>
-								</>
-							)}
-						</Paper>
+											<FormApplyVacancy
+												vacancy={data}
+												authUser={authUser}
+											/>
+										</>
+									)}
+								</Paper>
+							</>
+						) : null}
 					</Card>
 				</GridCol>
 			</Grid>

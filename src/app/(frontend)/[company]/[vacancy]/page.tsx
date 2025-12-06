@@ -1,17 +1,17 @@
 import { Stack } from '@mantine/core'
+import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
 import { VacancyView } from '$blocks/VacancyView'
 import Footer from '$layouts/Footer'
 import Header from '$layouts/Header'
 import { slug404 } from '$modules/vars'
-import { generateMeta } from '$root/lib/payload/meta-utils'
-import { queryVacancySubmissions } from '$root/lib/server-functions/vacancySubmission'
-import type { VacancySubmission } from '$root/payload-types'
+import { generateMeta } from '$payload-libs/meta-utils'
+import type { VacancySubmission } from '$payload-types'
 import { getAuthUser } from '$server-functions/auth'
 import { queryCompanies } from '$server-functions/company'
 import { queryVacancies } from '$server-functions/vacancy'
-import type { Metadata } from 'next'
+import { queryVacancySubmissions } from '$server-functions/vacancySubmission'
 
 type Args = {
 	params: Promise<{
@@ -118,6 +118,11 @@ export default async function vacancyPage({ params }: Args) {
 				{
 					vacancyReference: {
 						equals: vacancData.id,
+					},
+				},
+				{
+					userCandidateCompany: {
+						in: [authUser.id],
 					},
 				},
 				{

@@ -7,9 +7,9 @@ import Footer from '$layouts/Footer'
 import Header from '$layouts/Header'
 import { slug404 } from '$modules/vars'
 import { generateMeta } from '$payload-libs/meta-utils'
-import { queryVacancies } from '$root/lib/server-functions/vacancy'
 import { getAuthUser } from '$server-functions/auth'
 import { queryCompanies } from '$server-functions/company'
+import { queryVacancies } from '$server-functions/vacancy'
 
 type Args = {
 	params: Promise<{

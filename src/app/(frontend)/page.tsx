@@ -1,9 +1,9 @@
 import { Stack } from '@mantine/core'
 import type { Metadata } from 'next'
 
+import { HeroBullets } from '$blocks/HeroBullets'
 import Footer from '$layouts/Footer'
 import Header from '$layouts/Header'
-import { HeroBullets } from '$root/ui/blocks/HeroBullets'
 import { getAuthUser } from '$server-functions/auth'
 
 export const metadata: Metadata = {

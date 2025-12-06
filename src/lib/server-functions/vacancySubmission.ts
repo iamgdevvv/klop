@@ -128,6 +128,15 @@ export async function actionVacancySubmission({
 					biography: formData.biography,
 					resume,
 					documents: documents.length ? documents : null,
+					socials: {
+						website: candidate.socials?.website,
+						facebook: candidate.socials?.facebook,
+						instagram: candidate.socials?.instagram,
+						twitter: candidate.socials?.twitter,
+						linkedin: candidate.socials?.linkedin,
+						youtube: candidate.socials?.youtube,
+						tiktok: candidate.socials?.tiktok,
+					},
 				},
 				userCandidateCompany,
 				vacancy: {
@@ -184,10 +193,11 @@ export async function actionVacancySubmissionRegister({
 				name: formData.name,
 				email: formData.email,
 				password: formData.password,
+				phone: formData.phone,
 				biography: formData.biography,
-			},
-			select: {
-				email: true,
+				gender: formData.gender,
+				education: formData.education,
+				role: 'candidate',
 			},
 		})
 
@@ -298,13 +308,23 @@ export async function actionVacancySubmissionRegister({
 			data: {
 				candidateName: formData.name,
 				candidate: {
-					email: formData.email,
-					phone: formData.phone,
-					gender: formData.gender,
-					education: formData.education,
-					biography: formData.biography,
+					avatar: candidate.avatar,
+					email: candidate.email,
+					phone: candidate.phone,
+					gender: candidate.gender,
+					education: candidate.education,
+					biography: candidate.biography,
 					resume,
 					documents: documents.length ? documents : null,
+					socials: {
+						website: candidate.socials?.website,
+						facebook: candidate.socials?.facebook,
+						instagram: candidate.socials?.instagram,
+						twitter: candidate.socials?.twitter,
+						linkedin: candidate.socials?.linkedin,
+						youtube: candidate.socials?.youtube,
+						tiktok: candidate.socials?.tiktok,
+					},
 				},
 				userCandidateCompany,
 				vacancy: {

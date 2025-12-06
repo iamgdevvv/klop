@@ -7,17 +7,19 @@ import { useCallback, useEffect, useState, useTransition } from 'react'
 
 import { useRouter } from '$hooks/use-router'
 import { slugAssessment } from '$modules/vars'
-import type { Assessment } from '$payload-types'
-import type { PayloadCandidateAssessment, PayloadExamAssessment } from '$schema/assesment'
+import type { Assessment, AssessmentSubmission, User } from '$payload-types'
+import type { PayloadExamAssessment } from '$schema/assesment'
 import { actionAssessmentSubmission } from '$server-functions/assessmentSubmission'
 import { ExamView } from './ExamView'
 import { IntroView } from './IntroView'
 
 type Props = {
 	data: Assessment
+	authUser: User | null
+	userAssessmentSubmission: AssessmentSubmission | null
 } & ContainerProps
 
-export function AssessmentRunner({ data, ...props }: Props) {
+export function AssessmentRunner({ data, authUser, userAssessmentSubmission, ...props }: Props) {
 	const [fullscreenOffCount, setFullscreenOffCount] = useState(0)
 	const { toggle: toggleFullscreen, fullscreen } = useFullscreen()
 	const router = useRouter()
@@ -25,7 +27,7 @@ export function AssessmentRunner({ data, ...props }: Props) {
 	const [errorMessage, setErrorMessage] = useState<string | null>(null)
 	const [step, setStep] = useState<'INTRO' | 'EXAM' | null>('INTRO')
 	const [payload, setPayload] = useSetState<{
-		candidate: PayloadCandidateAssessment | null
+		candidate: User | null
 		exams: (PayloadExamAssessment & {
 			expectedAnswer: string
 		})[]
@@ -43,6 +45,8 @@ export function AssessmentRunner({ data, ...props }: Props) {
 			setStep(null)
 
 			startActionAssessmentSubmission(async () => {
+				setErrorMessage(null)
+
 				const vacancy = typeof data.vacancy === 'object' ? data.vacancy : null
 				const company = typeof vacancy?.company === 'object' ? vacancy.company : null
 				const companyUserId =
@@ -52,6 +56,7 @@ export function AssessmentRunner({ data, ...props }: Props) {
 					try {
 						const assessmentSubmission = await actionAssessmentSubmission({
 							companyUserId,
+							candidateUserId: formData.candidate.id,
 							assessment: {
 								id: data.id,
 								title: data.title,
@@ -61,7 +66,6 @@ export function AssessmentRunner({ data, ...props }: Props) {
 										})
 									: '',
 							},
-							candidate: formData.candidate,
 							exams: formData.exams,
 						})
 
@@ -122,9 +126,11 @@ export function AssessmentRunner({ data, ...props }: Props) {
 			<IntroView
 				{...props}
 				data={data}
-				onSubmit={(submitData) => {
+				authUser={authUser}
+				userAssessmentSubmission={userAssessmentSubmission}
+				onSubmit={(candidate) => {
 					setPayload({
-						candidate: submitData,
+						candidate,
 					})
 					setStep('EXAM')
 					toggleFullscreen()

@@ -6,7 +6,7 @@ import { getPayload, type PaginatedDocs, type Where } from 'payload'
 import configPromise from '$payload-config'
 import type { AssessmentSubmission } from '$payload-types'
 import { klopAIAssessmentScoring } from '$repo/klop-ai'
-import type { PayloadCandidateAssessment, PayloadExamAssessment } from '$schema/assesment'
+import type { PayloadExamAssessment } from '$schema/assesment'
 
 export type ReturnAssessmentSubmission =
 	| {
@@ -22,23 +22,55 @@ export type ReturnAssessmentSubmission =
 
 export async function actionAssessmentSubmission({
 	companyUserId,
+	candidateUserId,
 	assessment,
-	candidate,
 	exams,
 }: {
 	companyUserId: number
+	candidateUserId: number
 	assessment: {
 		id: number
 		title: string
 		description: string
 	}
-	candidate: PayloadCandidateAssessment
 	exams: (PayloadExamAssessment & {
 		expectedAnswer: string
 	})[]
 }): Promise<ReturnAssessmentSubmission> {
 	try {
 		const payload = await getPayload({ config: configPromise })
+
+		const [companyUser, candidateUser] = await Promise.all([
+			payload.findByID({
+				collection: 'users',
+				id: companyUserId,
+				overrideAccess: true,
+				select: {
+					role: true,
+				},
+			}),
+			payload.findByID({
+				collection: 'users',
+				id: candidateUserId,
+				overrideAccess: true,
+			}),
+		])
+
+		if (companyUser?.role !== 'company') {
+			return {
+				success: false,
+				error: 'Company user not found',
+			}
+		}
+
+		if (candidateUser?.role !== 'candidate') {
+			return {
+				success: false,
+				error: 'Candidate user not found',
+			}
+		}
+
+		const userCandidateCompany: number[] = [companyUser.id, candidateUser.id]
 
 		if (exams.length) {
 			const assessmentScoring = await klopAIAssessmentScoring({
@@ -61,13 +93,27 @@ export async function actionAssessmentSubmission({
 				collection: 'assessmentSubmissions',
 				overrideAccess: true,
 				data: {
-					candidateName: candidate.name,
+					candidateName: candidateUser.name,
 					candidate: {
-						email: candidate.email,
-						phone: candidate.phone,
-						gender: candidate.gender,
+						avatar: candidateUser.avatar,
+						email: candidateUser.email,
+						phone: candidateUser.phone,
+						gender: candidateUser.gender,
+						education: candidateUser.education,
+						biography: candidateUser.biography,
+						resume: candidateUser.resume,
+						documents: candidateUser.documents,
+						socials: {
+							website: candidateUser.socials?.website,
+							facebook: candidateUser.socials?.facebook,
+							instagram: candidateUser.socials?.instagram,
+							twitter: candidateUser.socials?.twitter,
+							linkedin: candidateUser.socials?.linkedin,
+							youtube: candidateUser.socials?.youtube,
+							tiktok: candidateUser.socials?.tiktok,
+						},
 					},
-					userCandidateCompany: [companyUserId],
+					userCandidateCompany,
 					score: scoreSubmission,
 					assessment: assessment.id,
 					summary: assessmentScoring.summary,
@@ -86,13 +132,27 @@ export async function actionAssessmentSubmission({
 				collection: 'assessmentSubmissions',
 				overrideAccess: true,
 				data: {
-					candidateName: candidate.name,
+					candidateName: candidateUser.name,
 					candidate: {
-						email: candidate.email,
-						phone: candidate.phone,
-						gender: candidate.gender,
+						avatar: candidateUser.avatar,
+						email: candidateUser.email,
+						phone: candidateUser.phone,
+						gender: candidateUser.gender,
+						education: candidateUser.education,
+						biography: candidateUser.biography,
+						resume: candidateUser.resume,
+						documents: candidateUser.documents,
+						socials: {
+							website: candidateUser.socials?.website,
+							facebook: candidateUser.socials?.facebook,
+							instagram: candidateUser.socials?.instagram,
+							twitter: candidateUser.socials?.twitter,
+							linkedin: candidateUser.socials?.linkedin,
+							youtube: candidateUser.socials?.youtube,
+							tiktok: candidateUser.socials?.tiktok,
+						},
 					},
-					userCandidateCompany: [companyUserId],
+					userCandidateCompany,
 					score: 0,
 					assessment: assessment.id,
 					summary: 'Kandidat gagal melakukan assessment',
@@ -132,6 +192,7 @@ export async function getAssessmentSubmission(id: number) {
 		return await payload.findByID({
 			collection: 'assessmentSubmissions',
 			id,
+			overrideAccess: true,
 		})
 	} catch (error) {
 		console.log('Error fetching assessmentSubmissions', { error })

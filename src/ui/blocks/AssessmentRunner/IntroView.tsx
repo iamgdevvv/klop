@@ -1,15 +1,17 @@
 'use client'
 import {
+	Alert,
+	Anchor,
 	Box,
 	Button,
 	Card,
+	Checkbox,
 	Container,
 	Divider,
 	Grid,
 	Group,
 	List,
-	Radio,
-	RadioGroup,
+	PasswordInput,
 	SimpleGrid,
 	Stack,
 	Text,
@@ -21,12 +23,14 @@ import {
 import { useForm, type TransformedValues } from '@mantine/form'
 import { Check, Clock, ListFilter, Trophy } from 'lucide-react'
 import { zod4Resolver } from 'mantine-form-zod-resolver'
-import { useCallback, useMemo, useTransition } from 'react'
+import { useCallback, useMemo, useState, useTransition } from 'react'
 
+import Link from '$components/Link'
 import Richtext from '$components/Richtext'
-import { candidateGender, vacancyEducation, vacancyLevel, vacancyType } from '$payload-libs/enum'
-import type { Assessment } from '$payload-types'
-import { queryAssessmentSubmissions } from '$root/lib/server-functions/assessmentSubmission'
+import { slugDashboard } from '$modules/vars'
+import { vacancyEducation, vacancyLevel, vacancyType } from '$payload-libs/enum'
+import type { Assessment, AssessmentSubmission, User } from '$payload-types'
+import { actionRegisterAuth } from '$root/lib/server-functions/auth'
 import {
 	PayloadCandidateAssessmentSchema,
 	type PayloadCandidateAssessment,
@@ -35,16 +39,22 @@ import { printSalary } from '$utils/common'
 
 type Props = {
 	data: Assessment
-	onSubmit: (payload: PayloadCandidateAssessment) => void
+	authUser: User | null
+	userAssessmentSubmission: AssessmentSubmission | null
+	onSubmit: (candidate: User) => void
 } & Omit<ContainerProps, 'onSubmit'>
 
-export function IntroView({ data, onSubmit, ...props }: Props) {
-	const [isLoadingCandidateExist, startActionCandidateExist] = useTransition()
+export function IntroView({ data, authUser, userAssessmentSubmission, onSubmit, ...props }: Props) {
+	const [isLoadingCreateCandidate, startActionCreateCandidate] = useTransition()
+	const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
 	const form = useForm<PayloadCandidateAssessment>({
 		mode: 'uncontrolled',
 		validate: zod4Resolver(PayloadCandidateAssessmentSchema),
 		validateInputOnBlur: true,
+		onValuesChange: () => {
+			setErrorMessage(null)
+		},
 	})
 
 	const vacancy = useMemo(() => {
@@ -90,49 +100,19 @@ export function IntroView({ data, onSubmit, ...props }: Props) {
 
 	const handlerSubmit = useCallback(
 		(payload: TransformedValues<typeof form>) => {
-			startActionCandidateExist(async () => {
-				const assessmentSubmissionsCandidateExist = await queryAssessmentSubmissions({
-					limit: 1,
-					whereAnd: [
-						{
-							assessment: {
-								equals: data.id,
-							},
-						},
-					],
-					whereOr: [
-						{
-							['candidate.email']: {
-								equals: payload.email,
-							},
-						},
-						{
-							['candidate.phone']: {
-								equals: payload.phone,
-							},
-						},
-					],
-				})
+			setErrorMessage(null)
 
-				if (assessmentSubmissionsCandidateExist?.docs.length) {
-					const candidate = assessmentSubmissionsCandidateExist.docs[0].candidate
+			startActionCreateCandidate(async () => {
+				const registerCandidate = await actionRegisterAuth('candidate', payload)
 
-					if (candidate?.phone === payload.phone) {
-						form.setFieldError(
-							'phone',
-							'Candidate already exist with this phone number',
-						)
-					}
-
-					if (candidate?.email === payload.email) {
-						form.setFieldError('email', 'Candidate already exist with this email')
-					}
+				if (registerCandidate.success) {
+					onSubmit(registerCandidate.data)
 				} else {
-					onSubmit(payload)
+					setErrorMessage(registerCandidate.error)
 				}
 			})
 		},
-		[data.id, form, onSubmit],
+		[onSubmit],
 	)
 
 	return (
@@ -344,76 +324,153 @@ export function IntroView({ data, onSubmit, ...props }: Props) {
 							withBorder
 							className="h-full flex flex-col justify-center"
 						>
-							<Title
-								order={4}
-								mb="xs"
-							>
-								Siap Memulai?
-							</Title>
-							<Text
-								c="dimmed"
-								size="sm"
-								mb="md"
-							>
-								Lengkapi data diri Anda untuk masuk ke ujian.
-							</Text>
-
-							<form onSubmit={form.onSubmit(handlerSubmit)}>
-								<Stack gap="xs">
-									<TextInput
-										label="Nama Lengkap"
-										readOnly={isLoadingCandidateExist}
-										key={form.key('name')}
-										{...form.getInputProps('name')}
-									/>
-									<TextInput
-										type="email"
-										label="Email"
-										readOnly={isLoadingCandidateExist}
-										key={form.key('email')}
-										{...form.getInputProps('email')}
-									/>
-									<TextInput
-										type="tel"
-										label="No. Telp / Whatsapp"
-										placeholder="0812..."
-										readOnly={isLoadingCandidateExist}
-										key={form.key('phone')}
-										{...form.getInputProps('phone')}
-									/>
-									<RadioGroup
-										label="Jenis Kelamin"
-										readOnly={isLoadingCandidateExist}
-										{...form.getInputProps('gender')}
+							{userAssessmentSubmission && authUser ? (
+								<>
+									<Title
+										order={4}
+										mb="xs"
 									>
-										<Stack
-											gap="xs"
-											mt={4}
+										Halo, {authUser.name}! Asessmen sudah selesai.
+									</Title>
+									<Text
+										c="dimmed"
+										mb="lg"
+									>
+										Anda telah menyelesaikan assesmen ini, lihat riwayat
+										assessment Anda di{' '}
+										<Anchor
+											component={Link}
+											c="green.5"
+											href={`/${slugDashboard}/collections/assessmentSubmissions/${userAssessmentSubmission.id}`}
+											target="_blank"
 										>
-											{candidateGender.map((item, index) => (
-												<Radio
-													key={`${item.value}-${index}`}
-													value={item.value}
-													label={item.label}
-												/>
-											))}
-										</Stack>
-									</RadioGroup>
-								</Stack>
+											Assessment Saya
+										</Anchor>
+										.
+									</Text>
+								</>
+							) : authUser?.role === 'candidate' ? (
+								<>
+									<Title
+										order={4}
+										mb="xs"
+									>
+										Halo,{' '}
+										<Text
+											span
+											c="blue"
+											fz="inherit"
+											fw="inherit"
+										>
+											{authUser.name}
+										</Text>
+										! Siap Memulai?
+									</Title>
+									<Checkbox
+										label="Saya menyetujui ketentuan dan syarat yang berlaku."
+										checked
+									/>
+									<Button
+										fullWidth
+										size="lg"
+										radius="md"
+										mt="md"
+										color="blue"
+										loading={isLoadingCreateCandidate}
+										disabled={closeVacancy}
+										onClick={() => {
+											onSubmit(authUser)
+										}}
+									>
+										Mulai Asesmen
+									</Button>
+								</>
+							) : (
+								<>
+									<Title
+										order={4}
+										mb="xs"
+									>
+										Siap Memulai?
+									</Title>
+									<Text
+										c="dimmed"
+										size="sm"
+										mb="md"
+									>
+										Lengkapi data diri Anda untuk daftar menjadi kandidat
+										lansung melaksanakan asassesmen.
+									</Text>
 
-								<Button
-									type="submit"
-									fullWidth
-									size="lg"
-									radius="md"
-									mt="md"
-									color="blue"
-									loading={isLoadingCandidateExist}
-									disabled={closeVacancy}
-								>
-									Mulai Asesmen
-								</Button>
-							</form>
+									{errorMessage ? (
+										<Alert
+											variant="light"
+											color="red"
+											mb="lg"
+										>
+											{errorMessage}
+										</Alert>
+									) : null}
+
+									<form onSubmit={form.onSubmit(handlerSubmit)}>
+										<Stack gap="xs">
+											<TextInput
+												label="Nama Lengkap"
+												readOnly={isLoadingCreateCandidate}
+												key={form.key('name')}
+												{...form.getInputProps('name')}
+											/>
+											<TextInput
+												type="email"
+												label="Email"
+												readOnly={isLoadingCreateCandidate}
+												key={form.key('email')}
+												{...form.getInputProps('email')}
+											/>
+											<TextInput
+												type="tel"
+												label="No. Telp / Whatsapp"
+												placeholder="0812..."
+												readOnly={isLoadingCreateCandidate}
+												key={form.key('phone')}
+												{...form.getInputProps('phone')}
+											/>
+											<PasswordInput
+												label="Password"
+												key={form.key('password')}
+												readOnly={isLoadingCreateCandidate}
+												{...form.getInputProps('password')}
+											/>
+											<PasswordInput
+												label="Confirm Password"
+												key={form.key('confirmPassword')}
+												readOnly={isLoadingCreateCandidate}
+												{...form.getInputProps('confirmPassword')}
+											/>
+											<Checkbox
+												key={form.key('agreeToc')}
+												label="Saya menyetujui ketentuan dan syarat yang berlaku."
+												{...form.getInputProps('agreeToc', {
+													type: 'checkbox',
+												})}
+											/>
+										</Stack>
+
+										<Button
+											type="submit"
+											fullWidth
+											size="lg"
+											radius="md"
+											mt="md"
+											color="blue"
+											loading={isLoadingCreateCandidate}
+											disabled={closeVacancy}
+										>
+											Mulai Asesmen
+										</Button>
+									</form>
+								</>
+							)}
 						</Card>
 					</Grid.Col>
 				</Grid>

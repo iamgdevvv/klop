@@ -1,5 +1,5 @@
 'use server'
-import { headers as getHeaders } from 'next/headers'
+import { cookies as getCookies, headers as getHeaders } from 'next/headers'
 import { getPayload, ValidationError } from 'payload'
 
 import configPromise from '$payload-config'
@@ -35,7 +35,9 @@ export const getAuthUser = async () => {
 
 export async function actionRegisterAuth<T extends User['role']>(
 	role: T,
-	body: T extends 'candidate' ? PayloadRegisterCandidate : PayloadRegister,
+	body: T extends 'candidate'
+		? Omit<PayloadRegisterCandidate, 'biography' | 'gender' | 'education'>
+		: PayloadRegister,
 ): Promise<ReturnAuth> {
 	try {
 		const payload = await getPayload({ config: configPromise })
@@ -49,6 +51,31 @@ export async function actionRegisterAuth<T extends User['role']>(
 		})
 
 		if (register) {
+			const authLogin = await payload.login({
+				collection: 'users',
+				data: {
+					email: body.email,
+					password: body.password,
+				},
+			})
+
+			if (authLogin.exp && authLogin.token) {
+				const cookies = await getCookies()
+
+				cookies.set('payload-token', authLogin.token, {
+					httpOnly: true,
+					secure: process.env.NODE_ENV == 'production',
+					maxAge: authLogin.exp,
+					sameSite: 'lax',
+					path: '/',
+				})
+			} else {
+				return {
+					success: false,
+					error: 'Something went wrong cant login',
+				}
+			}
+
 			return {
 				success: true,
 				data: register,

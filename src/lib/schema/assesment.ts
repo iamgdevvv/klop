@@ -1,16 +1,27 @@
 import * as z from 'zod'
+import { PayloadRegisterCandidateSchema } from './register'
 
-import { candidateGender } from '$payload-libs/enum'
-
-const PayloadCandidateAssessmentSchema = z.object({
-	name: z.string('Isi kolom ini').nonempty('Tidak boleh kosong'),
-	email: z.email('Harus berupa alamat email yang valid').nonempty('Tidak boleh kosong'),
-	phone: z.string('Isi kolom ini').nonempty('Tidak boleh kosong'),
-	gender: z.enum(
-		candidateGender.map((item) => item.value),
-		'Pilih jenis kelamin',
-	),
-})
+const PayloadCandidateAssessmentSchema = z
+	.object({
+		...PayloadRegisterCandidateSchema.pick({
+			name: true,
+			email: true,
+			phone: true,
+		}).shape,
+		password: z
+			.string('Isi kolom ini')
+			.nonempty('Tidak boleh kosong')
+			.min(6, 'Kata sandi harus terdiri dari minimal 6 karakter.'),
+		confirmPassword: z
+			.string('Isi kolom ini')
+			.nonempty('Tidak boleh kosong')
+			.min(6, 'Kata sandi harus terdiri dari minimal 6 karakter.'),
+		agreeToc: z.literal(true, 'Wajib dicentang'),
+	})
+	.refine((data) => data.password === data.confirmPassword, {
+		message: 'Kata sandi tidak cocok',
+		path: ['confirmPassword'],
+	})
 
 const PayloadExamAssessmentSchema = z.object({
 	question: z.string(),

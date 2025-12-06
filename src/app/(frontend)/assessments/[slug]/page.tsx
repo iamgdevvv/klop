@@ -5,7 +5,9 @@ import { redirect } from 'next/navigation'
 
 import { AssessmentRunner } from '$blocks/AssessmentRunner'
 import { slug404 } from '$modules/vars'
+import type { AssessmentSubmission } from '$payload-types'
 import { queryAssessments } from '$server-functions/assessment'
+import { queryAssessmentSubmissions } from '$server-functions/assessmentSubmission'
 import { getAuthUser } from '$server-functions/auth'
 
 type Args = {
@@ -36,13 +38,53 @@ export default async function assessmentPage({ params }: Args) {
 		return redirect(`/${slug404}`)
 	}
 
+	const assessment = assessmentResult.docs[0]
+
+	let userAssessmentSubmission: AssessmentSubmission | null = null
+
+	if (authUser) {
+		const assessmentSubmissionResult = await queryAssessmentSubmissions({
+			limit: 1,
+			whereOr: [
+				{
+					assessment: {
+						equals: assessment.id,
+					},
+				},
+				{
+					userCandidateCompany: {
+						in: [authUser.id],
+					},
+				},
+				{
+					['candidate.email']: {
+						equals: authUser.email,
+					},
+				},
+				{
+					['candidate.phone']: {
+						equals: authUser.phone,
+					},
+				},
+			],
+		})
+
+		if (assessmentSubmissionResult?.docs.length) {
+			userAssessmentSubmission = assessmentSubmissionResult.docs[0]
+		}
+	}
+
 	return (
 		<Stack
 			gap={0}
 			mih="100vh"
 		>
 			<main className="main">
-				<AssessmentRunner data={assessmentResult.docs[0]} />
+				<AssessmentRunner
+					data={assessment}
+					authUser={authUser}
+					userAssessmentSubmission={userAssessmentSubmission}
+				/>
 			</main>
 		</Stack>
 	)

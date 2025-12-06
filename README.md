@@ -3,9 +3,9 @@
 
 ![Preview Template](public/images/preview-klop.jpg)
 
-# Creators Klop! v2
+# Creators Klop!
 
-Selamat datang di repository **Creators Klopvv** site-v2 Website Template 🎉
+Selamat datang di repository **Klop** 🎉
 
 Template website yang dibangun oleh **pribadi** dengan semangat bingung mau ngapain weekend.\
 Kalian juga dapat menggunakan website template ini secara gratis.

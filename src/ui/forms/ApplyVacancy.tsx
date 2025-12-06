@@ -86,6 +86,8 @@ function FormApplyVacancyAuthUser({
 
 	const handlerSubmit = useCallback(
 		(payload: TransformedValues<typeof form>) => {
+			setErrorMessage(null)
+
 			startActionRegister(async () => {
 				startActionRegister(async () => {
 					const action = await actionVacancySubmission({

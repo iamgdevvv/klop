@@ -4,8 +4,8 @@ import type { Metadata } from 'next'
 import { BrowseCompanies } from '$blocks/BrowseCompanies'
 import Footer from '$layouts/Footer'
 import Header from '$layouts/Header'
-import { queryCompanies } from '$root/lib/server-functions/company'
 import { getAuthUser } from '$server-functions/auth'
+import { queryCompanies } from '$server-functions/company'
 
 export const metadata: Metadata = {
 	title: 'Temukan Perusahaan ⎯ Klop!',

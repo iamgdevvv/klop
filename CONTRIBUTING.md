@@ -20,7 +20,7 @@ Semua kontribusi, baik kecil maupun besar, sangat berarti.
     ```
     git push origin fitur-baru
     ```
-6. **Buat Pull Request (PR)** ke repository Creators Klop! branch site-v2.
+6. **Buat Pull Request (PR)** ke repository Creators Klop! branch main.
 
 &#x20;
 

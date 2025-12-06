@@ -17,6 +17,7 @@ import {
 	type ContainerProps,
 } from '@mantine/core'
 import { useForm, type TransformedValues } from '@mantine/form'
+import { useListState, usePageLeave } from '@mantine/hooks'
 import { Clock } from 'lucide-react'
 import { zod4Resolver } from 'mantine-form-zod-resolver'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -24,18 +25,13 @@ import * as z from 'zod'
 
 import Image from '$components/Image'
 import { candidateGender } from '$payload-libs/enum'
-import type { Assessment } from '$payload-types'
-import { cx } from '$root/lib/utils/styles'
-import {
-	PayloadExamAssessmentSchema,
-	type PayloadCandidateAssessment,
-	type PayloadExamAssessment,
-} from '$schema/assesment'
-import { useListState, usePageLeave } from '@mantine/hooks'
+import type { Assessment, User } from '$payload-types'
+import { PayloadExamAssessmentSchema, type PayloadExamAssessment } from '$schema/assesment'
+import { cx } from '$utils/styles'
 
 type Props = {
 	data: Assessment
-	candidate: PayloadCandidateAssessment
+	candidate: User
 	onSubmit: (
 		payload: (PayloadExamAssessment & {
 			expectedAnswer: string
