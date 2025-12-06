@@ -95,6 +95,7 @@ export const Users: CollectionConfig = {
 				{
 					name: 'phone',
 					type: 'text',
+					unique: true,
 					admin: {
 						width: '33.333%',
 					},

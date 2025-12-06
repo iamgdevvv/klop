@@ -68,7 +68,7 @@ export function Company({ data, vacancies, ...props }: Props) {
 					/>
 
 					{/* Info */}
-					<Box style={{ flex: 1 }}>
+					<Box flex={1}>
 						<Group
 							align="center"
 							gap="xs"
@@ -325,9 +325,12 @@ export function Company({ data, vacancies, ...props }: Props) {
 						<Group gap="xl">
 							{socials.map(([social, link], index) => (
 								<Group
+									component={Link}
+									// @ts-expect-error
+									href={link!}
+									target="_blank"
 									key={`${link}-${index}`}
 									gap={6}
-									style={{ cursor: 'pointer' }}
 								>
 									{social === 'website' ? (
 										<Globe size={20} />
@@ -345,13 +348,12 @@ export function Company({ data, vacancies, ...props }: Props) {
 										<Music size={20} />
 									) : null}
 
-									<Link
-										href={link!}
-										target="_blank"
-										className="capitalize"
+									<Text
+										component="span"
+										tt="capitalize"
 									>
 										{social}
-									</Link>
+									</Text>
 								</Group>
 							))}
 						</Group>

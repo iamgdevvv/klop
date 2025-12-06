@@ -214,7 +214,7 @@ export function AssessmentResult({ data, assessment, ...props }: Props) {
 						<Text
 							size="sm"
 							c="white"
-							style={{ opacity: 0.9 }}
+							opacity={0.9}
 						>
 							Assessment: {assessment?.title}
 						</Text>

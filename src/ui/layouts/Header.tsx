@@ -52,8 +52,9 @@ export default function Header({ user, showActions, ...props }: HeaderProps) {
 								</Button>
 								<ActionIcon
 									component={Link}
+									variant="subtle"
 									href={`/${slugDashboard}`}
-									hiddenFrom="md"
+									hiddenFrom="lg"
 								>
 									<Settings />
 								</ActionIcon>
@@ -79,7 +80,7 @@ export default function Header({ user, showActions, ...props }: HeaderProps) {
 									component={Link}
 									variant="subtle"
 									href={`/${slugRegister}`}
-									hiddenFrom="md"
+									hiddenFrom="lg"
 								>
 									<UserRoundPlus />
 								</ActionIcon>
@@ -87,7 +88,7 @@ export default function Header({ user, showActions, ...props }: HeaderProps) {
 									component={Link}
 									variant="subtle"
 									href={`/${slugDashboardLogin}`}
-									hiddenFrom="md"
+									hiddenFrom="lg"
 								>
 									<LogIn />
 								</ActionIcon>

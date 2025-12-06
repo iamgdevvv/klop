@@ -272,11 +272,11 @@ export function ExamView({ data, candidate, onSubmit, ...props }: Props) {
 						gap="xs"
 						mb={5}
 					>
-						<Box
+						<Paper
 							w={10}
 							h={10}
 							bg="blue.6"
-							style={{ borderRadius: 4 }}
+							radius={4}
 						/>
 						<Text size="xs">Current</Text>
 					</Group>
@@ -284,20 +284,20 @@ export function ExamView({ data, candidate, onSubmit, ...props }: Props) {
 						gap="xs"
 						mb={5}
 					>
-						<Box
+						<Paper
 							w={10}
 							h={10}
 							bg="green.1"
-							style={{ borderRadius: 4 }}
+							radius={4}
 						/>
 						<Text size="xs">Answered</Text>
 					</Group>
 					<Group gap="xs">
-						<Box
+						<Paper
 							w={10}
 							h={10}
 							bg="gray.3"
-							style={{ borderRadius: 4 }}
+							radius={4}
 						/>
 						<Text size="xs">Unanswered</Text>
 					</Group>
@@ -323,7 +323,6 @@ export function ExamView({ data, candidate, onSubmit, ...props }: Props) {
 						<Title
 							order={3}
 							mb={30}
-							style={{ lineHeight: 1.4 }}
 						>
 							{questions[currentIndexQuestion].question}
 						</Title>
@@ -464,11 +463,11 @@ export function ExamView({ data, candidate, onSubmit, ...props }: Props) {
 								gap="xs"
 								mb={5}
 							>
-								<Box
+								<Paper
 									w={10}
 									h={10}
 									bg="blue.6"
-									style={{ borderRadius: 4 }}
+									radius={4}
 								/>
 								<Text size="xs">Current</Text>
 							</Group>
@@ -476,20 +475,20 @@ export function ExamView({ data, candidate, onSubmit, ...props }: Props) {
 								gap="xs"
 								mb={5}
 							>
-								<Box
+								<Paper
 									w={10}
 									h={10}
 									bg="green.1"
-									style={{ borderRadius: 4 }}
+									radius={4}
 								/>
 								<Text size="xs">Answered</Text>
 							</Group>
 							<Group gap="xs">
-								<Box
+								<Paper
 									w={10}
 									h={10}
 									bg="gray.3"
-									style={{ borderRadius: 4 }}
+									radius={4}
 								/>
 								<Text size="xs">Unanswered</Text>
 							</Group>

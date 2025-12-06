@@ -153,7 +153,7 @@ export type OptionsQueryAssessmentSubmissions = Omit<
 	}
 }
 
-const fieldSearch = ['title', 'excerpt']
+const fieldSearch = ['candidateName', 'summary']
 
 export const queryAssessmentSubmissions = async <
 	T extends Partial<Record<keyof AssessmentSubmission, true>> | undefined,
@@ -169,7 +169,7 @@ export const queryAssessmentSubmissions = async <
 
 		const limit = options?.limit || 6
 		const page = options?.page || 1
-		const sort = options?.sort || '-startDate'
+		const sort = options?.sort || '-updatedAt'
 		const whereAnd: Where['and'] = [
 			...(options?.where?.and || []),
 			...(options?.whereAnd || []),

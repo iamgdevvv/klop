@@ -32,7 +32,7 @@ export const VacancySubmissions: CollectionConfig = {
 	dbName: 'vcnsbs',
 	admin: {
 		useAsTitle: 'candidateName',
-		defaultColumns: ['candidateName', 'vacancy', 'createdAt'],
+		defaultColumns: ['candidateName', 'vacancy', 'vacancyReference', 'createdAt'],
 		group: 'Submissions',
 		// hideAPIURL: true,
 		baseFilter({ req }) {
@@ -56,7 +56,7 @@ export const VacancySubmissions: CollectionConfig = {
 		},
 	},
 	access: {
-		create: () => false,
+		create: ({ req: { user } }) => user?.role === 'candidate',
 		read: authenticatedActionByVacancyAuthor,
 		update: () => false,
 		delete: () => false,
@@ -96,20 +96,13 @@ export const VacancySubmissions: CollectionConfig = {
 												width: '100%',
 												readOnly: true,
 											},
-											filterOptions({ user }) {
-												if (user) {
-													if (user.role === 'admin') {
-														return true
-													}
-
-													return {
-														author: {
-															equals: user.id,
-														},
-													}
-												}
-
-												return false
+										},
+										{
+											name: 'email',
+											type: 'email',
+											admin: {
+												width: '50%',
+												readOnly: true,
 											},
 										},
 										{
@@ -156,21 +149,6 @@ export const VacancySubmissions: CollectionConfig = {
 												width: '100%',
 												readOnly: true,
 											},
-											filterOptions({ user }) {
-												if (user) {
-													if (user.role === 'admin') {
-														return true
-													}
-
-													return {
-														author: {
-															equals: user.id,
-														},
-													}
-												}
-
-												return false
-											},
 										},
 										{
 											type: 'upload',
@@ -180,21 +158,6 @@ export const VacancySubmissions: CollectionConfig = {
 											admin: {
 												width: '100%',
 												readOnly: true,
-											},
-											filterOptions({ user }) {
-												if (user) {
-													if (user.role === 'admin') {
-														return true
-													}
-
-													return {
-														author: {
-															equals: user.id,
-														},
-													}
-												}
-
-												return false
 											},
 										},
 									],
@@ -282,26 +245,7 @@ export const VacancySubmissions: CollectionConfig = {
 							hasMany: true,
 							maxRows: 2,
 							admin: {
-								readOnly: true,
-							},
-							filterOptions: ({ user }) => {
-								if (user?.role === 'candidate') {
-									return {
-										role: {
-											equals: 'company',
-										},
-									}
-								}
-
-								if (user?.role === 'company') {
-									return {
-										role: {
-											equals: 'candidate',
-										},
-									}
-								}
-
-								return false
+								condition: (_, __, { user }) => user?.role === 'admin',
 							},
 						},
 						{
@@ -313,13 +257,21 @@ export const VacancySubmissions: CollectionConfig = {
 									type: 'row',
 									fields: [
 										{
+											type: 'text',
+											name: 'title',
+											admin: {
+												readOnly: true,
+												width: '50%',
+											},
+										},
+										{
 											type: 'select',
 											name: 'type',
 											enumName: 'vcltyp',
 											options: vacancyType,
 											admin: {
 												readOnly: true,
-												width: '33.3333%',
+												width: '50%',
 											},
 										},
 										{
@@ -329,7 +281,7 @@ export const VacancySubmissions: CollectionConfig = {
 											options: vacancyLevel,
 											admin: {
 												readOnly: true,
-												width: '33.3333%',
+												width: '50%',
 											},
 										},
 										{
@@ -339,7 +291,7 @@ export const VacancySubmissions: CollectionConfig = {
 											options: vacancyEducation,
 											admin: {
 												readOnly: true,
-												width: '33.3333%',
+												width: '50%',
 											},
 										},
 									],
@@ -377,6 +329,7 @@ export const VacancySubmissions: CollectionConfig = {
 						},
 						{
 							type: 'relationship',
+							label: 'Vacancy',
 							name: 'vacancyReference',
 							relationTo: 'vacancies',
 							required: true,
@@ -385,27 +338,6 @@ export const VacancySubmissions: CollectionConfig = {
 								condition: (_, __, { user }) => {
 									return user?.role === 'company'
 								},
-							},
-							filterOptions: ({ user }) => {
-								if (user) {
-									if (user.role === 'admin') {
-										return true
-									}
-
-									return {
-										author: {
-											equals: user.id,
-										},
-										expiresAt: {
-											greater_than_equal: new Date().toISOString(),
-										},
-										closeVacancy: {
-											not_equals: true,
-										},
-									}
-								}
-
-								return false
 							},
 						},
 					],

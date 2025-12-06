@@ -27,7 +27,7 @@ export default async function registerPage() {
 			mih="100vh"
 		>
 			<Header
-				showActions={true}
+				showActions
 				user={authUser}
 			/>
 
@@ -61,14 +61,12 @@ export default async function registerPage() {
 					<Text
 						ta="center"
 						mt={4}
-						c="dimmed"
 					>
 						Mendaftar sebagai kandidat?{' '}
 						<Anchor
 							component={Link}
 							href={`/${slugRegister}/candidate`}
 							fw={700}
-							c="dimmed"
 						>
 							Daftar (kandidat)
 						</Anchor>

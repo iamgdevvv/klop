@@ -36,7 +36,7 @@ const nextConfig: NextConfig = {
 			'@mantine/nprogress',
 		],
 		serverActions: {
-			bodySizeLimit: '10mb',
+			bodySizeLimit: '20mb',
 		},
 	},
 }

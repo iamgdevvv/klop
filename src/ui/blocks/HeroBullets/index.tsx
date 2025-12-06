@@ -1,19 +1,20 @@
-'use client';
-
 import {
 	Button,
 	Container,
 	Group,
 	Image,
 	List,
+	ListItem,
 	Text,
 	ThemeIcon,
 	Title,
-} from '@mantine/core';
-import { Check } from 'lucide-react';
-import Link from 'next/link';
+} from '@mantine/core'
+import { Check } from 'lucide-react'
 
-import classes from '$styles/blocks/HeroBullets.module.css';
+import Link from '$components/Link'
+import { slugDashboard, slugRegister } from '$modules/vars'
+
+import classes from '$styles/blocks/HeroBullets.module.css'
 
 interface HeroBulletsProps {
 	description?: string
@@ -26,7 +27,8 @@ export function HeroBullets({ description, imageSrc = '' }: HeroBulletsProps) {
 			<div className={classes.inner}>
 				<div className={classes.content}>
 					<Title className={classes.title}>
-						Satu Dashboard untuk Rekrutmen yang <span className={classes.highlight}>Klop!</span>
+						Satu Dashboard untuk Rekrutmen yang{' '}
+						<span className={classes.highlight}>Klop!</span>
 					</Title>
 
 					<Text
@@ -50,21 +52,24 @@ export function HeroBullets({ description, imageSrc = '' }: HeroBulletsProps) {
 							</ThemeIcon>
 						}
 					>
-						<List.Item>
-							<b>Manajemen Data Terpusat</b> – Buat profil perusahaan & lowongan, langsung aktif di dashboard.
-						</List.Item>
-						<List.Item>
-							<b>AI Assessment Generator</b> – Otomatis buat soal, opsi jawaban, dan kunci jawaban presisi.
-						</List.Item>
-						<List.Item>
-							<b>Bagikan & Tinjau</b> – Salin link seleksi ke mana saja & review submission kandidat dengan mudah.
-						</List.Item>
+						<ListItem>
+							<b>Manajemen Data Terpusat</b> – Buat profil perusahaan & lowongan,
+							langsung aktif di dashboard.
+						</ListItem>
+						<ListItem>
+							<b>AI Assessment Generator</b> – Otomatis buat soal, opsi jawaban, dan
+							kunci jawaban presisi.
+						</ListItem>
+						<ListItem>
+							<b>Bagikan & Tinjau</b> – Salin link seleksi ke mana saja & review
+							submission kandidat dengan mudah.
+						</ListItem>
 					</List>
 
 					<Group mt={30}>
 						<Button
 							component={Link}
-							href="/register"
+							href={`/${slugRegister}`}
 							radius="xl"
 							size="md"
 							className={classes.control}
@@ -73,7 +78,7 @@ export function HeroBullets({ description, imageSrc = '' }: HeroBulletsProps) {
 						</Button>
 						<Button
 							component={Link}
-							href="/login"
+							href={`/${slugDashboard}`}
 							variant="default"
 							radius="xl"
 							size="md"

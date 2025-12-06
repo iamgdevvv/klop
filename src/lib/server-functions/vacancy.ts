@@ -32,7 +32,7 @@ export const queryVacancies = async <T extends Partial<Record<keyof Vacancy, tru
 
 		const limit = options?.limit || 6
 		const page = options?.page || 1
-		const sort = options?.sort || '-startDate'
+		const sort = options?.sort || '-updatedAt'
 		const whereAnd: Where['and'] = [
 			...(options?.where?.and || []),
 			...(options?.whereAnd || []),

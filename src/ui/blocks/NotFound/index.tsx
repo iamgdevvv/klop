@@ -1,7 +1,6 @@
-'use client';
+import { Button, Container, Group, Stack, Text, Title, type ContainerProps } from '@mantine/core'
 
-import { Box, Button, Container, Group, Text, Title } from '@mantine/core';
-import Link from 'next/link';
+import Link from '$components/Link'
 
 function Illustration(props: React.ComponentPropsWithoutRef<'svg'>) {
 	return (
@@ -18,59 +17,54 @@ function Illustration(props: React.ComponentPropsWithoutRef<'svg'>) {
 	)
 }
 
-export function NothingFoundBackground() {
-	return (
-		<Container py={80}>
-			<Box style={{ position: 'relative' }}>
-				{/* Ilustrasi Background */}
-				<Illustration
-					style={{
-						position: 'absolute',
-						inset: 0,
-						opacity: 0.1,
-						color: 'var(--mantine-color-gray-5)',
-						width: '100%',
-						height: 'auto',
-					}}
-				/>
+type Props = ContainerProps
 
-				{/* Konten Text */}
-				<Box
-					pt={{ base: 120, sm: 220 }}
-					style={{ position: 'relative', zIndex: 1 }}
+export function NothingFoundBackground(props: Props) {
+	return (
+		<Container
+			{...props}
+			pos="relative"
+		>
+			<Illustration className="absolute inset-0 opacity-10 text-gray-500 w-full h-auto" />
+			<Stack
+				pos="relative"
+				pt={{
+					base: 120,
+					sm: 220,
+				}}
+				className="z-10"
+			>
+				<Title
+					ta="center"
+					fw={900}
+					fz={{ base: 32, sm: 40 }}
 				>
-					<Title
-						ta="center"
-						fw={900}
-						fz={{ base: 32, sm: 40 }}
+					Halaman Tidak Ditemukan
+				</Title>
+				<Text
+					c="dimmed"
+					size="lg"
+					ta="center"
+					mx="auto"
+					mt="xl"
+					mb={45}
+					maw={540}
+				>
+					Halaman yang Anda cari mungkin telah dipindahkan, dihapus, atau alamat URL yang
+					Anda masukkan salah. Silakan periksa kembali tautan Anda.
+				</Text>
+				<Group justify="center">
+					<Button
+						component={Link}
+						href="/"
+						size="md"
+						radius="xl"
+						variant="outline"
 					>
-						Halaman Tidak Ditemukan
-					</Title>
-					<Text
-						c="dimmed"
-						size="lg"
-						ta="center"
-						mx="auto"
-						mt="xl"
-						mb={45}
-						maw={540}
-					>
-						Halaman yang Anda cari mungkin telah dipindahkan, dihapus, atau alamat URL yang Anda masukkan salah.
-						Silakan periksa kembali tautan Anda.
-					</Text>
-					<Group justify="center">
-						<Button
-							component={Link}
-							href="/"
-							size="md"
-							radius="xl"
-							variant="outline"
-						>
-							Kembali ke Beranda
-						</Button>
-					</Group>
-				</Box>
-			</Box>
+						Kembali ke Beranda
+					</Button>
+				</Group>
+			</Stack>
 		</Container>
 	)
 }

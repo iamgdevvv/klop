@@ -96,21 +96,6 @@ export const AssessmentSubmissions: CollectionConfig = {
 												width: '100%',
 												readOnly: true,
 											},
-											filterOptions({ user }) {
-												if (user) {
-													if (user.role === 'admin') {
-														return true
-													}
-
-													return {
-														author: {
-															equals: user.id,
-														},
-													}
-												}
-
-												return false
-											},
 										},
 										{
 											name: 'email',
@@ -164,21 +149,6 @@ export const AssessmentSubmissions: CollectionConfig = {
 												width: '100%',
 												readOnly: true,
 											},
-											filterOptions({ user }) {
-												if (user) {
-													if (user.role === 'admin') {
-														return true
-													}
-
-													return {
-														author: {
-															equals: user.id,
-														},
-													}
-												}
-
-												return false
-											},
 										},
 										{
 											type: 'upload',
@@ -188,21 +158,6 @@ export const AssessmentSubmissions: CollectionConfig = {
 											admin: {
 												width: '100%',
 												readOnly: true,
-											},
-											filterOptions({ user }) {
-												if (user) {
-													if (user.role === 'admin') {
-														return true
-													}
-
-													return {
-														author: {
-															equals: user.id,
-														},
-													}
-												}
-
-												return false
 											},
 										},
 									],
@@ -282,47 +237,28 @@ export const AssessmentSubmissions: CollectionConfig = {
 					label: 'Assessment',
 					fields: [
 						{
+							type: 'relationship',
+							name: 'userCandidateCompany',
+							relationTo: 'users',
+							label: 'Relation',
+							required: true,
+							hasMany: true,
+							maxRows: 2,
+							admin: {
+								readOnly: true,
+								condition: (_, __, { user }) => user?.role === 'admin',
+							},
+						},
+						{
 							type: 'row',
 							fields: [
-								{
-									type: 'relationship',
-									name: 'userCandidateCompany',
-									relationTo: 'users',
-									label: 'Relation',
-									required: true,
-									hasMany: true,
-									maxRows: 2,
-									admin: {
-										readOnly: true,
-										width: '33.3333%',
-									},
-									// filterOptions: ({ user }) => {
-									// 	if (user?.role === 'candidate') {
-									// 		return {
-									// 			role: {
-									// 				equals: 'company',
-									// 			},
-									// 		}
-									// 	}
-
-									// 	if (user?.role === 'company') {
-									// 		return {
-									// 			role: {
-									// 				equals: 'candidate',
-									// 			},
-									// 		}
-									// 	}
-
-									// 	return false
-									// },
-								},
 								{
 									type: 'number',
 									name: 'score',
 									required: true,
 									admin: {
 										readOnly: true,
-										width: '33.3333%',
+										width: '50%',
 									},
 								},
 								{
@@ -332,8 +268,12 @@ export const AssessmentSubmissions: CollectionConfig = {
 									required: true,
 									admin: {
 										readOnly: true,
-										width: '33.3333%',
+										width: '50%',
 										condition: (data, _, { user }) => {
+											if (user?.role === 'admin') {
+												return true
+											}
+
 											return user?.role === 'company'
 										},
 									},

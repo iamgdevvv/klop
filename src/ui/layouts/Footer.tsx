@@ -1,7 +1,7 @@
 import { Anchor, Divider, Group, Stack, Text, type StackProps } from '@mantine/core'
 
 import Link from '$components/Link'
-import { slugPrivacyPolicy, slugTermCondition } from '$modules/vars'
+import { slugCompanies, slugPrivacyPolicy, slugTermCondition } from '$modules/vars'
 
 const CURRENT_YEAR = new Date().getFullYear()
 
@@ -25,6 +25,12 @@ export default function Footer(props: FooterProps) {
 					gap="xs"
 					ml="auto"
 				>
+					<Anchor
+						component={Link}
+						href={`/${slugCompanies}`}
+					>
+						Browse
+					</Anchor>
 					<Anchor
 						component={Link}
 						href={`/${slugPrivacyPolicy}`}

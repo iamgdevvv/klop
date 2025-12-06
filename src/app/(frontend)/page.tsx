@@ -20,7 +20,7 @@ export default async function HomePage() {
 			mih="100vh"
 		>
 			<Header
-				showActions={true}
+				showActions
 				user={authUser}
 			/>
 			<main className="main">

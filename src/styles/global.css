@@ -190,40 +190,6 @@ img {
 .mantine-Input-input {
 	--input-size: 48px;
 	--input-height: 48px;
-	--input-padding-inline-start: 16px;
-	--input-padding-inline-end: 16px;
-}
-
-.mantine-Input-section[data-with-left-section='true'] {
-	--input-right-section-size: 40px;
-
-	[data-position='left'] {
-		@apply pr-1;
-		@apply justify-end;
-	}
-
-	.mantine-Input-input {
-		--input-padding-inline-start: var(
-			--input-left-section-width,
-			var(--input-right-section-size)
-		);
-	}
-}
-
-.mantine-Input-section[data-with-right-section='true'] {
-	--input-right-section-size: 40px;
-
-	[data-position='right'] {
-		@apply pl-1;
-		@apply justify-start;
-	}
-
-	.mantine-Input-input {
-		--input-padding-inline-end: var(
-			--input-right-section-width,
-			var(--input-right-section-size)
-		);
-	}
 }
 
 .mantine-Textarea-root .mantine-Input-input {

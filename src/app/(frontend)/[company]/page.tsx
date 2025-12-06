@@ -80,7 +80,7 @@ export default async function companyPage({ params }: Args) {
 			mih="100vh"
 		>
 			<Header
-				showActions={true}
+				showActions
 				user={authUser}
 			/>
 

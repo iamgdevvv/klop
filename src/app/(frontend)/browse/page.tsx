@@ -1,9 +1,10 @@
-import { Box, Stack } from '@mantine/core'
+import { Stack } from '@mantine/core'
 import type { Metadata } from 'next'
 
 import { BrowseCompanies } from '$blocks/BrowseCompanies'
 import Footer from '$layouts/Footer'
 import Header from '$layouts/Header'
+import { queryCompanies } from '$root/lib/server-functions/company'
 import { getAuthUser } from '$server-functions/auth'
 
 export const metadata: Metadata = {
@@ -11,28 +12,33 @@ export const metadata: Metadata = {
 	robots: 'index, follow',
 }
 
-export default async function browseCompaniesPage() {
-	const authUser = await getAuthUser()
+type Args = {
+	searchParams: Promise<{ search: string | undefined }>
+}
+
+export default async function browseCompaniesPage({ searchParams }: Args) {
+	const { search } = await searchParams
+	const [authUser, companiesResult] = await Promise.all([
+		getAuthUser(),
+		queryCompanies({
+			limit: 18,
+			search,
+		}),
+	])
 
 	return (
 		<Stack
 			gap={0}
 			mih="100vh"
 		>
-			<Header showActions={true} user={authUser} />
+			<Header
+				showActions
+				user={authUser}
+			/>
 
-			<Box
-				component="main"
-				style={{
-					flex: 1,
-					// --- DOT PATTERN (KONSISTEN) ---
-					backgroundColor: 'var(--mantine-color-gray-0)',
-					backgroundImage: 'radial-gradient(var(--mantine-color-gray-3) 1.5px, transparent 1.5px)',
-					backgroundSize: '24px 24px',
-				}}
-			>
-				<BrowseCompanies />
-			</Box>
+			<main className="main">
+				<BrowseCompanies companies={companiesResult?.docs || []} />
+			</main>
 
 			<Footer />
 		</Stack>

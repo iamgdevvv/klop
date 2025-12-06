@@ -3,13 +3,13 @@
 import { Alert, Center, Container, Loader, type ContainerProps } from '@mantine/core'
 import { useFullscreen, useSetState } from '@mantine/hooks'
 import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
-import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState, useTransition } from 'react'
 
+import { useRouter } from '$hooks/use-router'
+import { slugAssessment } from '$modules/vars'
 import type { Assessment } from '$payload-types'
-import { slugAssessment } from '$root/lib/modules/vars'
-import { actionAssessmentSubmission } from '$root/lib/server-functions/assessmentSubmission'
 import type { PayloadCandidateAssessment, PayloadExamAssessment } from '$schema/assesment'
+import { actionAssessmentSubmission } from '$server-functions/assessmentSubmission'
 import { ExamView } from './ExamView'
 import { IntroView } from './IntroView'
 

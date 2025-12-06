@@ -1,12 +1,13 @@
-import { Container, Stack, Text, Title } from '@mantine/core'
+import { Anchor, Container, Stack, Text, Title } from '@mantine/core'
 import type { Metadata } from 'next'
+import { redirect } from 'next/navigation'
 
+import { RegisterCandidateForm } from '$blocks/RegisterForm'
+import Link from '$components/Link'
 import Footer from '$layouts/Footer'
 import Header from '$layouts/Header'
-import { slugDashboard } from '$root/lib/modules/vars'
-import { RegisterForm } from '$root/ui/blocks/RegisterForm'
+import { slugDashboard, slugDashboardLogin } from '$modules/vars'
 import { getAuthUser } from '$server-functions/auth'
-import { redirect } from 'next/navigation'
 
 export const metadata: Metadata = {
 	title: 'Buat Akun Kandidat ⎯ Klop!',
@@ -26,7 +27,7 @@ export default async function registerPage() {
 			mih="100vh"
 		>
 			<Header
-				showActions={true}
+				showActions
 				user={authUser}
 			/>
 
@@ -43,7 +44,20 @@ export default async function registerPage() {
 					>
 						Join Klop! to find your perfect candidate match
 					</Text>
-					<RegisterForm role="candidate" />
+					<RegisterCandidateForm />
+					<Text
+						ta="center"
+						mt="md"
+					>
+						Sudah memiliki akun?{' '}
+						<Anchor
+							component={Link}
+							href={`/${slugDashboardLogin}`}
+							fw={700}
+						>
+							Login
+						</Anchor>
+					</Text>
 				</Container>
 			</main>
 

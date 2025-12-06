@@ -1,10 +1,10 @@
 'use server'
 import { headers as getHeaders } from 'next/headers'
-import { getPayload } from 'payload'
+import { getPayload, ValidationError } from 'payload'
 
 import configPromise from '$payload-config'
 import type { User } from '$payload-types'
-import type { PayloadRegister } from '$schema/register'
+import type { PayloadRegister, PayloadRegisterCandidate } from '$schema/register'
 
 export type ReturnAuth =
 	| {
@@ -33,9 +33,9 @@ export const getAuthUser = async () => {
 	}
 }
 
-export async function actionRegisterAuth(
-	role: User['role'],
-	body: PayloadRegister,
+export async function actionRegisterAuth<T extends User['role']>(
+	role: T,
+	body: T extends 'candidate' ? PayloadRegisterCandidate : PayloadRegister,
 ): Promise<ReturnAuth> {
 	try {
 		const payload = await getPayload({ config: configPromise })
@@ -62,9 +62,39 @@ export async function actionRegisterAuth(
 	} catch (error) {
 		console.log('actionRegisterAuth', { error })
 
+		const message: string[] = []
+
+		if (error instanceof ValidationError) {
+			if (
+				typeof error.cause === 'object' &&
+				error.cause &&
+				'errors' in error.cause &&
+				Array.isArray(error.cause.errors)
+			) {
+				error.cause.errors.forEach((err) => {
+					if (
+						typeof err === 'object' &&
+						err &&
+						'path' in err &&
+						typeof err.path === 'string'
+					) {
+						if (err.path === 'email') {
+							message.push('Email sudah digunakan')
+						}
+
+						if (err.path === 'phone') {
+							message.push('Nomor telepon sudah digunakan')
+						}
+					}
+				})
+			}
+		} else {
+			message.push('Internal server error')
+		}
+
 		return {
 			success: false,
-			error: 'Internal server error',
+			error: message.join(', '),
 		}
 	}
 }

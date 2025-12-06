@@ -374,7 +374,7 @@ export interface AssessmentSubmission {
       tiktok?: string | null;
     };
   };
-  userCandidateCompany: (number | User)[];
+  userCandidateCompany?: (number | User)[] | null;
   score: number;
   assessment?: (number | null) | Assessment;
   summary?: string | null;
@@ -398,6 +398,7 @@ export interface VacancySubmission {
   candidateName: string;
   candidate?: {
     avatar?: (number | null) | Asset;
+    email?: string | null;
     phone?: string | null;
     gender?: ('male' | 'female') | null;
     education?: ('bachelor' | 'master' | 'diploma' | 'highSchool' | 'middleSchool' | 'elementarySchool') | null;
@@ -414,8 +415,9 @@ export interface VacancySubmission {
       tiktok?: string | null;
     };
   };
-  userCandidateCompany: (number | User)[];
+  userCandidateCompany?: (number | User)[] | null;
   vacancy?: {
+    title?: string | null;
     type?: ('fullTime' | 'partTime' | 'contract' | 'internship') | null;
     level?: ('senior' | 'medior' | 'junior') | null;
     education?: ('bachelor' | 'master' | 'diploma' | 'highSchool' | 'middleSchool' | 'elementarySchool') | null;
@@ -738,6 +740,7 @@ export interface VacancySubmissionsSelect<T extends boolean = true> {
     | T
     | {
         avatar?: T;
+        email?: T;
         phone?: T;
         gender?: T;
         education?: T;
@@ -760,6 +763,7 @@ export interface VacancySubmissionsSelect<T extends boolean = true> {
   vacancy?:
     | T
     | {
+        title?: T;
         type?: T;
         level?: T;
         education?: T;

@@ -20,7 +20,7 @@ export type OptionsQueryCompanies = Omit<
 	}
 }
 
-const fieldSearch = ['type', 'level', 'education', 'education', 'title', 'excerpt']
+const fieldSearch = ['businessCategory', 'location', 'title', 'excerpt']
 
 export const queryCompanies = async <T extends Partial<Record<keyof Company, true>> | undefined>(
 	options?: OptionsQueryCompanies,
@@ -32,7 +32,7 @@ export const queryCompanies = async <T extends Partial<Record<keyof Company, tru
 
 		const limit = options?.limit || 6
 		const page = options?.page || 1
-		const sort = options?.sort || '-startDate'
+		const sort = options?.sort || '-updatedAt'
 		const whereAnd: Where['and'] = [
 			...(options?.where?.and || []),
 			...(options?.whereAnd || []),

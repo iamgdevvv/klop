@@ -342,12 +342,7 @@ export function IntroView({ data, onSubmit, ...props }: Props) {
 							radius="xl"
 							p="xl"
 							withBorder
-							style={{
-								height: '100%',
-								display: 'flex',
-								flexDirection: 'column',
-								justifyContent: 'center',
-							}}
+							className="h-full flex flex-col justify-center"
 						>
 							<Title
 								order={4}
@@ -380,7 +375,7 @@ export function IntroView({ data, onSubmit, ...props }: Props) {
 									/>
 									<TextInput
 										type="tel"
-										label="Nomor WhatsApp"
+										label="No. Telp / Whatsapp"
 										placeholder="0812..."
 										readOnly={isLoadingCandidateExist}
 										key={form.key('phone')}

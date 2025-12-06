@@ -42,6 +42,7 @@
 			"$templates/*": ["src/ui/templates/*"],
 			"$components/*": ["src/ui/components/*"],
 			"$icons/*": ["src/ui/icons/*"],
+			"$forms/*": ["src/ui/forms/*"],
 			"$layouts/*": ["src/ui/layouts/*"],
 			"$blocks/*": ["src/ui/blocks/*"]
 		},

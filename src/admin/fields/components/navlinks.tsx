@@ -35,6 +35,13 @@ export const BeforeNavLinks = () => {
 				>
 					🌐 Website
 				</Link>
+				<Link
+					href={`/${slugDashboard}/account`}
+					target="_blank"
+					className="nav__link"
+				>
+					😎 Account
+				</Link>
 			</NavGroup>
 		</div>
 	)

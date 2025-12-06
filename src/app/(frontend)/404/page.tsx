@@ -15,7 +15,7 @@ export default async function notFoundPage() {
 			gap={0}
 			mih="100vh"
 		>
-			<Header showActions={false} />
+			<Header showActions />
 
 			<main className="main">
 				<NothingFoundBackground />
