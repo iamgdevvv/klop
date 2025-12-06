@@ -140,7 +140,6 @@ export function HeroBullets({ user, ...props }: Props) {
 					</Group>
 				</div>
 
-				{/* Gambar Ilustrasi */}
 				<Image
 					src="/images/hero-banner.png"
 					className={classes.image}

@@ -62,7 +62,9 @@ export function VacancyView({
 			<Grid gutter="xl">
 				<GridCol span={{ base: 12, md: 4 }}>
 					<Stack gap="xs">
-						<Title order={4}>Available Positions</Title>
+						<Title order={4} size="h4">
+							Posisi Tersedia
+						</Title>
 						<Text
 							size="sm"
 							c="dimmed"
@@ -133,7 +135,6 @@ export function VacancyView({
 						radius="lg"
 						bg="white"
 					>
-						{/* Header Detail */}
 						<Stack gap="xs">
 							<Group justify="flex-end">
 								<Badge
@@ -164,14 +165,19 @@ export function VacancyView({
 									</Badge>
 								) : null}
 							</Group>
-							<Title>{data.title}</Title>
+
+							<Title order={2} size="h3">
+								{data.title}
+							</Title>
+
 							<Group gap="md">
 								<Group gap={6}>
 									<Building
-										size={18}
+										size={14}
 										color="gray"
 									/>
 									<Text
+										size="sm"
 										component="span"
 										c="dimmed"
 									>
@@ -181,10 +187,11 @@ export function VacancyView({
 								{type ? (
 									<Group gap={6}>
 										<FolderClock
-											size={18}
+											size={14}
 											color="gray"
 										/>
 										<Text
+											size="sm"
 											component="span"
 											c="dimmed"
 										>
@@ -195,10 +202,11 @@ export function VacancyView({
 								{level ? (
 									<Group gap={6}>
 										<PersonStanding
-											size={18}
+											size={14}
 											color="gray"
 										/>
 										<Text
+											size="sm"
 											component="span"
 											c="dimmed"
 										>
@@ -209,10 +217,11 @@ export function VacancyView({
 								{education ? (
 									<Group gap={6}>
 										<GraduationCap
-											size={18}
+											size={14}
 											color="gray"
 										/>
 										<Text
+											size="sm"
 											component="span"
 											c="dimmed"
 										>
@@ -248,7 +257,7 @@ export function VacancyView({
 												size="h4"
 												c="green.5"
 											>
-												Anda Telah Melamar
+												Lamaran Terkirim
 											</Title>
 											<Text
 												c="dimmed"
@@ -283,6 +292,7 @@ export function VacancyView({
 										</Alert>
 									) : (
 										<>
+											{/* Translate Title */}
 											<Title
 												order={3}
 												mb="sm"

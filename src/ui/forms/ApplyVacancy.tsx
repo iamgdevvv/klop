@@ -62,13 +62,11 @@ function FormApplyVacancyAuthUser({
 
 	const documents = useMemo((): string[] => {
 		const documentNames: string[] = []
-
 		authUser.documents?.forEach((document) => {
 			if (typeof document === 'object' && document.filename) {
 				documentNames.push(document.filename)
 			}
 		})
-
 		return documentNames
 	}, [authUser])
 
@@ -87,22 +85,18 @@ function FormApplyVacancyAuthUser({
 	const handlerSubmit = useCallback(
 		(payload: TransformedValues<typeof form>) => {
 			setErrorMessage(null)
-
 			startActionRegister(async () => {
-				startActionRegister(async () => {
-					const action = await actionVacancySubmission({
-						vacancy,
-						candidate: authUser,
-						formData: payload,
-					})
-
-					if (action.success === false) {
-						setErrorMessage(action.error)
-						return
-					}
-
-					router.refresh()
+				const action = await actionVacancySubmission({
+					vacancy,
+					candidate: authUser,
+					formData: payload,
 				})
+
+				if (action.success === false) {
+					setErrorMessage(action.error)
+					return
+				}
+				router.refresh()
 			})
 		},
 		[authUser, router, vacancy],
@@ -114,11 +108,7 @@ function FormApplyVacancyAuthUser({
 			onReset={form.onReset}
 		>
 			{errorMessage ? (
-				<Alert
-					variant="light"
-					color="red"
-					mb="sm"
-				>
+				<Alert variant="light" color="red" mb="sm">
 					{errorMessage}
 				</Alert>
 			) : null}
@@ -130,29 +120,32 @@ function FormApplyVacancyAuthUser({
 				<Stack gap="sm">
 					<Textarea
 						label="Perkenalan Diri"
+						placeholder="Jelaskan secara singkat mengapa Anda cocok untuk posisi ini..."
 						key={form.key('biography')}
 						readOnly={isLoadingApplyVacancyAuthUser}
+						autosize
+						minRows={3}
 						{...form.getInputProps('biography')}
 					/>
 					<FileInput
-						label="Resume (Optional)"
-						key={form.key('resume')}
-						readOnly={isLoadingApplyVacancyAuthUser}
-						accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+						label="Resume / CV (Opsional)"
 						placeholder={
 							typeof authUser.resume === 'object'
 								? authUser.resume?.filename
-								: undefined
+								: "Upload file PDF..."
 						}
+						key={form.key('resume')}
+						readOnly={isLoadingApplyVacancyAuthUser}
+						accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 						{...form.getInputProps('resume')}
 					/>
 					<FileInput
-						label="Dokumen Pendukung (Optional)"
+						label="Dokumen Pendukung (Opsional)"
+						placeholder={documents.length > 0 ? documents.join(', ') : "Sertifikat, Portofolio, dll..."}
 						key={form.key('documents')}
 						multiple
 						readOnly={isLoadingApplyVacancyAuthUser}
-						accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-						placeholder={documents.join(', ')}
+						accept="image/*,application/pdf"
 						{...form.getInputProps('documents')}
 					/>
 				</Stack>
@@ -163,7 +156,7 @@ function FormApplyVacancyAuthUser({
 						size="xl"
 						loading={isLoadingApplyVacancyAuthUser}
 					>
-						Submit Lamaran
+						Kirim Lamaran
 					</Button>
 				</Group>
 			</Stack>
@@ -192,12 +185,10 @@ function FormApplyVacancyRegister({ vacancy, ...props }: Omit<Props, 'authUser'>
 					vacancy,
 					formData: payload,
 				})
-
 				if (action.success === false) {
 					setErrorMessage(action.error)
 					return
 				}
-
 				router.refresh()
 			})
 		},
@@ -210,11 +201,7 @@ function FormApplyVacancyRegister({ vacancy, ...props }: Omit<Props, 'authUser'>
 			onReset={form.onReset}
 		>
 			{errorMessage ? (
-				<Alert
-					variant="light"
-					color="red"
-					mb="sm"
-				>
+				<Alert variant="light" color="red" mb="sm">
 					{errorMessage}
 				</Alert>
 			) : null}
@@ -225,7 +212,8 @@ function FormApplyVacancyRegister({ vacancy, ...props }: Omit<Props, 'authUser'>
 			>
 				<Stack gap="sm">
 					<TextInput
-						label="Nama"
+						label="Nama Lengkap"
+						placeholder="Contoh: Budi Santoso"
 						key={form.key('name')}
 						readOnly={isLoadingApplyVacancyAuthUser}
 						{...form.getInputProps('name')}
@@ -235,10 +223,7 @@ function FormApplyVacancyRegister({ vacancy, ...props }: Omit<Props, 'authUser'>
 						readOnly={isLoadingApplyVacancyAuthUser}
 						{...form.getInputProps('gender')}
 					>
-						<Stack
-							gap="xs"
-							mt={4}
-						>
+						<Stack gap="xs" mt={4}>
 							{candidateGender.map((item, index) => (
 								<Radio
 									key={`${item.value}-${index}`}
@@ -250,6 +235,7 @@ function FormApplyVacancyRegister({ vacancy, ...props }: Omit<Props, 'authUser'>
 					</RadioGroup>
 					<Select
 						label="Pendidikan Terakhir"
+						placeholder="Pilih tingkat pendidikan"
 						data={vacancyEducation}
 						key={form.key('education')}
 						readOnly={isLoadingApplyVacancyAuthUser}
@@ -261,55 +247,58 @@ function FormApplyVacancyRegister({ vacancy, ...props }: Omit<Props, 'authUser'>
 					>
 						<TextInput
 							type="email"
-							label="Email"
+							label="Alamat Email"
+							placeholder="contoh@email.com"
 							key={form.key('email')}
 							readOnly={isLoadingApplyVacancyAuthUser}
 							{...form.getInputProps('email')}
 						/>
 						<TextInput
 							type="tel"
-							label="No. Telp / Whatsapp"
+							label="No. Telp / WhatsApp"
 							placeholder="0812..."
 							key={form.key('phone')}
 							readOnly={isLoadingApplyVacancyAuthUser}
 							{...form.getInputProps('phone')}
 						/>
 						<PasswordInput
-							label="Password"
+							label="Kata Sandi"
+							placeholder="Minimal 8 karakter"
 							key={form.key('password')}
 							readOnly={isLoadingApplyVacancyAuthUser}
 							{...form.getInputProps('password')}
 						/>
 						<PasswordInput
-							label="Confirm Password"
+							label="Konfirmasi Kata Sandi"
+							placeholder="Ulangi kata sandi"
 							key={form.key('confirmPassword')}
 							readOnly={isLoadingApplyVacancyAuthUser}
 							{...form.getInputProps('confirmPassword')}
 						/>
 					</SimpleGrid>
-					<Divider
-						mt="lg"
-						mb="md"
-					/>
+					<Divider mt="lg" mb="md" />
 					<Textarea
 						label="Perkenalan Diri"
+						placeholder="Ceritakan pengalaman dan keahlian Anda secara singkat..."
 						key={form.key('biography')}
 						readOnly={isLoadingApplyVacancyAuthUser}
 						{...form.getInputProps('biography')}
 					/>
 					<FileInput
-						label="Resume"
+						label="Resume / CV"
+						placeholder="Upload file PDF..."
 						key={form.key('resume')}
 						readOnly={isLoadingApplyVacancyAuthUser}
-						accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+						accept="application/pdf"
 						{...form.getInputProps('resume')}
 					/>
 					<FileInput
-						label="Dokumen Pendukung (Optional)"
+						label="Dokumen Pendukung (Opsional)"
+						placeholder="Sertifikat, Portofolio..."
 						key={form.key('documents')}
 						multiple
 						readOnly={isLoadingApplyVacancyAuthUser}
-						accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+						accept="image/*,application/pdf"
 						{...form.getInputProps('documents')}
 					/>
 				</Stack>
@@ -317,7 +306,7 @@ function FormApplyVacancyRegister({ vacancy, ...props }: Omit<Props, 'authUser'>
 				<Group justify="flex-end">
 					<Button
 						type="submit"
-						size="xl"
+						size="md"
 						loading={isLoadingApplyVacancyAuthUser}
 					>
 						Submit Lamaran
