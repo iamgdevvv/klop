@@ -24,7 +24,7 @@ export default async function HomePage() {
 				user={authUser}
 			/>
 			<main className="main">
-				<HeroBullets imageSrc="/images/hero-banner.png" />
+				<HeroBullets user={authUser} />
 			</main>
 
 			<Footer />

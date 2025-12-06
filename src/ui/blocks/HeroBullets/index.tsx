@@ -8,22 +8,26 @@ import {
 	Text,
 	ThemeIcon,
 	Title,
+	type ContainerProps,
 } from '@mantine/core'
 import { Check } from 'lucide-react'
 
 import Link from '$components/Link'
-import { slugDashboard, slugRegister } from '$modules/vars'
+import { slugCompanies, slugDashboard, slugRegister } from '$modules/vars'
+import type { User } from '$payload-types'
 
 import classes from '$styles/blocks/HeroBullets.module.css'
 
-interface HeroBulletsProps {
-	description?: string
-	imageSrc?: string
-}
+type Props = {
+	user: User | null
+} & ContainerProps
 
-export function HeroBullets({ description, imageSrc = '' }: HeroBulletsProps) {
+export function HeroBullets({ user, ...props }: Props) {
 	return (
-		<Container size="md">
+		<Container
+			{...props}
+			size={props.size || 'md'}
+		>
 			<div className={classes.inner}>
 				<div className={classes.content}>
 					<Title className={classes.title}>
@@ -35,8 +39,9 @@ export function HeroBullets({ description, imageSrc = '' }: HeroBulletsProps) {
 						c="dimmed"
 						mt="md"
 					>
-						{description ||
-							'Solusi lengkap bagi perusahaan: Kelola data perusahaan & lowongan, buat asesmen instan berbasis AI, bagikan tautan seleksi, dan tinjau hasil kandidat secara terpusat dan efisien.'}
+						Solusi lengkap bagi perusahaan: Kelola data perusahaan & lowongan, buat
+						asesmen instan berbasis AI, bagikan tautan seleksi, dan tinjau hasil
+						kandidat secara terpusat dan efisien.
 					</Text>
 
 					<List
@@ -67,31 +72,77 @@ export function HeroBullets({ description, imageSrc = '' }: HeroBulletsProps) {
 					</List>
 
 					<Group mt={30}>
-						<Button
-							component={Link}
-							href={`/${slugRegister}`}
-							radius="xl"
-							size="md"
-							className={classes.control}
-						>
-							Daftar Perusahaan
-						</Button>
-						<Button
-							component={Link}
-							href={`/${slugDashboard}`}
-							variant="default"
-							radius="xl"
-							size="md"
-							className={classes.control}
-						>
-							Masuk Dashboard
-						</Button>
+						{user?.role === 'candidate' ? (
+							<>
+								<Button
+									component={Link}
+									href={`/${slugCompanies}`}
+									radius="xl"
+									size="md"
+									className={classes.control}
+								>
+									Telusuri Perusahaan
+								</Button>
+								<Button
+									component={Link}
+									href={`/${slugDashboard}/account`}
+									radius="xl"
+									size="md"
+									className={classes.control}
+								>
+									Profil Saya
+								</Button>
+							</>
+						) : user?.role === 'company' ? (
+							<>
+								<Button
+									component={Link}
+									href={`/${slugDashboard}/collections/assessmentSubmissions`}
+									radius="xl"
+									size="md"
+									className={classes.control}
+								>
+									Assessmen Kandidat
+								</Button>
+								<Button
+									component={Link}
+									href={`/${slugDashboard}/collections/vacancySubmissions`}
+									radius="xl"
+									size="md"
+									className={classes.control}
+								>
+									Lamaran Kandidat
+								</Button>
+							</>
+						) : (
+							<>
+								<Button
+									component={Link}
+									href={`/${slugRegister}`}
+									radius="xl"
+									size="md"
+									className={classes.control}
+								>
+									Daftar sebagai Perusahaan
+								</Button>
+								<Button
+									component={Link}
+									href={`/${slugRegister}/candidate`}
+									variant="default"
+									radius="xl"
+									size="md"
+									className={classes.control}
+								>
+									Daftar sebagai Kandidat
+								</Button>
+							</>
+						)}
 					</Group>
 				</div>
 
 				{/* Gambar Ilustrasi */}
 				<Image
-					src={imageSrc}
+					src="/images/hero-banner.png"
 					className={classes.image}
 					width={400}
 					height={400}
