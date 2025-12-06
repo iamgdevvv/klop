@@ -36,39 +36,42 @@ export default async function registerPage() {
 					size="sm"
 					w="100%"
 				>
-					<Title ta="center">Register Your Account</Title>
+					<Title ta="center">Daftar Akun</Title>
 					<Text
 						c="dimmed"
 						ta="center"
 						mt="sm"
 					>
-						Join Klop! to find your perfect candidate match
+						Bergabunglah dengan Klop! untuk menemukan kandidat terbaik yang sesuai budaya perusahaan Anda.
 					</Text>
+
 					<RegisterForm />
+
 					<Text
 						ta="center"
 						mt="md"
 					>
-						Sudah memiliki akun?{' '}
+						Sudah punya akun?{' '}
 						<Anchor
 							component={Link}
 							href={`/${slugDashboardLogin}`}
 							fw={700}
 						>
-							Login
+							Masuk
 						</Anchor>
 					</Text>
 					<Text
 						ta="center"
 						mt={4}
 					>
-						Mendaftar sebagai kandidat?{' '}
+						Ingin mendaftar sebagai kandidat?{' '}
 						<Anchor
 							component={Link}
 							href={`/${slugRegister}/candidate`}
 							fw={700}
+							c="blue"
 						>
-							Daftar (kandidat)
+							Daftar di sini
 						</Anchor>
 					</Text>
 				</Container>

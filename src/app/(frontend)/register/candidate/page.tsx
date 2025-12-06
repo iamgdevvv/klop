@@ -6,7 +6,7 @@ import { RegisterCandidateForm } from '$blocks/RegisterForm'
 import Link from '$components/Link'
 import Footer from '$layouts/Footer'
 import Header from '$layouts/Header'
-import { slugDashboard, slugDashboardLogin } from '$modules/vars'
+import { slugDashboard, slugDashboardLogin, slugRegister } from '$modules/vars'
 import { getAuthUser } from '$server-functions/auth'
 
 export const metadata: Metadata = {
@@ -36,26 +36,43 @@ export default async function registerPage() {
 					size="sm"
 					w="100%"
 				>
-					<Title ta="center">Register Your Account Kandidat</Title>
+					<Title ta="center">Daftar Akun Kandidat</Title>
 					<Text
 						c="dimmed"
 						ta="center"
 						mt="sm"
 					>
-						Join Klop! to find your perfect candidate match
+						Mulai perjalanan karirmu dan temukan pekerjaan impian yang benar-benar pas.
 					</Text>
+
 					<RegisterCandidateForm />
+
 					<Text
 						ta="center"
 						mt="md"
 					>
-						Sudah memiliki akun?{' '}
+						Sudah punya akun?{' '}
 						<Anchor
 							component={Link}
 							href={`/${slugDashboardLogin}`}
 							fw={700}
 						>
-							Login
+							Masuk
+						</Anchor>
+					</Text>
+					<Text
+						ta="center"
+						mt={4}
+						c="dimmed"
+					>
+						Ingin mendaftar sebagai perusahaan?{' '}
+						<Anchor
+							component={Link}
+							href={`/${slugRegister}`}
+							fw={700}
+							c="blue"
+						>
+							Daftar di sini
 						</Anchor>
 					</Text>
 				</Container>

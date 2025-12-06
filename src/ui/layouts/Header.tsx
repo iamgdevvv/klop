@@ -67,14 +67,14 @@ export default function Header({ user, showActions, ...props }: HeaderProps) {
 									href={`/${slugRegister}`}
 									visibleFrom="lg"
 								>
-									Sign up
+									Daftar
 								</Button>
 								<Button
 									component={Link}
 									href={`/${slugDashboardLogin}`}
 									visibleFrom="lg"
 								>
-									Sign in
+									Masuk
 								</Button>
 								<ActionIcon
 									component={Link}
