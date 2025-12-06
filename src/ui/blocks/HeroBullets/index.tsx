@@ -26,7 +26,7 @@ export function HeroBullets({ user, ...props }: Props) {
 	return (
 		<Container
 			{...props}
-			size={props.size || 'md'}
+			size={props.size || 'xl'}
 		>
 			<div className={classes.inner}>
 				<div className={classes.content}>
