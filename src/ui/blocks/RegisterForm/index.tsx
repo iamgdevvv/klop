@@ -97,14 +97,16 @@ export function RegisterForm({ redirect, ...props }: Props) {
 
 			<Stack gap="md">
 				<TextInput
-					label="Nama"
+					label="Nama Lengkap"
+					placeholder="Masukkan nama lengkap"
 					key={form.key('name')}
 					readOnly={isLoadingRegister}
 					{...form.getInputProps('name')}
 				/>
 				<TextInput
 					type="email"
-					label="Email"
+					label="Alamat Email"
+					placeholder="nama@email.com"
 					key={form.key('email')}
 					readOnly={isLoadingRegister}
 					{...form.getInputProps('email')}
@@ -114,13 +116,15 @@ export function RegisterForm({ redirect, ...props }: Props) {
 					spacing="md"
 				>
 					<PasswordInput
-						label="Password"
+						label="Kata Sandi"
+						placeholder="********"
 						key={form.key('password')}
 						readOnly={isLoadingRegister}
 						{...form.getInputProps('password')}
 					/>
 					<PasswordInput
-						label="Confirm Password"
+						label="Konfirmasi Kata Sandi"
+						placeholder="********"
 						key={form.key('confirmPassword')}
 						readOnly={isLoadingRegister}
 						{...form.getInputProps('confirmPassword')}
@@ -135,12 +139,11 @@ export function RegisterForm({ redirect, ...props }: Props) {
 				type="submit"
 				loading={isLoadingRegister}
 			>
-				Create Account
+				Buat Akun
 			</Button>
 		</Paper>
 	)
 }
-
 export function RegisterCandidateForm({ redirect, ...props }: Props) {
 	const searchParams = useSearchParams()
 	const router = useRouter()
@@ -206,7 +209,8 @@ export function RegisterCandidateForm({ redirect, ...props }: Props) {
 
 			<Stack gap="md">
 				<TextInput
-					label="Nama"
+					label="Nama Lengkap"
+					placeholder="Masukkan nama lengkap"
 					key={form.key('name')}
 					readOnly={isLoadingRegister}
 					{...form.getInputProps('name')}
@@ -231,6 +235,7 @@ export function RegisterCandidateForm({ redirect, ...props }: Props) {
 				</RadioGroup>
 				<Select
 					label="Pendidikan Terakhir"
+					placeholder="Pilih pendidikan terakhir"
 					data={vacancyEducation}
 					key={form.key('education')}
 					readOnly={isLoadingRegister}
@@ -243,6 +248,7 @@ export function RegisterCandidateForm({ redirect, ...props }: Props) {
 					<TextInput
 						type="email"
 						label="Email"
+						placeholder="nama@email.com"
 						key={form.key('email')}
 						readOnly={isLoadingRegister}
 						{...form.getInputProps('email')}
@@ -250,19 +256,23 @@ export function RegisterCandidateForm({ redirect, ...props }: Props) {
 					<TextInput
 						type="tel"
 						label="No. Telp / Whatsapp"
-						placeholder="0812..."
+						placeholder="08xxxxxxxxxx"
 						key={form.key('phone')}
 						readOnly={isLoadingRegister}
 						{...form.getInputProps('phone')}
 					/>
+
 					<PasswordInput
-						label="Password"
+						label="Kata Sandi"
+						placeholder="Masukkan kata sandi"
 						key={form.key('password')}
 						readOnly={isLoadingRegister}
 						{...form.getInputProps('password')}
 					/>
+
 					<PasswordInput
-						label="Confirm Password"
+						label="Konfirmasi Kata Sandi"
+						placeholder="Ulangi kata sandi"
 						key={form.key('confirmPassword')}
 						readOnly={isLoadingRegister}
 						{...form.getInputProps('confirmPassword')}
@@ -270,6 +280,7 @@ export function RegisterCandidateForm({ redirect, ...props }: Props) {
 				</SimpleGrid>
 				<Textarea
 					label="Perkenalan Diri"
+					placeholder="Tuliskan perkenalan singkat tentang diri Anda"
 					key={form.key('biography')}
 					readOnly={isLoadingRegister}
 					{...form.getInputProps('biography')}
@@ -283,7 +294,7 @@ export function RegisterCandidateForm({ redirect, ...props }: Props) {
 				type="submit"
 				loading={isLoadingRegister}
 			>
-				Create Account
+				Buat Akun
 			</Button>
 		</Paper>
 	)
