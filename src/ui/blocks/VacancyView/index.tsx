@@ -1,7 +1,6 @@
 import {
-	Alert,
-	Anchor,
 	Badge,
+	Button,
 	Card,
 	Container,
 	Divider,
@@ -11,11 +10,12 @@ import {
 	Paper,
 	Stack,
 	Text,
+	ThemeIcon,
 	Title,
-	type ContainerProps,
+	type ContainerProps
 } from '@mantine/core'
 import dayjs from 'dayjs'
-import { Building, FolderClock, GraduationCap, PersonStanding } from 'lucide-react'
+import { ArrowRight, Ban, Building, CheckCircle2, Clock, FolderClock, GraduationCap, PersonStanding } from 'lucide-react'
 
 import Link from '$components/Link'
 import Richtext from '$components/Richtext'
@@ -62,11 +62,11 @@ export function VacancyView({
 			<Grid gutter="xl">
 				<GridCol span={{ base: 12, md: 4 }}>
 					<Stack gap="xs">
-						<Title order={4} size="h4">
+						<Title order={4} size="h5">
 							Posisi Tersedia
 						</Title>
 						<Text
-							size="sm"
+							size="xs"
 							c="dimmed"
 						>
 							Lowongan lain di {company.title} ({vacancies.length})
@@ -166,7 +166,7 @@ export function VacancyView({
 								) : null}
 							</Group>
 
-							<Title order={2} size="h3">
+							<Title order={2} size="h5">
 								{data.title}
 							</Title>
 
@@ -244,76 +244,135 @@ export function VacancyView({
 								/>
 
 								<Paper
-									p="xl"
-									radius="lg"
-									bg="gray.0"
+									p="md"
+									radius="md"
+									style={{
+										borderColor: 'var(--mantine-color-gray-3)',
+										backgroundColor: 'var(--mantine-color-gray-0)',
+										backgroundImage: 'radial-gradient(var(--mantine-color-teal-2) 1.5px, transparent 1.5px)',
+										backgroundSize: '20px 20px',
+									}}
 									withBorder
 								>
 									{userVacancySubmission ? (
-										<>
-											<Title
-												order={3}
-												mb="sm"
-												size="h4"
-												c="green.5"
-											>
-												Lamaran Terkirim
-											</Title>
-											<Text
-												c="dimmed"
-												mb="lg"
-											>
-												Anda telah melamar pada lowongan ini, lihat riwayat
-												lamaran Anda di{' '}
-												<Anchor
+										<Paper
+											p="md"
+											radius="md"
+											bg="teal.0"
+											withBorder
+											style={{ borderColor: 'var(--mantine-color-teal-2)' }}
+										>
+											<Group justify="space-between" align="center" wrap="nowrap">
+												<Group gap="md" wrap="nowrap">
+													<ThemeIcon
+														radius="xl"
+														size="lg"
+														color="teal"
+														variant="white"
+													>
+														<CheckCircle2 size={20} />
+													</ThemeIcon>
+													<div>
+														<Text fw={600} c="teal.9" size="sm">
+															Lamaran Berhasil Dikirim
+														</Text>
+														<Text size="xs" c="teal.7">
+															Kami telah menerima data Anda. Pantau status seleksi secara berkala.
+														</Text>
+													</div>
+												</Group>
+
+												<Button
 													component={Link}
-													c="green.5"
 													href={`/${slugDashboard}/collections/vacancySubmissions/${userVacancySubmission.id}`}
-													target="_blank"
+													variant="white"
+													color="teal"
+													size="xs"
+													radius="md"
+													rightSection={<ArrowRight size={14} />}
 												>
-													Lamaran Saya
-												</Anchor>
-												.
-											</Text>
-										</>
-									) : isExpired ? (
-										<Alert
-											color="orange"
-											variant="light"
+													Cek Status
+												</Button>
+											</Group>
+										</Paper>
+									) : !isExpired ? (
+										<Paper
+											p="md"
+											radius="md"
+											bg="orange.0"
+											withBorder
+											style={{ borderColor: 'var(--mantine-color-orange-2)' }}
 										>
-											Lowongan Berakhir
-										</Alert>
+											<Group gap="md" wrap="nowrap">
+												<ThemeIcon
+													radius="xl"
+													size="lg"
+													color="orange"
+													variant="white"
+												>
+													<Clock size={20} />
+												</ThemeIcon>
+												<div>
+													<Text fw={600} c="orange.9" size="sm">
+														Masa Berlaku Habis
+													</Text>
+													<Text size="xs" c="orange.8">
+														Lowongan ini telah melewati batas waktu pendaftaran.
+													</Text>
+												</div>
+											</Group>
+										</Paper>
 									) : data.closeVacancy ? (
-										<Alert
-											color="red"
-											variant="light"
+										<Paper
+											p="md"
+											radius="md"
+											bg="red.0"
+											withBorder
+											style={{ borderColor: 'var(--mantine-color-red-2)' }}
 										>
-											Lowongan Tutup
-										</Alert>
+											<Group gap="md" wrap="nowrap">
+												<ThemeIcon
+													radius="xl"
+													size="lg"
+													color="red"
+													variant="white"
+												>
+													<Ban size={20} />
+												</ThemeIcon>
+												<div>
+													<Text fw={600} c="red.9" size="sm">
+														Pendaftaran Ditutup
+													</Text>
+													<Text size="xs" c="red.7">
+														Mohon maaf, kuota pelamar untuk posisi ini sudah penuh atau periode pendaftaran telah berakhir.
+													</Text>
+												</div>
+											</Group>
+										</Paper>
 									) : (
-										<>
-											{/* Translate Title */}
-											<Title
-												order={3}
-												mb="sm"
-												size="h4"
-											>
-												Lamar Sekarang
-											</Title>
-											<Text
-												size="sm"
-												c="dimmed"
-												mb="lg"
-											>
-												Isi data singkat Anda untuk melanjutkan ke tahap
-												asesmen.
-											</Text>
+										<Paper
+											p={{ base: 'md', md: 'xl' }}
+											radius="md"
+											bg="white"
+											withBorder
+											style={{
+												boxShadow: '0 4px 20px rgba(0,0,0,0.03)'
+											}}
+										>
+											<Stack gap="xs" mb="lg">
+												<Title order={3} size="h4" c="dark.8">
+													Lamar Sekarang
+												</Title>
+												<Text size="sm" c="dimmed">
+													Lengkapi formulir singkat di bawah ini untuk mengikuti asesmen AI.
+												</Text>
+											</Stack>
 
 											<FormApplyVacancy
 												vacancy={data}
 												authUser={authUser}
 											/>
-										</>
+										</Paper>
 									)}
 								</Paper>
 							</>
