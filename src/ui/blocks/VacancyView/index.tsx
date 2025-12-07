@@ -326,7 +326,7 @@ export function VacancyView({
 												</Button>
 											</Group>
 										</Paper>
-									) : !isExpired ? (
+									) : isExpired ? (
 										<Paper
 											p="md"
 											radius="md"
