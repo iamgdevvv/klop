@@ -198,7 +198,7 @@ export const Vacancies: CollectionConfig = {
 					}
 
 					return {
-						author: {
+						id: {
 							equals: user.id,
 						},
 					}

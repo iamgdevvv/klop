@@ -224,7 +224,7 @@ export const Companies: CollectionConfig = {
 					}
 
 					return {
-						author: {
+						id: {
 							equals: user.id,
 						},
 					}
