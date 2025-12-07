@@ -1,13 +1,13 @@
-# Sistem Penilaian AI Klop!
+# Klop! AI Assessments
 
 Platform penilaian teknis berbasis AI yang menghasilkan pertanyaan kontekstual dan menyediakan penilaian otomatis dengan mekanisme fallback yang cerdas.
 
 ## Fitur
 
 ### Pembuatan Pertanyaan
-- **Pembuatan Pertanyaan Cerdas**: Mengubah deskripsi peran menjadi studi kasus tingkat HOTS
+- **Pembuatan Pertanyaan Cerdas**: Mengubah deskripsi peran menjadi studi kasus tingkat HOTS (High Order Thinking Skills)
 - **Peningkatan Pertanyaan**: Meningkatkan draf pertanyaan ke tingkat pemikiran analitis
-- **Penilaian Komprehensif**: Menghasilkan paket pertanyaan lengkap dengan format pilihan ganda atau esai
+- **Penilaian Komprehensif**: Menghasilkan paket pertanyaan lengkap dalam format pilihan ganda atau esai
 
 ### Penilaian Otomatis
 - **Evaluasi Adaptif**: Penilaian cerdas untuk respons pilihan ganda dan esai
@@ -18,9 +18,10 @@ Platform penilaian teknis berbasis AI yang menghasilkan pertanyaan kontekstual d
 
 - **Framework**: FastAPI
 - **Bahasa**: Python 3.11+
-- **Integrasi AI**: Kolosal AI (Utama) + Google Gemini (Cadangan)
+- **Integrasi AI**: Kolosal AI
+- **LLM Model**: Qwen2.5 7B Instruct
 - **Validasi**: Pydantic
-- **HTTP Client**: Klien async yang kompatibel dengan OpenAI
+- **HTTP Client**: Klien async kompatibel OpenAI
 
 ## Struktur Proyek
 
@@ -87,24 +88,19 @@ cp .env.example .env
 KOLOSAL_API_KEY=your-kolosal-api-key
 KOLOSAL_BASE_URL=https://api.kolosal.ai/v1
 KOLOSAL_MODEL=qwen2.5-7b-instruct
-
-# LLM Cadangan (Gemini) - Opsional tetapi direkomendasikan
-GEMINI_API_KEY=your-gemini-api-key
-GEMINI_MODEL=gemini-1.5-flash
+API_SECRET_TOKEN=your-api-token
 ```
 
-### 3. Instalasi SDK Gemini (untuk fallback)
-
-```bash
-pip install google-genai
-```
+### 3. Prasyarat Runtime (Opsional)
+- Pastikan port 8000 tersedia
+- Python 3.11+ terpasang dan dapat menjalankan uvicorn
 
 ### 4. Jalankan Aplikasi
 
 ```bash
 uvicorn main:app --reload
 # Server dimulai di http://localhost:8000
-# Dokumentasi API di http://localhost:8000/docs
+# Dokumentasi API di http://localhost:8000/docs atau http://localhost:8000/redoc
 ```
 
 ### 5. Deployment dengan Docker
@@ -128,17 +124,23 @@ docker run -p 8000:8000 --env-file .env klop-ai-be
 | POST | `/enhance` | Tingkatkan draf pertanyaan yang ada |
 | POST | `/comprehensive` | Buat paket penilaian lengkap |
 
+### Modul Jawaban (`/answers`)
+| Metode | Endpoint | Deskripsi |
+|--------|----------|-----------|
+| POST | `/expected/essay` | Hasilkan jawaban esai yang diharapkan |
+| POST | `/expected/choices` | Hasilkan kunci jawaban untuk pilihan ganda |
+| POST | `/options` | Hasilkan opsi pilihan ganda untuk pertanyaan |
+
 ### Modul Penilaian (`/assessments`)
 
 | Metode | Endpoint | Deskripsi |
 |--------|----------|-----------|
-| POST | `/score` | Nilai respons kandidat |
+| POST | `/scoring` | Nilai respons kandidat |
 
 ## Integrasi LLM
 
 ### Arsitektur Fallback
-- **Utama**: Kolosal AI (kompatibel OpenAI)
-- **Cadangan**: Google Gemini (dipicu otomatis saat Kolosal gagal)
+- **Utama**: Kolosal AI
 - **Logika Retry**: 3 percobaan dengan backoff eksponensial
 
 ### Penanganan Respons
@@ -164,7 +166,7 @@ Respons:
 
 ### Penilaian Skor
 ```json
-POST /assessments/score
+POST /assessments/scoring
 {
   "title": "Penilaian Backend Developer",
   "description": "Evaluasi teknis untuk posisi senior",
@@ -193,7 +195,7 @@ Respons:
 ## Konfigurasi
 
 ### Pengaturan LLM
-- **Temperature**: 0.2-0.5 untuk output yang konsisten
+- **Temperature**: 0.2–0.5 untuk output yang konsisten
 - **Mode JSON**: Dipaksakan untuk semua respons terstruktur
 - **Token Maksimum**: Dikonfigurasi sesuai kebutuhan endpoint
 
@@ -215,20 +217,6 @@ Respons:
 curl http://localhost:8000/health
 ```
 
-## Penulis
+## Author
 
 **Tim Klop!**
-
-
-## Lisensi
-Dilisensikan di bawah Apache License, Version 2.0 ("Lisensi");
-Anda tidak boleh menggunakan file ini kecuali sesuai dengan Lisensi.
-Anda dapat memperoleh salinan Lisensi di
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Kecuali disyaratkan oleh hukum yang berlaku atau disetujui secara tertulis, perangkat lunak
-yang didistribusikan di bawah Lisensi didistribusikan "SEBAGAIMANA ADANYA",
-TANPA JAMINAN ATAU KETENTUAN APA PUN, baik tersurat maupun tersirat.
-Lihat Lisensi untuk bahasa tertentu yang mengatur izin dan
-pembatasan di bawah Lisensi.

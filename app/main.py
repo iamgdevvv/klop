@@ -34,7 +34,6 @@ app = FastAPI(
 origins = [
     "https://klop-ai.vercel.app",
     "http://localhost:8000",
-    "*",
 ]
 
 app.add_middleware(

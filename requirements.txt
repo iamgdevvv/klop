@@ -1,7 +1,6 @@
 fastapi
 uvicorn[standard]
 tenacity
-google-genai
 openai
 pydantic>=2.5.0
 pydantic-settings

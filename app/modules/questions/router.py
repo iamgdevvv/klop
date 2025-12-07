@@ -4,9 +4,8 @@ from fastapi import (  # pyright: ignore[reportMissingImports]
     status,
 )
 
-# Import Schemas
 from .schemas import (
-    ComprehensiveRequest,  # <-- Schema baru wajib diimport
+    ComprehensiveRequest,
     ComprehensiveResponse,
     CreateQuestionRequest,
     QuestionRequest,
