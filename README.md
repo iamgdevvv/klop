@@ -19,7 +19,7 @@ Platform penilaian teknis berbasis AI yang menghasilkan pertanyaan kontekstual d
 - **Framework**: FastAPI
 - **Bahasa**: Python 3.11+
 - **Integrasi AI**: Kolosal AI
-- **LLM Model**: Qwen2.5 7B Instruct
+- **LLM Model**: Qwen 3 30BA3B
 - **Validasi**: Pydantic
 - **HTTP Client**: Klien async kompatibel OpenAI
 
@@ -84,10 +84,9 @@ cp .env.example .env
 
 **Variabel yang Diperlukan:**
 ```env
-# LLM Utama (Kolosal)
 KOLOSAL_API_KEY=your-kolosal-api-key
 KOLOSAL_BASE_URL=https://api.kolosal.ai/v1
-KOLOSAL_MODEL=qwen2.5-7b-instruct
+KOLOSAL_MODEL=your-kolosal-model
 API_SECRET_TOKEN=your-api-token
 ```
 
@@ -116,7 +115,7 @@ docker run -p 8000:8000 --env-file .env klop-ai-be
 
 ## Endpoint API
 
-### Modul Pertanyaan (`/questions`)
+### Modul Pertanyaan (`/question`)
 
 | Metode | Endpoint | Deskripsi |
 |--------|----------|-----------|
@@ -124,14 +123,14 @@ docker run -p 8000:8000 --env-file .env klop-ai-be
 | POST | `/enhance` | Tingkatkan draf pertanyaan yang ada |
 | POST | `/comprehensive` | Buat paket penilaian lengkap |
 
-### Modul Jawaban (`/answers`)
+### Modul Jawaban (`/answer`)
 | Metode | Endpoint | Deskripsi |
 |--------|----------|-----------|
 | POST | `/expected/essay` | Hasilkan jawaban esai yang diharapkan |
 | POST | `/expected/choices` | Hasilkan kunci jawaban untuk pilihan ganda |
 | POST | `/options` | Hasilkan opsi pilihan ganda untuk pertanyaan |
 
-### Modul Penilaian (`/assessments`)
+### Modul Penilaian (`/assessment`)
 
 | Metode | Endpoint | Deskripsi |
 |--------|----------|-----------|
