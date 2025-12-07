@@ -51,13 +51,13 @@ export function AssessmentResult({ data, assessment, ...props }: Props) {
 						fw={700}
 						tt="uppercase"
 					>
-						Assessment Result
+						Hasil Asesmen
 					</Text>
 					<Text
 						size="lg"
 						fw={500}
 					>
-						Hi {data.candidateName},
+						Hai {data.candidateName},
 					</Text>
 
 					<Text
@@ -74,22 +74,25 @@ export function AssessmentResult({ data, assessment, ...props }: Props) {
 						ta="center"
 						c="dark.9"
 						mt="sm"
+						size="h5"
 					>
-						{isPassed ? 'Congratulations! You Passed!' : 'Sorry, You Failed.'}
+						{isPassed ? 'Selamat! Anda Lulus!' : 'Mohon Maaf, Anda Belum Lulus.'}
 					</Title>
 					<Text
 						c="dimmed"
 						ta="center"
+						size='sm'
 					>
-						You answered{' '}
+						Anda menjawab{' '}
 						<Text
 							span
 							fw={700}
 							c="dark.9"
+							size="sm"
 						>
 							{totalCorrectAnswers}
 						</Text>{' '}
-						out of {assessment.questions?.length} questions correctly
+						dari {assessment.questions?.length} soal dengan benar.
 					</Text>
 
 					<Divider
@@ -106,13 +109,12 @@ export function AssessmentResult({ data, assessment, ...props }: Props) {
 							<Text
 								size="sm"
 								c="dimmed"
-								mb={5}
 							>
-								Your Score
+								Skor Anda
 							</Text>
 							<Text
 								fw={900}
-								size="xl"
+								size="h3"
 								c={statusColor}
 							>
 								{data.score}%
@@ -126,13 +128,12 @@ export function AssessmentResult({ data, assessment, ...props }: Props) {
 							<Text
 								size="sm"
 								c="dimmed"
-								mb={5}
 							>
-								Passing Score
+								Nilai Kelulusan
 							</Text>
 							<Text
 								fw={900}
-								size="xl"
+								size="h3"
 								c="gray.7"
 							>
 								{assessment?.passingGrade || 70}%
@@ -142,7 +143,7 @@ export function AssessmentResult({ data, assessment, ...props }: Props) {
 
 					<Box
 						w="100%"
-						mt="xl"
+						mt="sm"
 					>
 						<Group
 							mb="xs"
@@ -158,8 +159,9 @@ export function AssessmentResult({ data, assessment, ...props }: Props) {
 								fw={700}
 								c="blue.6"
 								tt="uppercase"
+								style={{ letterSpacing: 1 }}
 							>
-								AI Performance Analysis
+								Analisis Performa AI
 							</Text>
 						</Group>
 
@@ -188,7 +190,7 @@ export function AssessmentResult({ data, assessment, ...props }: Props) {
 
 				<Box
 					bg={statusColor}
-					p="lg"
+					p="md"
 				>
 					<Stack
 						gap={4}
@@ -208,7 +210,7 @@ export function AssessmentResult({ data, assessment, ...props }: Props) {
 								tt="uppercase"
 								c="white"
 							>
-								{isPassed ? 'PASSED' : 'NOT PASSED'}
+								{isPassed ? 'LULUS' : 'TIDAK LULUS'}
 							</Text>
 						</Group>
 
@@ -217,7 +219,7 @@ export function AssessmentResult({ data, assessment, ...props }: Props) {
 							c="white"
 							opacity={0.9}
 						>
-							Assessment: {assessment?.title}
+							Asesmen: {assessment?.title}
 						</Text>
 					</Stack>
 				</Box>
