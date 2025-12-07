@@ -20,7 +20,7 @@ Karena field 'type' tidak tersedia, analisa `expectedAnswer` untuk menentukan me
 
 1. **Metode KEYWORD MATCHING (Untuk Essay/Isian):**
    - **Kondisi:** Jika `expectedAnswer` berisi daftar kata kunci (dipisahkan koma) atau poin-poin singkat.
-   - **Aturan:** Bernilai `true` jika jawaban kandidat (`answer`) mencakup minimal 70% konsep/keyword dari `expectedAnswer` secara semantik ( tidak persis sama, cukup dalam artian dan tujuan yang sama). Abaikan perbedaan struktur kalimat.
+   - **Aturan:** Bernilai `true` jika jawaban kandidat (`answer`) mencakup minimal 40% konsep/keyword dari `expectedAnswer` secara semantik ( tidak persis sama, cukup dalam artian, maksud dan tujuan yang sama). Abaikan perbedaan struktur kalimat.
 
 2. **Metode EXACT/STRICT MATCH (Untuk Pilihan Ganda):**
    - **Kondisi:** Jika `expectedAnswer` adalah kalimat tunggal spesifik yang terlihat seperti opsi pilihan ganda.
