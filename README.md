@@ -39,6 +39,29 @@ Klop! adalah platform rekrutmen berbasis AI yang membantu **UMKM** melakukan pro
 ## 🛠️ Cara Menjalankan Project
 
 Pastikan Anda sudah menginstal **Node.js** versi terbaru.
+Salin .env.example ke .env dan konfigurasi:
+
+```env
+# Payload
+DATABASE_URI=postgresql://klop:123456@localhost:5432/portopro
+CRON_SECRET=secret
+PAYLOAD_SECRET=secret
+PAYLOAD_PREVIEW_SECRET=secret
+REVALIDATE_SECRET=secret
+
+# Global
+NEXT_PUBLIC_SITE_URL='http://localhost:3000'
+NEXT_PUBLIC_SITE_INDEX=false
+KLOP_AI_API='https://example.com'
+KLOP_AI_TOKEN=secret
+
+# Supabase
+SUPABASE_S3_BUCKET=bucket
+SUPABASE_S3_ACCESS_KEY_ID=secret
+SUPABASE_S3_SECRET_ACCESS_KEY=secret
+SUPABASE_S3_REGION=secret
+SUPABASE_S3_ENDPOINT=secret
+```
 
 1. **Install dependencies**
 
@@ -54,7 +77,8 @@ Pastikan Anda sudah menginstal **Node.js** versi terbaru.
 
 3. **Jalankan aplikasi**
     ```bash
-    npm run start
+    npm run start # production
+    npm run dev # development
     ```
 
 Aplikasi akan berjalan pada port yang dikonfigurasi oleh Next.js (biasanya http://localhost:3000).
