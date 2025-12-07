@@ -16,7 +16,7 @@ type Args = {
 }
 
 export const metadata: Metadata = {
-	title: 'Assessment Submission ⎯ Klop!',
+	title: 'Hasil Asesmen ⎯ Klop!',
 }
 
 export default async function assessmentSubmissionPage({ params }: Args) {
