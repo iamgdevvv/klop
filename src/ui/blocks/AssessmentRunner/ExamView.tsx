@@ -198,7 +198,7 @@ export function ExamView({ data, candidate, onSubmit, ...props }: Props) {
 							fw={700}
 							size="xl"
 						>
-							JavaScript Developer Assessment
+
 						</Text>
 						<Text c="dimmed">{candidateMetadata}</Text>
 					</Stack>
@@ -333,7 +333,7 @@ export function ExamView({ data, candidate, onSubmit, ...props }: Props) {
 
 						<form onSubmit={form.onSubmit(handlerSubmitAmswer)}>
 							{questions[currentIndexQuestion].isAnswerOptions &&
-							questions[currentIndexQuestion].answerOptions?.length ? (
+								questions[currentIndexQuestion].answerOptions?.length ? (
 								<Radio.Group
 									key={form.key('answer')}
 									errorProps={{
