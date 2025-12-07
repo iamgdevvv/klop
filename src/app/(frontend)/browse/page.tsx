@@ -21,7 +21,7 @@ export default async function browseCompaniesPage({ searchParams }: Args) {
 	const [authUser, companiesResult] = await Promise.all([
 		getAuthUser(),
 		queryCompanies({
-			limit: 18,
+			limit: 80,
 			search,
 		}),
 	])
