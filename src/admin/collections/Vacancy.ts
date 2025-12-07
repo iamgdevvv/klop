@@ -2,7 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { metafield } from '$payload-fields/metadata'
 import { slugField } from '$payload-fields/slug'
-import { authenticated, authenticatedAdminOrAuthor } from '$payload-libs/access-rules'
+import { authenticatedAdminOrAuthor, authenticatedAdminOrCompany } from '$payload-libs/access-rules'
 import { vacancyEducation, vacancyLevel, vacancyType } from '$payload-libs/enum'
 import { revalidateChange, revalidateDelete } from '$payload-libs/hooks/revalidate'
 import { generatePreviewPath } from '$payload-libs/preview-path'
@@ -47,43 +47,63 @@ export const Vacancies: CollectionConfig = {
 		},
 		livePreview: {
 			url: ({ data, req }) => {
-				let companySlug = 'unknown'
+				if (!data?.slug && typeof data.slug !== 'string') {
+					return null
+				}
+
+				if (!data?.company) {
+					return null
+				}
 
 				if (
-					data?.company &&
 					typeof data.company === 'object' &&
 					'slug' in data.company &&
 					typeof data.company.slug === 'string'
 				) {
-					companySlug = data.company.slug
+					return generatePreviewPath({
+						path: `/${data.company.slug}/${data.slug}`,
+						req,
+					})
+				} else if (typeof data.company === 'number') {
+					return generatePreviewPath({
+						path: `/scv/${data.company}/${data.slug}`,
+						req,
+					})
 				}
 
-				return generatePreviewPath({
-					path: typeof data?.slug === 'string' ? `/${companySlug}/${data.slug}` : '/',
-					req,
-				})
+				return null
 			},
 		},
 		preview: (data, { req }) => {
-			let companySlug = 'unknown'
+			if (!data?.slug && typeof data.slug !== 'string') {
+				return null
+			}
+
+			if (!data?.company) {
+				return null
+			}
 
 			if (
-				data?.company &&
 				typeof data.company === 'object' &&
 				'slug' in data.company &&
 				typeof data.company.slug === 'string'
 			) {
-				companySlug = data.company.slug
+				return generatePreviewPath({
+					path: `/${data.company.slug}/${data.slug}`,
+					req,
+				})
+			} else if (typeof data.company === 'number') {
+				return generatePreviewPath({
+					path: `/scv/${data.company}/${data.slug}`,
+					req,
+				})
 			}
 
-			return generatePreviewPath({
-				path: typeof data?.slug === 'string' ? `/${companySlug}/${data.slug}` : '',
-				req,
-			})
+			return null
 		},
 	},
 	access: {
-		create: authenticated,
+		create: authenticatedAdminOrCompany,
 		read: authenticatedAdminOrAuthor,
 		update: authenticatedAdminOrAuthor,
 		delete: authenticatedAdminOrAuthor,
@@ -170,6 +190,21 @@ export const Vacancies: CollectionConfig = {
 			slug: {
 				...slugField,
 				unique: false,
+			},
+			filterOptionsAuthor({ user }) {
+				if (user) {
+					if (user.role === 'admin') {
+						return true
+					}
+
+					return {
+						author: {
+							equals: user.id,
+						},
+					}
+				}
+
+				return false
 			},
 			general: [
 				{

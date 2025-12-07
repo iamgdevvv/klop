@@ -12,10 +12,19 @@ import {
 	Text,
 	ThemeIcon,
 	Title,
-	type ContainerProps
+	type ContainerProps,
 } from '@mantine/core'
 import dayjs from 'dayjs'
-import { ArrowRight, Ban, Building, CheckCircle2, Clock, FolderClock, GraduationCap, PersonStanding } from 'lucide-react'
+import {
+	ArrowRight,
+	Ban,
+	Building,
+	CheckCircle2,
+	Clock,
+	FolderClock,
+	GraduationCap,
+	PersonStanding,
+} from 'lucide-react'
 
 import Link from '$components/Link'
 import Richtext from '$components/Richtext'
@@ -45,11 +54,11 @@ export function VacancyView({
 	const type = vacancyType.find((t) => t.value === data.type)
 	const level = vacancyLevel.find((l) => l.value === data.level)
 	const education = vacancyEducation.find((e) => e.value === data.education)
-	const isExpired = dayjs(data.expiresAt).isAfter(dayjs())
+	const isExpired = dayjs(data.expiresAt).isBefore(dayjs())
 
 	const sortedVacancies = vacancies.sort((a, b) => {
-		const aIsOpen = !a.closeVacancy && dayjs(a.expiresAt).isAfter(dayjs())
-		const bIsOpen = !b.closeVacancy && dayjs(b.expiresAt).isAfter(dayjs())
+		const aIsOpen = !a.closeVacancy && dayjs(a.expiresAt).isBefore(dayjs())
+		const bIsOpen = !b.closeVacancy && dayjs(b.expiresAt).isBefore(dayjs())
 
 		return aIsOpen === bIsOpen ? 0 : aIsOpen ? 1 : -1
 	})
@@ -62,7 +71,10 @@ export function VacancyView({
 			<Grid gutter="xl">
 				<GridCol span={{ base: 12, md: 4 }}>
 					<Stack gap="xs">
-						<Title order={4} size="h5">
+						<Title
+							order={4}
+							size="h5"
+						>
 							Posisi Tersedia
 						</Title>
 						<Text
@@ -80,7 +92,7 @@ export function VacancyView({
 						{sortedVacancies.map((vacancy, index) => {
 							const isActive = vacancy.id === data.id
 							const closeVacancy =
-								vacancy.closeVacancy || dayjs(vacancy.expiresAt).isAfter(dayjs())
+								vacancy.closeVacancy || dayjs(vacancy.expiresAt).isBefore(dayjs())
 
 							return (
 								<Card
@@ -166,7 +178,10 @@ export function VacancyView({
 								) : null}
 							</Group>
 
-							<Title order={2} size="h5">
+							<Title
+								order={2}
+								size="h5"
+							>
 								{data.title}
 							</Title>
 
@@ -249,7 +264,8 @@ export function VacancyView({
 									style={{
 										borderColor: 'var(--mantine-color-gray-3)',
 										backgroundColor: 'var(--mantine-color-gray-0)',
-										backgroundImage: 'radial-gradient(var(--mantine-color-teal-2) 1.5px, transparent 1.5px)',
+										backgroundImage:
+											'radial-gradient(var(--mantine-color-teal-2) 1.5px, transparent 1.5px)',
 										backgroundSize: '20px 20px',
 									}}
 									withBorder
@@ -262,8 +278,15 @@ export function VacancyView({
 											withBorder
 											style={{ borderColor: 'var(--mantine-color-teal-2)' }}
 										>
-											<Group justify="space-between" align="center" wrap="nowrap">
-												<Group gap="md" wrap="nowrap">
+											<Group
+												justify="space-between"
+												align="center"
+												wrap="nowrap"
+											>
+												<Group
+													gap="md"
+													wrap="nowrap"
+												>
 													<ThemeIcon
 														radius="xl"
 														size="lg"
@@ -273,11 +296,19 @@ export function VacancyView({
 														<CheckCircle2 size={20} />
 													</ThemeIcon>
 													<div>
-														<Text fw={600} c="teal.9" size="sm">
+														<Text
+															fw={600}
+															c="teal.9"
+															size="sm"
+														>
 															Lamaran Berhasil Dikirim
 														</Text>
-														<Text size="xs" c="teal.7">
-															Kami telah menerima data Anda. Pantau status seleksi secara berkala.
+														<Text
+															size="xs"
+															c="teal.7"
+														>
+															Kami telah menerima data Anda. Pantau
+															status seleksi secara berkala.
 														</Text>
 													</div>
 												</Group>
@@ -303,7 +334,10 @@ export function VacancyView({
 											withBorder
 											style={{ borderColor: 'var(--mantine-color-orange-2)' }}
 										>
-											<Group gap="md" wrap="nowrap">
+											<Group
+												gap="md"
+												wrap="nowrap"
+											>
 												<ThemeIcon
 													radius="xl"
 													size="lg"
@@ -313,11 +347,19 @@ export function VacancyView({
 													<Clock size={20} />
 												</ThemeIcon>
 												<div>
-													<Text fw={600} c="orange.9" size="sm">
+													<Text
+														fw={600}
+														c="orange.9"
+														size="sm"
+													>
 														Masa Berlaku Habis
 													</Text>
-													<Text size="xs" c="orange.8">
-														Lowongan ini telah melewati batas waktu pendaftaran.
+													<Text
+														size="xs"
+														c="orange.8"
+													>
+														Lowongan ini telah melewati batas waktu
+														pendaftaran.
 													</Text>
 												</div>
 											</Group>
@@ -330,7 +372,10 @@ export function VacancyView({
 											withBorder
 											style={{ borderColor: 'var(--mantine-color-red-2)' }}
 										>
-											<Group gap="md" wrap="nowrap">
+											<Group
+												gap="md"
+												wrap="nowrap"
+											>
 												<ThemeIcon
 													radius="xl"
 													size="lg"
@@ -340,11 +385,20 @@ export function VacancyView({
 													<Ban size={20} />
 												</ThemeIcon>
 												<div>
-													<Text fw={600} c="red.9" size="sm">
+													<Text
+														fw={600}
+														c="red.9"
+														size="sm"
+													>
 														Pendaftaran Ditutup
 													</Text>
-													<Text size="xs" c="red.7">
-														Mohon maaf, kuota pelamar untuk posisi ini sudah penuh atau periode pendaftaran telah berakhir.
+													<Text
+														size="xs"
+														c="red.7"
+													>
+														Mohon maaf, kuota pelamar untuk posisi ini
+														sudah penuh atau periode pendaftaran telah
+														berakhir.
 													</Text>
 												</div>
 											</Group>
@@ -356,15 +410,26 @@ export function VacancyView({
 											bg="white"
 											withBorder
 											style={{
-												boxShadow: '0 4px 20px rgba(0,0,0,0.03)'
+												boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
 											}}
 										>
-											<Stack gap="xs" mb="lg">
-												<Title order={3} size="h4" c="dark.8">
+											<Stack
+												gap="xs"
+												mb="lg"
+											>
+												<Title
+													order={3}
+													size="h4"
+													c="dark.8"
+												>
 													Lamar Sekarang
 												</Title>
-												<Text size="sm" c="dimmed">
-													Lengkapi formulir singkat di bawah ini untuk mengikuti asesmen AI.
+												<Text
+													size="sm"
+													c="dimmed"
+												>
+													Lengkapi formulir singkat di bawah ini untuk
+													mengikuti asesmen AI.
 												</Text>
 											</Stack>
 

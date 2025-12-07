@@ -1,10 +1,8 @@
 import type { CollectionConfig } from 'payload'
 
-import { slugAssessment } from '$modules/vars'
 import { metafield } from '$payload-fields/metadata'
 import { authenticated, authenticatedAdminOrAuthor } from '$payload-libs/access-rules'
 import { revalidateChange, revalidateDelete } from '$payload-libs/hooks/revalidate'
-import { generatePreviewPath } from '$payload-libs/preview-path'
 import { queryVacancySubmissions } from '$root/lib/server-functions/vacancySubmission'
 
 export const Assessments: CollectionConfig = {
@@ -46,19 +44,6 @@ export const Assessments: CollectionConfig = {
 
 			return null
 		},
-		livePreview: {
-			url: ({ data, req }) => {
-				return generatePreviewPath({
-					path: typeof data?.slug === 'string' ? `/${slugAssessment}/${data.slug}` : '/',
-					req,
-				})
-			},
-		},
-		preview: (data, { req }) =>
-			generatePreviewPath({
-				path: typeof data?.slug === 'string' ? `/${slugAssessment}/${data.slug}` : '',
-				req,
-			}),
 	},
 	access: {
 		create: authenticated,

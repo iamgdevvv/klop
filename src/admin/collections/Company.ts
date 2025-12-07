@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { metafield } from '$payload-fields/metadata'
-import { authenticated, authenticatedAdminOrAuthor } from '$payload-libs/access-rules'
+import { authenticatedAdminOrAuthor, authenticatedAdminOrCompany } from '$payload-libs/access-rules'
 import { revalidateChange, revalidateDelete } from '$payload-libs/hooks/revalidate'
 import { generatePreviewPath } from '$payload-libs/preview-path'
 
@@ -65,7 +65,7 @@ export const Companies: CollectionConfig = {
 			}),
 	},
 	access: {
-		create: authenticated,
+		create: authenticatedAdminOrCompany,
 		read: authenticatedAdminOrAuthor,
 		update: authenticatedAdminOrAuthor,
 		delete: authenticatedAdminOrAuthor,
@@ -217,6 +217,21 @@ export const Companies: CollectionConfig = {
 			],
 		},
 		...metafield({
+			filterOptionsAuthor({ user }) {
+				if (user) {
+					if (user.role === 'admin') {
+						return true
+					}
+
+					return {
+						author: {
+							equals: user.id,
+						},
+					}
+				}
+
+				return false
+			},
 			general: [
 				{
 					type: 'upload',

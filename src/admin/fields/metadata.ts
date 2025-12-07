@@ -1,4 +1,4 @@
-import type { Field, TextField } from 'payload'
+import type { Field, FilterOptions, TextField } from 'payload'
 
 import { slugField } from '$payload-fields/slug'
 
@@ -6,6 +6,7 @@ export const metafield = (fields?: {
 	general?: Field[]
 	info?: Field[]
 	slug?: TextField
+	filterOptionsAuthor?: FilterOptions
 }): Field[] => [
 	{
 		type: 'tabs',
@@ -66,6 +67,7 @@ export const metafield = (fields?: {
 						name: 'author',
 						type: 'relationship',
 						relationTo: 'users',
+						filterOptions: fields?.filterOptionsAuthor,
 						defaultValue: ({ req }) => {
 							if (req?.user) {
 								return req.user.id

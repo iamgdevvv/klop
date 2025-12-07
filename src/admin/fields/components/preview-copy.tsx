@@ -69,7 +69,7 @@ export const PreviewCompanyCopy = () => {
 
 	return (
 		<Button
-			buttonStyle="subtle"
+			buttonStyle="secondary"
 			onClick={() => copy(`${process.env.NEXT_PUBLIC_SITE_URL}/${slugValue}`)}
 		>
 			{isCopying ? <Loader /> : isCopied ? <CopyCheck size={18} /> : <Copy size={18} />}

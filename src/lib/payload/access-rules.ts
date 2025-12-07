@@ -12,6 +12,14 @@ export const authenticatedAdmin: isAuthenticated = ({ req: { user } }) => {
 	return user?.role === 'admin'
 }
 
+export const authenticatedAdminOrCompany: Access = ({ data, req: { user } }) => {
+	if (data?.author && user?.collection === 'users') {
+		return user.role === 'admin' || user.role === 'company'
+	}
+
+	return true
+}
+
 export const authenticatedAdminOrAuthor: Access = ({ data, req: { user } }) => {
 	if (data?.author && user?.collection === 'users') {
 		if (user.role === 'admin') {
