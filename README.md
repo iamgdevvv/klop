@@ -1,40 +1,79 @@
-![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg) ![Made with React](https://img.shields.io/badge/Made%20with-React-61DAFB?logo=react&logoColor=white)
-![Tailwind](https://img.shields.io/badge/Style-TailwindCSS-38B2AC?logo=tailwindcss&logoColor=white) ![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg) [![Code of Conduct](https://img.shields.io/badge/Contributor-Covenant-ff69b4.svg)](CODE_OF_CONDUCT.md) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
+![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
+![Made with React](https://img.shields.io/badge/Made%20with-React-61DAFB?logo=react&logoColor=white)
+![Tailwind](https://img.shields.io/badge/Style-TailwindCSS-38B2AC?logo=tailwindcss&logoColor=white)
+![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)
+[![Code of Conduct](https://img.shields.io/badge/Contributor-Covenant-ff69b4.svg)](CODE_OF_CONDUCT.md)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-![Preview Template](public/images/preview-klop.jpg)
+![Preview Template](public/images/preview-klop.png)
 
-# Creators Klop!
+# Klop! — Smart Recruitment Platform for UMKM & Candidates
 
-Selamat datang di repository **Klop** 🎉
-
-Template website yang dibangun oleh **pribadi** dengan semangat bingung mau ngapain weekend.\
-Kalian juga dapat menggunakan website template ini secara gratis.
-
-## 📖 Lisensi
-
-Seluruh template di repository ini dirilis di bawah **Apache License 2.0 dengan Atribusi Wajib**.\
-Artinya:
-
-- Anda bebas menggunakan, memodifikasi, dan mendistribusikan
-  template ini.
-- **Wajib mencantumkan atribusi** kepada Creators Klop! dalam bentuk:
-    - Nama proyek dibuat dengan X **Creators Klop**
-    - Tautan menuju repository atau website Creators Klop
-    - Atribusi tidak boleh dihapus dalam kondisi apapun.
-
-📌 Detail lengkap mengenai lisensi dapat dibaca di file
-[LICENSE.md](./LICENSE.md) dan [NOTICE.md](./NOTICE.md).
-
-## 🙌 Kontribusi
-
-Kami selalu terbuka bagi siapa pun yang ingin menjadi bagian dari tempate website gratis ini.\
-Silakan cek panduan kontribusi di [CONTRIBUTING.md](./CONTRIBUTING.md).
-
-## ❤️ Apresiasi
-
-Jika Anda menggunakan template ini, jangan lupa memberikan atribusi sebagai bentuk apresiasi.\
-Hal ini sangat berarti bagi saya pribadi, karena membantu membangun portofolio saya.
+Selamat datang di repository **Klop!** 🎉  
+Klop! adalah platform rekrutmen berbasis AI yang membantu **UMKM** melakukan proses hiring secara cepat, efisien, dan terstruktur. Aplikasi ini memudahkan perusahaan membuat lowongan, memberikan assessment otomatis, serta menilai kandidat menggunakan bantuan AI. Kandidat pun dapat melamar pekerjaan, mengerjakan assessment anti-cheat, dan menerima feedback secara instan.
 
 ---
 
-Dibangun dengan cinta oleh [Creators Klop!](https://creators-klop.vercel.app)
+## 🚀 Fitur Utama
+
+### Untuk Company (UMKM)
+
+- Membuat profil perusahaan dan lowongan (vacancy).
+- Membuat assessment berbasis AI untuk setiap vacancy.
+- Assign assessment ke kandidat yang sudah diseleksi.
+- Penilaian otomatis oleh AI lengkap dengan skor & ringkasan hasil.
+- Melihat riwayat submission vacancy dan assessment.
+- Halaman publik untuk company & vacancy yang dapat dibagikan secara manual.
+
+### Untuk Kandidat
+
+- Apply vacancy dari berbagai perusahaan.
+- Mengerjakan assessment dengan sistem anti-cheat (fullscreen & single-tab).
+- Assessment hanya bisa dikerjakan sekali.
+- Mendapatkan skor dan summary AI secara langsung setelah selesai.
+- Update data diri di halaman Account Settings.
+- Melihat riwayat lamaran dan assessment di dashboard pribadi.
+
+---
+
+## 🛠️ Cara Menjalankan Project
+
+Pastikan Anda sudah menginstal **Node.js** versi terbaru.
+
+1. **Install dependencies**
+
+    ```bash
+    npm install
+    ```
+
+2. **Build project**
+
+    ```bash
+    npm run build
+    ```
+
+3. **Jalankan aplikasi**
+    ```bash
+    npm run start
+    ```
+
+Aplikasi akan berjalan pada port yang dikonfigurasi oleh Next.js (biasanya http://localhost:3000).
+
+---
+
+## 📖 Lisensi
+
+Proyek ini dirilis di bawah Apache License 2.0 dengan Atribusi Wajib.
+
+Anda boleh:
+
+- Menggunakan, memodifikasi, dan mendistribusikan project ini.
+
+Dengan syarat:
+
+- Wajib mencantumkan atribusi kepada Creators Klop! Contoh:
+    - “Proyek ini dibuat dengan X — Creators Klop!”
+    - Menyertakan tautan ke repository atau website Creators Klop!
+- Atribusi tidak boleh dihapus.
+
+Baca detail lengkap di: [LICENSE.md](./LICENSE.md) dan [NOTICE.md](./NOTICE.md)
