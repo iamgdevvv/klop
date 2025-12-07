@@ -66,7 +66,7 @@ export default async function assessmentPage({ params }: Args) {
 
 		const assessmentSubmissionResult = await queryAssessmentSubmissions({
 			limit: 1,
-			whereOr: [
+			whereAnd: [
 				{
 					assessment: {
 						equals: assessment.id,
@@ -75,16 +75,6 @@ export default async function assessmentPage({ params }: Args) {
 				{
 					userCandidateCompany: {
 						in: [authUser.id],
-					},
-				},
-				{
-					['candidate.email']: {
-						equals: authUser.email,
-					},
-				},
-				{
-					['candidate.phone']: {
-						equals: authUser.phone,
 					},
 				},
 			],

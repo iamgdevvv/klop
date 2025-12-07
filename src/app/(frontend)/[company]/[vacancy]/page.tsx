@@ -114,7 +114,7 @@ export default async function vacancyPage({ params }: Args) {
 	if (authUser) {
 		const vacancySubmissionResult = await queryVacancySubmissions({
 			limit: 1,
-			whereOr: [
+			whereAnd: [
 				{
 					vacancyReference: {
 						equals: vacancyData.id,
@@ -123,16 +123,6 @@ export default async function vacancyPage({ params }: Args) {
 				{
 					userCandidateCompany: {
 						in: [authUser.id],
-					},
-				},
-				{
-					['candidate.email']: {
-						equals: authUser.email,
-					},
-				},
-				{
-					['candidate.phone']: {
-						equals: authUser.phone,
 					},
 				},
 			],
