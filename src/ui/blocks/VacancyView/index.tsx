@@ -307,8 +307,7 @@ export function VacancyView({
 															size="xs"
 															c="teal.7"
 														>
-															Kami telah menerima data Anda. Pantau
-															status seleksi secara berkala.
+															Kami telah menerima data Anda.
 														</Text>
 													</div>
 												</Group>
